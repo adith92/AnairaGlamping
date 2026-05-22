@@ -73,3 +73,44 @@ Jika CLI belum ada:
 Lisensi QloApps asli tetap dipertahankan (OSL/AFL sesuai upstream).
 
 ## Vercel Git Deploy Guide`r`nLihat panduan lengkap di `docs/vercel-deploy.md` untuk setup root directory `frontend/hotelier` dan preview deployment berbasis GitHub.`r`n
+
+## Final Visual Assets
+- Asset root: rontend/hotelier/assets
+- Brand:
+  - ssets/brand/logo-anaira-black-transparent.png
+  - ssets/brand/logo-anaira-white-transparent.png
+  - ssets/brand/favicon.ico
+  - ssets/brand/apple-touch-icon.png
+  - ssets/brand/og-anaira-glamping.jpg
+- Hero:
+  - Desktop: ssets/images/hero/hero-pool-mountain-desktop.webp
+  - Mobile: ssets/images/hero/hero-pool-mountain-mobile.webp
+- Rooms:
+  - Balcony: ssets/images/rooms/balcony/balcony-exterior-garden.webp
+  - Porch: ssets/images/rooms/porch/porch-cabin-garden.webp
+  - Villa: ssets/images/rooms/villa/villa-view-pool-area.webp
+- Facilities:
+  - ssets/images/facilities/pool-mountain-view.webp
+  - ssets/images/facilities/garden-cabin-overview.webp
+  - ssets/images/facilities/outdoor-table-umbrella.webp
+- Gallery: ssets/images/gallery/gallery-*.webp, ssets/images/gallery/thumb-*.webp
+- Video: ssets/video/anaira-glamping-video.mp4
+
+## Local Preview Without npm Dependencies
+`ash
+cd frontend/hotelier
+node scripts/static-server.js
+`
+PowerShell shortcut:
+`powershell
+.\scripts\start-local.ps1
+`
+
+## Vercel Preview
+`ash
+cd frontend/hotelier
+npx.cmd vercel --yes
+`
+
+## Pending
+- Google Maps exact pin/share URL masih menunggu konfirmasi final owner.

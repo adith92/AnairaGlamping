@@ -1,38 +1,56 @@
-<!doctype html>
-<html lang="id">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Anaira Glamping & Resort | Rooms</title>
-  <meta name="description" content="Anaira Glamping & Resort di Jl. Raya Curug Nangka. Booking via WhatsApp dan QRIS dengan opsi Midtrans/Xendit.">
-  <style>
-    :root{--bg:#f8f2e8;--ink:#2b2a28;--brand:#1e7a56;--card:#fffdf9}
-    *{box-sizing:border-box} body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:linear-gradient(160deg,#f8f2e8,#f4f8f4);color:var(--ink)}
-    .wrap{max-width:1080px;margin:auto;padding:18px}
-    nav{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
-    nav a{color:var(--ink);text-decoration:none;padding:8px 10px;border-radius:8px}
-    nav .menu{display:flex;flex-wrap:wrap;gap:8px}
-    .cta{background:var(--brand);color:#fff !important}
-    .hero,.card{background:var(--card);border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.08)}
-    .hero{padding:20px;margin-top:10px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-    .card{padding:14px} footer{margin:20px 0 40px;color:#564f47;font-size:14px}
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <nav>
-      <strong>Anaira Glamping & Resort</strong>
-      <div class="menu">
-        <a href="index.html">Home</a><a href="rooms.html">Rooms</a><a href="gallery.html">Gallery</a><a href="packages.html">Packages</a><a href="contact.html">Contact</a>
-        <a class="cta" href="https://wa.me/6281399693499?text=Saya%20ingin%20booking%20Anaira%20Glamping">Book via WhatsApp</a>
-      </div>
-    </nav>
-    <section class="hero"><h1>Rooms & Units</h1><p>Pilih unit sesuai kapasitas rombongan Anda.</p></section><section class="grid"><article class="card"><h3>Balcony</h3><p>6 rooms, max 4 guests, AC, Android TV, amenities.</p><p>Weekday Rp500.000 • Weekend Rp700.000</p></article><article class="card"><h3>Porch</h3><p>6 rooms, max 4 guests, Fan/Kipas, Android TV, amenities.</p><p>Weekday Rp350.000 • Weekend Rp420.000</p></article><article class="card"><h3>Villa</h3><p>1 house, max 20 guests, AC, Android TV, kitchen, karaoke set.</p><p>Weekday Rp2.100.000 • Weekend Rp3.000.000</p></article></section>
-    <footer>
-      <p><strong>Anaira Glamping & Resort</strong> • Jl. Raya Curug Nangka</p>
-      <p>Check-in 13:00 • Check-out 12:00 • Early check-in/late checkout menyesuaikan ketersediaan • Kebijakan cancel: DP hangus, bisa reschedule.</p>
-      <p>Fasilitas umum: kolam, cafe, api unggun, parkir. Booking: 081399693499 / 6281399693499.</p>
-    </footer>
+<!doctype html><html lang='id'><head>
+<title>Anaira Glamping & Resort | Rooms & Rates</title>
+<meta name='description' content='Pilihan room Anaira Glamping: Balcony, Porch, dan Villa lengkap dengan kapasitas, fasilitas, serta harga weekday dan weekend.'>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="assets/brand/favicon.ico">
+<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+<meta property="og:image" content="assets/brand/og-anaira-glamping.jpg">
+<style>
+:root{--bg:#f6f1e7;--ink:#1f2421;--brand:#1b7f5a;--muted:#5f635f;--card:#fff;--dark:#1d2a25}
+*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+.wrap{max-width:1120px;margin:auto;padding:16px}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.logo{height:46px;width:auto}.menu{display:flex;gap:10px;flex-wrap:wrap}.menu a{text-decoration:none;color:var(--ink);padding:8px 10px;border-radius:8px}
+.btn{display:inline-block;background:var(--brand);color:#fff;text-decoration:none;padding:10px 14px;border-radius:10px;font-weight:600}
+.btn.alt{background:#fff;color:var(--brand);border:1px solid var(--brand)}
+.hero{position:relative;border-radius:16px;overflow:hidden}.hero img{width:100%;height:62vh;object-fit:cover;display:block}.overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.55),rgba(0,0,0,.15));display:flex;align-items:flex-end}.copy{padding:24px;color:#fff;max-width:720px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}.card{background:var(--card);border-radius:14px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.08)}.card img{width:100%;height:180px;object-fit:cover;display:block}.card .p{padding:14px}
+section{margin:22px 0}h1,h2,h3{margin:.2em 0}.muted{color:var(--muted)}
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}.gallery a{display:block;background:#fff;border-radius:12px;overflow:hidden}.gallery img{width:100%;height:170px;object-fit:cover;display:block}
+.video{background:#fff;padding:16px;border-radius:14px;box-shadow:0 8px 22px rgba(0,0,0,.08)}video{width:100%;border-radius:10px}
+footer{margin-top:24px;background:var(--dark);color:#f2f4f3;border-radius:16px;padding:20px}.footer-top{display:flex;align-items:center;gap:12px}.logo-white{height:40px}
+@media (max-width:700px){.hero img{height:54vh}.copy{padding:16px}.logo{height:40px}}
+</style>
+</head><body>
+<header class='wrap'>
+  <nav class='nav'>
+    <a href='index.html'><img class='logo' src='assets/brand/logo-anaira-black-transparent.png' alt='Anaira Glamping & Resort'></a>
+    <div class='menu'>
+      <a href='index.html'>Home</a>
+      <a href='rooms.html'>Rooms</a>
+      <a href='gallery.html'>Gallery</a>
+      <a href='packages.html'>Packages</a>
+      <a href='contact.html'>Contact</a>
+      <a class='btn' href='https://wa.me/6281399693499?text=Halo%20Anaira%20Glamping%2C%20saya%20ingin%20booking'>Book via WhatsApp</a>
+    </div>
+  </nav>
+</header>
+<main class='wrap'>
+  <section><h1>Rooms & Rates</h1><p class='muted'>Pilih unit sesuai kebutuhan perjalanan Anda.</p></section>
+  <section class='grid'>
+    <article class='card'><img src='assets/images/rooms/balcony/balcony-exterior-garden.webp' alt='Balcony'><div class='p'><h3>Balcony</h3><p>Max 4 orang • 6 kamar</p><p>AC, Android TV, amenities</p><p>Weekday Rp500.000 • Weekend Rp700.000</p><p><a class='btn' href='https://wa.me/6281399693499?text=Halo%20Anaira%20Glamping%2C%20saya%20ingin%20booking'>Book via WhatsApp</a></p></div></article>
+    <article class='card'><img src='assets/images/rooms/porch/porch-cabin-garden.webp' alt='Porch'><div class='p'><h3>Porch</h3><p>Max 4 orang • 6 kamar</p><p>Kipas, Android TV, amenities</p><p>Weekday Rp350.000 • Weekend Rp420.000</p><p><a class='btn' href='https://wa.me/6281399693499?text=Halo%20Anaira%20Glamping%2C%20saya%20ingin%20booking'>Book via WhatsApp</a></p></div></article>
+    <article class='card'><img src='assets/images/rooms/villa/villa-view-pool-area.webp' alt='Villa'><div class='p'><h3>Villa</h3><p>Max 20 orang • 1 rumah</p><p>AC, Android TV, kitchen, karaoke set</p><p>Weekday Rp2.100.000 • Weekend Rp3.000.000</p><p><a class='btn' href='https://wa.me/6281399693499?text=Halo%20Anaira%20Glamping%2C%20saya%20ingin%20booking'>Book via WhatsApp</a></p></div></article>
+  </section>
+</main>
+<footer class='wrap'>
+  <div class='footer-top'>
+    <img class='logo-white' src='assets/brand/logo-anaira-white-transparent.png' alt='Anaira logo white'>
+    <strong>Anaira Glamping & Resort</strong>
   </div>
-</body>
-</html>
+  <p>Jl. Raya Curug Nangka</p>
+  <p>Check-in 13:00 • Check-out 12:00 • Early check-in dan late checkout menyesuaikan ketersediaan • Cancellation: DP hangus, bisa reschedule.</p>
+  <p>Fasilitas: kolam, cafe, api unggun, parkir, outdoor seating, mountain/nature view.</p>
+</footer>
+</body></html>

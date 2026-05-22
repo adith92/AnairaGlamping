@@ -4,11 +4,8 @@
   "private": true,
   "description": "Static Hotelier frontend for Anaira Glamping & Resort",
   "scripts": {
-    "dev": "serve . -l 4173",
-    "start": "serve . -l 4173",
-    "preview": "serve . -l 4173"
-  },
-  "devDependencies": {
-    "serve": "^14.2.4"
+    "dev": "node scripts/static-server.js",
+    "start": "node scripts/static-server.js",
+    "preview": "node scripts/static-server.js"
   }
 }

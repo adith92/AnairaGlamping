@@ -1,0 +1,212 @@
+{
+  "brand": "Anaira Glamping & Resort",
+  "assets": [
+    {
+      "file": "frontend/hotelier/assets/images/hero/hero-pool-mountain-desktop.webp",
+      "source": "Anaira Glamping Foto  (2).jpeg",
+      "usage": "Homepage hero desktop: pool with mountain/cloud view",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/hero/hero-pool-mountain-mobile.webp",
+      "source": "Anaira Glamping Foto  (2).jpeg",
+      "usage": "Homepage hero mobile",
+      "size": [
+        1080,
+        1350
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/hero/hero-balcony-garden-desktop.webp",
+      "source": "Anaira Glamping Foto  (5).jpeg",
+      "usage": "Alternative hero: balcony building and garden",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/hero/hero-cabin-overview-desktop.webp",
+      "source": "Anaira Glamping Foto  (3).jpeg",
+      "usage": "Overview hero: cabin line and tropical garden",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/rooms/balcony/balcony-exterior-garden.webp",
+      "source": "Anaira Glamping Foto  (5).jpeg",
+      "usage": "Balcony unit card/room detail",
+      "size": [
+        1200,
+        900
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/rooms/balcony/balcony-corridor.webp",
+      "source": "Anaira Glamping Foto  (4).jpeg",
+      "usage": "Balcony corridor/detail",
+      "size": [
+        1200,
+        900
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/rooms/porch/porch-cabin-garden.webp",
+      "source": "Anaira Glamping Foto  (1).jpeg",
+      "usage": "Porch unit card/room detail",
+      "size": [
+        1200,
+        900
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/rooms/porch/porch-overview.webp",
+      "source": "Anaira Glamping Foto  (3).jpeg",
+      "usage": "Porch overview/gallery",
+      "size": [
+        1200,
+        900
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/villa/villa-view-pool-area.webp",
+      "source": "Anaira Glamping Foto  (2).jpeg",
+      "usage": "Villa/area placeholder until villa-specific photos uploaded",
+      "size": [
+        1200,
+        900
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/facilities/pool-mountain-view.webp",
+      "source": "Anaira Glamping Foto  (2).jpeg",
+      "usage": "Facilities: swimming pool",
+      "size": [
+        1200,
+        900
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/facilities/garden-cabin-overview.webp",
+      "source": "Anaira Glamping Foto  (3).jpeg",
+      "usage": "Facilities: garden and landscape",
+      "size": [
+        1200,
+        900
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/facilities/outdoor-table-umbrella.webp",
+      "source": "Anaira Glamping Foto  (1).jpeg",
+      "usage": "Facilities: outdoor seating",
+      "size": [
+        1200,
+        900
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/gallery/gallery-01-pool.webp",
+      "source": "Anaira Glamping Foto  (2).jpeg",
+      "usage": "Gallery image 1: pool",
+      "size": [
+        960,
+        1280
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/gallery/thumb-01-pool.webp",
+      "source": "Anaira Glamping Foto  (2).jpeg",
+      "usage": "Gallery thumbnail 1: pool",
+      "size": [
+        600,
+        450
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/gallery/gallery-02-overview.webp",
+      "source": "Anaira Glamping Foto  (3).jpeg",
+      "usage": "Gallery image 2: overview",
+      "size": [
+        960,
+        1280
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/gallery/thumb-02-overview.webp",
+      "source": "Anaira Glamping Foto  (3).jpeg",
+      "usage": "Gallery thumbnail 2: overview",
+      "size": [
+        600,
+        450
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/gallery/gallery-03-corridor.webp",
+      "source": "Anaira Glamping Foto  (4).jpeg",
+      "usage": "Gallery image 3: corridor",
+      "size": [
+        960,
+        1280
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/gallery/thumb-03-corridor.webp",
+      "source": "Anaira Glamping Foto  (4).jpeg",
+      "usage": "Gallery thumbnail 3: corridor",
+      "size": [
+        600,
+        450
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/gallery/gallery-04-balcony.webp",
+      "source": "Anaira Glamping Foto  (5).jpeg",
+      "usage": "Gallery image 4: balcony",
+      "size": [
+        960,
+        1280
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/gallery/thumb-04-balcony.webp",
+      "source": "Anaira Glamping Foto  (5).jpeg",
+      "usage": "Gallery thumbnail 4: balcony",
+      "size": [
+        600,
+        450
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/gallery/gallery-05-porch.webp",
+      "source": "Anaira Glamping Foto  (1).jpeg",
+      "usage": "Gallery image 5: porch",
+      "size": [
+        960,
+        1280
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/images/gallery/thumb-05-porch.webp",
+      "source": "Anaira Glamping Foto  (1).jpeg",
+      "usage": "Gallery thumbnail 5: porch",
+      "size": [
+        600,
+        450
+      ]
+    },
+    {
+      "file": "frontend/hotelier/assets/brand/og-anaira-glamping.jpg",
+      "source": "Anaira Glamping Foto  (2).jpeg",
+      "usage": "OpenGraph/social share image",
+      "size": [
+        1200,
+        630
+      ]
+    }
+  ]
+}
