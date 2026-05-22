@@ -39,3 +39,4 @@ pm install.
 
 ## Pending
 - Google Maps exact pin/share URL masih menunggu konfirmasi owner.
+

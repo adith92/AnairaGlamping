@@ -40,5 +40,6 @@ npx.cmd vercel --yes
 `
 
 ## Pending
-- Exact Google Maps pin/share URL belum final; sementara pakai Google Maps search link + TODO comment di contact page.
+- Google Maps final link: https://maps.app.goo.gl/YVSmNtEsiK9tQNRS6.
 - PHP lint backend tetap pending jika runtime PHP belum tersedia di mesin.
+

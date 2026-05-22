@@ -26,6 +26,9 @@ const contentTypes = {
   '.ico': 'image/x-icon',
   '.svg': 'image/svg+xml',
   '.json': 'application/json; charset=utf-8',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2',
+  '.ttf': 'font/ttf',
 };
 
 function safeResolve(urlPath) {
@@ -73,3 +76,4 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => {
   console.log('Anaira local preview running at http://localhost:4173');
 });
+

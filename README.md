@@ -113,4 +113,5 @@ npx.cmd vercel --yes
 `
 
 ## Pending
-- Google Maps exact pin/share URL masih menunggu konfirmasi final owner.
+- Google Maps final link: https://maps.app.goo.gl/YVSmNtEsiK9tQNRS6.
+
