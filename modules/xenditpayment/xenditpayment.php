@@ -6,7 +6,7 @@ class XenditPayment extends PaymentModule
     {
         $this->name = 'xenditpayment';
         $this->tab = 'payments_gateways';
-        $this->version = '1.0.0';
+        $this->version = '1.1.0';
         $this->author = 'Anaira';
         $this->controllers = array('payment', 'validation');
         $this->bootstrap = true;
@@ -19,9 +19,10 @@ class XenditPayment extends PaymentModule
     public function getContent()
     {
         if (Tools::isSubmit('submitXenditPayment')) {
+            Configuration::updateValue('XENDIT_ENABLED', (int)Tools::getValue('XENDIT_ENABLED'));
+            Configuration::updateValue('XENDIT_ENV', Tools::getValue('XENDIT_ENV'));
             Configuration::updateValue('XENDIT_API_KEY', Tools::getValue('XENDIT_API_KEY'));
             Configuration::updateValue('XENDIT_CALLBACK_TOKEN', Tools::getValue('XENDIT_CALLBACK_TOKEN'));
-            Configuration::updateValue('XENDIT_ENV', Tools::getValue('XENDIT_ENV'));
             return $this->displayConfirmation($this->l('Settings updated')) . $this->renderForm();
         }
         return $this->renderForm();
@@ -30,22 +31,22 @@ class XenditPayment extends PaymentModule
     {
         $helper = new HelperForm();
         $helper->submit_action = 'submitXenditPayment';
-        $helper->fields_value = array('XENDIT_API_KEY'=>Configuration::get('XENDIT_API_KEY'),'XENDIT_CALLBACK_TOKEN'=>Configuration::get('XENDIT_CALLBACK_TOKEN'),'XENDIT_ENV'=>Configuration::get('XENDIT_ENV','sandbox'));
+        $helper->fields_value = array('XENDIT_ENABLED'=>(int)Configuration::get('XENDIT_ENABLED',1),'XENDIT_ENV'=>Configuration::get('XENDIT_ENV','sandbox'),'XENDIT_API_KEY'=>Configuration::get('XENDIT_API_KEY'),'XENDIT_CALLBACK_TOKEN'=>Configuration::get('XENDIT_CALLBACK_TOKEN'));
         $helper->fields_form = array(array('form'=>array('legend'=>array('title'=>$this->l('Xendit Config')),'input'=>array(
-            array('type'=>'text','label'=>$this->l('API Key'),'name'=>'XENDIT_API_KEY','required'=>true),
-            array('type'=>'text','label'=>$this->l('Callback Token'),'name'=>'XENDIT_CALLBACK_TOKEN','required'=>true),
+            array('type'=>'switch','label'=>$this->l('Enable Xendit'),'name'=>'XENDIT_ENABLED','is_bool'=>true,'values'=>array(array('id'=>'on','value'=>1,'label'=>$this->l('Enabled')),array('id'=>'off','value'=>0,'label'=>$this->l('Disabled')))),
             array('type'=>'select','label'=>$this->l('Environment'),'name'=>'XENDIT_ENV','options'=>array('query'=>array(array('id'=>'sandbox','name'=>'Sandbox'),array('id'=>'production','name'=>'Production')),'id'=>'id','name'=>'name')),
+            array('type'=>'password','label'=>$this->l('API Key'),'name'=>'XENDIT_API_KEY','required'=>true),
+            array('type'=>'password','label'=>$this->l('Callback Token'),'name'=>'XENDIT_CALLBACK_TOKEN','required'=>true),
         ),'submit'=>array('title'=>$this->l('Save')))));
         return $helper->generateForm($helper->fields_form);
     }
     public function hookPaymentOptions($params)
     {
-        if (!$this->active) { return; }
+        if (!$this->active || !(int)Configuration::get('XENDIT_ENABLED',1)) { return; }
         $option = new PrestaShop\PrestaShop\Core\Payment\PaymentOption();
         $option->setCallToActionText($this->l('Bayar dengan Xendit'));
         $option->setAction($this->context->link->getModuleLink($this->name, 'payment', array(), true));
         $option->setAdditionalInformation($this->fetch('module:xenditpayment/views/templates/hook/payment_options.tpl'));
         return array($option);
     }
-    public function hookPaymentReturn($params) { return $this->display(__FILE__, 'views/templates/hook/payment_options.tpl'); }
 }

@@ -1,46 +1,73 @@
-# Anaira Glamping & Resort Booking System
+# Anaira Glamping & Resort
 
-Sistem reservasi glamping berbasis **QloApps** dengan integrasi template Hotelier.
+Fork dari QloApps untuk sistem booking **Anaira Glamping & Resort** dengan front-end Hotelier responsif dan arsitektur payment Indonesia.
 
-## Fitur
-- Manajemen kamar glamping (Balcony, Porch, Villa)
-- Integrasi pembayaran **Midtrans (Snap/QRIS)**
-- Integrasi pembayaran **Xendit (Invoice)**
-- Paket tambahan: breakfast, BBQ, honeymoon, family
-- Tombol booking WhatsApp
-- Front-end responsif (static Hotelier pages)
+## Fitur Utama
+- Booking kamar/unit glamping berbasis QloApps.
+- Front-end statis Hotelier siap deploy ke Vercel (`frontend/hotelier`).
+- Pembayaran:
+  - WhatsApp reservation
+  - Manual QRIS (display instruction)
+  - Midtrans (Snap/QRIS)
+  - Xendit (Invoice)
+  - DOKU (adapter plan/stub)
+  - Indopay/custom acquirer (stub, menunggu docs resmi)
+  - UnionPay-capable provider flow (via acquirer/provider, bukan API palsu langsung)
+- Paket tambahan: breakfast, BBQ, honeymoon, family.
 
-## Requirement
-- PHP 8.1
-- MySQL 8.0
-- Composer 2.x
-- Node.js 18+ (opsional untuk front-end toolchain)
+## Data Unit
+- Balcony: max 4 pax, 6 rooms, AC, Android TV, amenities, weekday Rp500.000, weekend Rp700.000.
+- Porch: max 4 pax, 6 rooms, fan/kipas, Android TV, amenities, weekday Rp350.000, weekend Rp420.000.
+- Villa: max 20 pax, 1 house, AC, Android TV, kitchen, karaoke set, weekday Rp2.100.000, weekend Rp3.000.000.
 
-## Instalasi Lokal
-1. Clone repo lalu checkout branch develop/feature.
-2. Jalankan dependency backend: `composer install`.
-3. Buat database MySQL dan konfigurasi `app/config/parameters.php`.
-4. Import schema QloApps dan jalankan seed:
-   - `mysql -u root -p dbname < data/seed_anaira.sql`
-5. Aktifkan modul `midtranspayment` dan `xenditpayment` di admin QloApps.
-6. Isi konfigurasi API key di halaman modul.
+## Lokasi & Kebijakan
+- Lokasi: Jl. Raya Curug Nangka
+- WhatsApp: 081399693499 / 6281399693499
+- Check-in 13:00, check-out 12:00
+- Early check-in/late checkout menyesuaikan ketersediaan
+- Cancellation: DP hangus, bisa reschedule
 
-## Konfigurasi Payment
-- Midtrans: ServerKey, ClientKey, Environment
-- Xendit: API Key, Callback Token, Environment
-- Callback URL set ke endpoint module front controller validation.
+## Struktur Payment
+- `modules/midtranspayment`: implementasi Midtrans.
+- `modules/xenditpayment`: implementasi Xendit.
+- `modules/anairamultipayment`: modul arsitektur bersama (adapter pattern, unified config baseline, webhook/log helper, provider stubs DOKU/Indopay/UnionPay, manual QRIS).
+- `ps_anaira_payment_log`: log transaksi + idempotency event hash.
 
-## Deploy
-### Front-end statis (Vercel)
-1. Masuk ke folder `frontend/hotelier`
-2. Jalankan `vercel deploy --prod`
-3. Map domain ke `anairaglamping.vercel.app` atau custom domain.
+## Setup Lokal
+1. Clone repo, checkout branch.
+2. `composer install`
+3. Set database di `app/config/parameters.php`
+4. Import schema QloApps + `data/seed_anaira.sql`
+5. Aktifkan modul payment di admin panel.
+6. Isi kredensial provider di konfigurasi modul (sandbox/production).
 
-### Backend PHP (Shared Hosting)
-1. Upload source backend (exclude `frontend` bila ingin pisah deployment)
-2. Buat database dan import `data/seed_anaira.sql`
-3. Update `app/config/parameters.php`
-4. Pastikan cron/SSL/domain aktif.
+## Shared Hosting (Backend)
+1. Upload source backend.
+2. Buat DB + import seed.
+3. Update `app/config/parameters.php`.
+4. Set HTTPS dan callback URL provider.
 
-## Catatan
-Setelah domain `AnairaGlamping.com` aktif, update URL callback payment gateway dan URL booking di front-end.
+## Vercel Demo Frontend
+1. `cd frontend/hotelier`
+2. `vercel`
+3. `vercel --prod`
+
+Jika CLI belum ada:
+- `npm i -g vercel`
+
+## Security Notes
+- Tidak ada hardcoded secret.
+- Semua transaksi dibuat server-side.
+- Webhook diverifikasi signature/token.
+- Idempotency dengan event hash per referensi.
+- Validasi amount sebelum update status paid.
+- Log hanya data non-sensitif.
+
+## Test Plan
+- Cek signature invalid => 401.
+- Callback duplikat => idempotent.
+- Amount mismatch => ditolak.
+- Status provider dipetakan ke status normalisasi.
+
+## License
+Lisensi QloApps asli tetap dipertahankan (OSL/AFL sesuai upstream).

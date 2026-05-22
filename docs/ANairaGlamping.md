@@ -1,40 +1,61 @@
-# Anaira Glamping & Resort Architecture
+# Anaira Glamping Technical Architecture
 
-## Ringkasan Arsitektur
-- Backend: QloApps (PHP/PrestaShop core)
-- Front-end landing: static pages di `frontend/hotelier`
-- Payment module custom:
-  - `modules/midtranspayment`
-  - `modules/xenditpayment`
-- Data seed: `data/seed_anaira.sql`
+## 1) Arsitektur Sistem
+- Backend: QloApps (fork PrestaShop)
+- Frontend: Static Hotelier di `frontend/hotelier`
+- Integrasi Payment:
+  - `midtranspayment`
+  - `xenditpayment`
+  - `anairamultipayment` (shared architecture)
 
-## Alur Booking dan Payment
-1. User pilih kamar (Balcony/Porch/Villa) dan paket tambahan.
-2. Order terbentuk di QloApps.
-3. User memilih metode pembayaran:
-   - Midtrans: Snap token dibuat, user membayar via modal/QRIS.
-   - Xendit: Invoice dibuat, user diarahkan ke halaman invoice.
-4. Callback gateway masuk ke controller `validation.php` masing-masing modul.
-5. Signature/token diverifikasi sebelum update status order menjadi paid.
+## 2) Frontend Static Hotelier
+- Halaman: `index`, `rooms`, `gallery`, `packages`, `contact`
+- CTA WhatsApp: `https://wa.me/6281399693499?text=...`
+- Vercel ready via `frontend/hotelier/vercel.json`
 
-## Menambah Unit Baru
-1. Tambah data produk + room type di database.
-2. Tambah harga weekday/weekend di `ps_anaira_room_pricing`.
-3. Jika perlu, update halaman statis front-end.
+## 3) Payment Architecture
+- Provider adapters via `modules/anairamultipayment/classes/adapters`
+- Provider siap/live: Midtrans, Xendit
+- Provider planned/stub: DOKU, Indopay/custom acquirer
+- Manual QRIS flow tersedia
+- UnionPay sebagai capability via provider/acquirer yang mendukung
 
-## Menambah Paket Baru
-1. Insert ke tabel `ps_package`.
-2. Pastikan modul booking memuat paket ke perhitungan total.
+## 4) Security Model
+- Secret disimpan di Configuration admin, bukan hardcoded.
+- Webhook verification:
+  - Midtrans: signature SHA512
+  - Xendit: `x-callback-token`
+- Idempotency:
+  - `last_event_hash` pada `ps_anaira_payment_log`
+- Amount validation sebelum status update
+- Safe customer message + detailed internal log
 
-## Maintenance
-- Update modul:
-  1. Pull source terbaru.
-  2. Jalankan regression test callback payment.
-  3. Deploy bertahap (staging -> production).
-- SSL:
-  1. Pantau masa aktif sertifikat.
-  2. Perpanjang sebelum jatuh tempo.
-  3. Validasi ulang callback URL HTTPS di Midtrans/Xendit.
-- Monitoring:
-  1. Cek log callback gagal.
-  2. Rekonsiliasi transaksi paid harian.
+## 5) Admin Config Fields
+- enable_midtrans, midtrans_environment, midtrans_server_key, midtrans_client_key
+- enable_xendit, xendit_environment, xendit_secret_key, xendit_callback_token
+- enable_doku, doku_environment, doku_client_id, doku_secret_key, doku_shared_key
+- enable_indopay, indopay_environment, indopay_merchant_id, indopay_api_key
+- enable_manual_qris, qris_image_path, qris_instruction_text
+- enable_unionpay, unionpay_provider, unionpay_notes
+- whatsapp_number
+
+## 6) Deploy
+### Frontend Demo (Vercel)
+- `cd frontend/hotelier`
+- `vercel`
+- `vercel --prod`
+
+### Backend Production (Shared Hosting)
+- Upload backend source
+- Import DB + `data/seed_anaira.sql`
+- Configure `app/config/parameters.php`
+- Set callback URL provider ke domain production HTTPS
+
+## 7) Manual QA Checklist
+- Payment option tampil sesuai enable/disable config
+- Midtrans/Xendit create transaction success/fail handling
+- Invalid webhook signature/token ditolak
+- Duplicate webhook idempotent
+- Amount mismatch ditolak
+- WhatsApp fallback selalu tersedia
+- Static pages mobile-friendly dan CTA valid
