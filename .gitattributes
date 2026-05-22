@@ -1,0 +1,59 @@
+# Repository classification hints for GitHub / ChatGPT Connector indexing
+# Keep real source code searchable, while marking heavy/generated assets correctly.
+
+# Text files
+*.php text
+*.tpl text
+*.js text
+*.css text
+*.scss text
+*.sass text
+*.html text
+*.md text
+*.yml text
+*.yaml text
+*.json text
+*.xml text
+*.sql text
+
+# Binary / media files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.svg text
+*.pdf binary
+*.zip binary
+*.gz binary
+*.tar binary
+*.rar binary
+*.mp4 binary
+*.mov binary
+*.mp3 binary
+*.wav binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+
+# Generated / cache / user-upload directories that should not dominate AI/code indexing
+cache/** linguist-generated=true
+log/** linguist-generated=true
+logs/** linguist-generated=true
+download/** linguist-generated=true
+upload/** linguist-generated=true
+img/** linguist-generated=true
+admin/backups/** linguist-generated=true
+admin/import/** linguist-generated=true
+translations/** linguist-generated=true
+mails/** linguist-generated=true
+vendor/** linguist-vendored=true
+node_modules/** linguist-vendored=true
+bower_components/** linguist-vendored=true
+
+# Keep key documentation visible
+README.md linguist-documentation=false
+AGENTS.md linguist-documentation=false
+CHATGPT_CONNECTOR_INDEX.md linguist-documentation=false
