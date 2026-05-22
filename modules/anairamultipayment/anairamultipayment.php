@@ -1,76 +1,100 @@
 <?php
-if (!defined('_PS_VERSION_')) { exit; }
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class AnairaMultiPayment extends PaymentModule
 {
+    private $configKeys = array(
+        'ANAIRA_ENABLE_MIDTRANS',
+        'ANAIRA_MIDTRANS_ENVIRONMENT',
+        'ANAIRA_MIDTRANS_SERVER_KEY',
+        'ANAIRA_MIDTRANS_CLIENT_KEY',
+        'ANAIRA_ENABLE_XENDIT',
+        'ANAIRA_XENDIT_ENVIRONMENT',
+        'ANAIRA_XENDIT_SECRET_KEY',
+        'ANAIRA_XENDIT_CALLBACK_TOKEN',
+        'ANAIRA_ENABLE_DOKU',
+        'ANAIRA_DOKU_ENVIRONMENT',
+        'ANAIRA_DOKU_CLIENT_ID',
+        'ANAIRA_DOKU_SECRET_KEY',
+        'ANAIRA_DOKU_SHARED_KEY',
+        'ANAIRA_ENABLE_INDOPAY',
+        'ANAIRA_INDOPAY_ENVIRONMENT',
+        'ANAIRA_INDOPAY_MERCHANT_ID',
+        'ANAIRA_INDOPAY_API_KEY',
+        'ANAIRA_ENABLE_MANUAL_QRIS',
+        'ANAIRA_QRIS_IMAGE_PATH',
+        'ANAIRA_QRIS_INSTRUCTION_TEXT',
+        'ANAIRA_ENABLE_UNIONPAY',
+        'ANAIRA_UNIONPAY_PROVIDER',
+        'ANAIRA_UNIONPAY_NOTES',
+        'ANAIRA_WHATSAPP_NUMBER',
+    );
+
     public function __construct()
     {
-        ->name = 'anairamultipayment';
-        ->tab = 'payments_gateways';
-        ->version = '1.0.1';
-        ->author = 'Anaira';
-        ->controllers = array('create', 'webhook', 'return', 'cancel');
-        ->bootstrap = true;
+        $this->name = 'anairamultipayment';
+        $this->tab = 'payments_gateways';
+        $this->version = '1.0.2';
+        $this->author = 'Anaira';
+        $this->controllers = array('create', 'webhook', 'return', 'cancel');
+        $this->bootstrap = true;
 
         parent::__construct();
 
-        ->displayName = ->l('Anaira Multi Payment');
-        ->description = ->l('Unified payment architecture with provider adapters and secure webhook handling.');
+        $this->displayName = $this->l('Anaira Multi Payment');
+        $this->description = $this->l('Unified payment architecture with provider adapters and secure webhook handling.');
+        $this->ps_versions_compliancy = array('min' => '1.7.0.0', 'max' => _PS_VERSION_);
     }
 
     public function install()
     {
         return parent::install()
-            && ->registerHook('paymentOptions')
-            && ->registerHook('paymentReturn')
-            && ->installSchema()
-            && ->installDefaults();
+            && $this->registerHook('paymentOptions')
+            && $this->registerHook('paymentReturn')
+            && $this->installSchema()
+            && $this->installDefaults();
     }
 
     public function uninstall()
     {
-         = array(
-            'ANAIRA_ENABLE_MIDTRANS', 'ANAIRA_MIDTRANS_ENVIRONMENT', 'ANAIRA_MIDTRANS_SERVER_KEY', 'ANAIRA_MIDTRANS_CLIENT_KEY',
-            'ANAIRA_ENABLE_XENDIT', 'ANAIRA_XENDIT_ENVIRONMENT', 'ANAIRA_XENDIT_SECRET_KEY', 'ANAIRA_XENDIT_CALLBACK_TOKEN',
-            'ANAIRA_ENABLE_DOKU', 'ANAIRA_DOKU_ENVIRONMENT', 'ANAIRA_DOKU_CLIENT_ID', 'ANAIRA_DOKU_SECRET_KEY', 'ANAIRA_DOKU_SHARED_KEY',
-            'ANAIRA_ENABLE_INDOPAY', 'ANAIRA_INDOPAY_ENVIRONMENT', 'ANAIRA_INDOPAY_MERCHANT_ID', 'ANAIRA_INDOPAY_API_KEY',
-            'ANAIRA_ENABLE_MANUAL_QRIS', 'ANAIRA_QRIS_IMAGE_PATH', 'ANAIRA_QRIS_INSTRUCTION_TEXT',
-            'ANAIRA_ENABLE_UNIONPAY', 'ANAIRA_UNIONPAY_PROVIDER', 'ANAIRA_UNIONPAY_NOTES', 'ANAIRA_WHATSAPP_NUMBER'
-        );
-        foreach ( as ) {
-            Configuration::deleteByName();
+        foreach ($this->configKeys as $key) {
+            Configuration::deleteByName($key);
         }
+
         return parent::uninstall();
     }
 
     protected function installSchema()
     {
-         = 'CREATE TABLE IF NOT EXISTS '._DB_PREFIX_.'anaira_payment_log (
-            id_anaira_payment_log INT UNSIGNED NOT NULL AUTO_INCREMENT,
-            id_order INT UNSIGNED NULL,
-            id_cart INT UNSIGNED NULL,
-            gateway VARCHAR(32) NOT NULL,
-            provider_transaction_id VARCHAR(128) NULL,
-            merchant_reference VARCHAR(128) NOT NULL,
-            mount DECIMAL(20,2) NOT NULL,
-            currency VARCHAR(8) NOT NULL DEFAULT "IDR",
-            status VARCHAR(32) NOT NULL DEFAULT "pending",
-            equest_hash VARCHAR(128) NULL,
-            last_event_hash VARCHAR(128) NULL,
-            safe_message VARCHAR(255) NULL,
-            created_at DATETIME NOT NULL,
-            updated_at DATETIME NOT NULL,
-            PRIMARY KEY (id_anaira_payment_log),
-            UNIQUE KEY uniq_merchant_reference (merchant_reference),
-            KEY idx_gateway_transaction (gateway,provider_transaction_id)
+        $sql = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'anaira_payment_log` (
+            `id_anaira_payment_log` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `id_order` INT UNSIGNED NULL,
+            `id_cart` INT UNSIGNED NULL,
+            `gateway` VARCHAR(32) NOT NULL,
+            `provider_transaction_id` VARCHAR(128) NULL,
+            `merchant_reference` VARCHAR(128) NOT NULL,
+            `amount` DECIMAL(20,2) NOT NULL,
+            `currency` VARCHAR(8) NOT NULL DEFAULT "IDR",
+            `status` VARCHAR(32) NOT NULL DEFAULT "pending",
+            `request_hash` VARCHAR(128) NULL,
+            `last_event_hash` VARCHAR(128) NULL,
+            `safe_message` VARCHAR(255) NULL,
+            `created_at` DATETIME NOT NULL,
+            `updated_at` DATETIME NOT NULL,
+            PRIMARY KEY (`id_anaira_payment_log`),
+            UNIQUE KEY `uniq_merchant_reference` (`merchant_reference`),
+            KEY `idx_gateway_transaction` (`gateway`, `provider_transaction_id`),
+            KEY `idx_status` (`status`)
         ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
-        return Db::getInstance()->execute();
+        return Db::getInstance()->execute($sql);
     }
 
     protected function installDefaults()
     {
-         = array(
+        $defaults = array(
             'ANAIRA_ENABLE_MIDTRANS' => 1,
             'ANAIRA_MIDTRANS_ENVIRONMENT' => 'sandbox',
             'ANAIRA_MIDTRANS_SERVER_KEY' => '',
@@ -97,8 +121,8 @@ class AnairaMultiPayment extends PaymentModule
             'ANAIRA_WHATSAPP_NUMBER' => '081399693499',
         );
 
-        foreach ( as  => ) {
-            Configuration::updateValue(, );
+        foreach ($defaults as $key => $value) {
+            Configuration::updateValue($key, $value);
         }
 
         return true;
@@ -107,91 +131,161 @@ class AnairaMultiPayment extends PaymentModule
     public function getContent()
     {
         if (Tools::isSubmit('submitAnairaMultiPayment')) {
-             = array(
-                'ANAIRA_ENABLE_MIDTRANS', 'ANAIRA_MIDTRANS_ENVIRONMENT', 'ANAIRA_MIDTRANS_SERVER_KEY', 'ANAIRA_MIDTRANS_CLIENT_KEY',
-                'ANAIRA_ENABLE_XENDIT', 'ANAIRA_XENDIT_ENVIRONMENT', 'ANAIRA_XENDIT_SECRET_KEY', 'ANAIRA_XENDIT_CALLBACK_TOKEN',
-                'ANAIRA_ENABLE_DOKU', 'ANAIRA_DOKU_ENVIRONMENT', 'ANAIRA_DOKU_CLIENT_ID', 'ANAIRA_DOKU_SECRET_KEY', 'ANAIRA_DOKU_SHARED_KEY',
-                'ANAIRA_ENABLE_INDOPAY', 'ANAIRA_INDOPAY_ENVIRONMENT', 'ANAIRA_INDOPAY_MERCHANT_ID', 'ANAIRA_INDOPAY_API_KEY',
-                'ANAIRA_ENABLE_MANUAL_QRIS', 'ANAIRA_QRIS_IMAGE_PATH', 'ANAIRA_QRIS_INSTRUCTION_TEXT',
-                'ANAIRA_ENABLE_UNIONPAY', 'ANAIRA_UNIONPAY_PROVIDER', 'ANAIRA_UNIONPAY_NOTES', 'ANAIRA_WHATSAPP_NUMBER'
-            );
-            foreach ( as ) {
-                Configuration::updateValue(, Tools::getValue());
+            foreach ($this->configKeys as $key) {
+                Configuration::updateValue($key, Tools::getValue($key));
             }
-            return ->displayConfirmation(->l('Settings saved.')) . ->renderForm();
+
+            return $this->displayConfirmation($this->l('Settings saved.')).$this->renderForm();
         }
 
-        return ->renderForm();
+        return $this->renderForm();
     }
 
     protected function renderForm()
     {
-         = new HelperForm();
-        ->submit_action = 'submitAnairaMultiPayment';
+        $helper = new HelperForm();
+        $helper->show_toolbar = false;
+        $helper->table = $this->table;
+        $helper->module = $this;
+        $helper->default_form_language = (int) Configuration::get('PS_LANG_DEFAULT');
+        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+        $helper->identifier = $this->identifier;
+        $helper->submit_action = 'submitAnairaMultiPayment';
+        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false)
+            .'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+        $helper->token = Tools::getAdminTokenLite('AdminModules');
 
-         = array();
-         = array('ANAIRA_ENABLE_MIDTRANS', 'ANAIRA_ENABLE_XENDIT', 'ANAIRA_ENABLE_DOKU', 'ANAIRA_ENABLE_INDOPAY', 'ANAIRA_ENABLE_MANUAL_QRIS', 'ANAIRA_ENABLE_UNIONPAY');
-        foreach ( as ) {
-            [] = array(
+        $inputs = array_merge(
+            $this->buildSwitchInputs(),
+            $this->buildEnvironmentInputs(),
+            $this->buildTextInputs()
+        );
+
+        $helper->fields_form = array(array(
+            'form' => array(
+                'legend' => array(
+                    'title' => $this->l('Anaira Multi Gateway Config'),
+                    'icon' => 'icon-credit-card',
+                ),
+                'input' => $inputs,
+                'submit' => array('title' => $this->l('Save')),
+            ),
+        ));
+
+        $values = array();
+        foreach ($this->configKeys as $key) {
+            $values[$key] = Configuration::get($key);
+        }
+        $helper->fields_value = $values;
+
+        return $helper->generateForm($helper->fields_form);
+    }
+
+    protected function buildSwitchInputs()
+    {
+        $keys = array(
+            'ANAIRA_ENABLE_MIDTRANS',
+            'ANAIRA_ENABLE_XENDIT',
+            'ANAIRA_ENABLE_DOKU',
+            'ANAIRA_ENABLE_INDOPAY',
+            'ANAIRA_ENABLE_MANUAL_QRIS',
+            'ANAIRA_ENABLE_UNIONPAY',
+        );
+
+        $inputs = array();
+        foreach ($keys as $key) {
+            $inputs[] = array(
                 'type' => 'switch',
-                'label' => ,
-                'name' => ,
+                'label' => $key,
+                'name' => $key,
                 'is_bool' => true,
                 'values' => array(
-                    array('id' => 'on', 'value' => 1, 'label' => ->l('Enabled')),
-                    array('id' => 'off', 'value' => 0, 'label' => ->l('Disabled')),
-                )
+                    array('id' => $key.'_on', 'value' => 1, 'label' => $this->l('Enabled')),
+                    array('id' => $key.'_off', 'value' => 0, 'label' => $this->l('Disabled')),
+                ),
             );
         }
 
-         = array('ANAIRA_MIDTRANS_ENVIRONMENT', 'ANAIRA_XENDIT_ENVIRONMENT', 'ANAIRA_DOKU_ENVIRONMENT', 'ANAIRA_INDOPAY_ENVIRONMENT');
-        foreach ( as ) {
-            [] = array(
+        return $inputs;
+    }
+
+    protected function buildEnvironmentInputs()
+    {
+        $keys = array(
+            'ANAIRA_MIDTRANS_ENVIRONMENT',
+            'ANAIRA_XENDIT_ENVIRONMENT',
+            'ANAIRA_DOKU_ENVIRONMENT',
+            'ANAIRA_INDOPAY_ENVIRONMENT',
+        );
+
+        $inputs = array();
+        foreach ($keys as $key) {
+            $inputs[] = array(
                 'type' => 'select',
-                'label' => ,
-                'name' => ,
+                'label' => $key,
+                'name' => $key,
                 'options' => array(
                     'query' => array(
                         array('id' => 'sandbox', 'name' => 'Sandbox'),
-                        array('id' => 'production', 'name' => 'Production')
+                        array('id' => 'production', 'name' => 'Production'),
                     ),
                     'id' => 'id',
-                    'name' => 'name'
-                )
+                    'name' => 'name',
+                ),
             );
         }
 
-         = array('ANAIRA_MIDTRANS_SERVER_KEY', 'ANAIRA_MIDTRANS_CLIENT_KEY', 'ANAIRA_XENDIT_SECRET_KEY', 'ANAIRA_XENDIT_CALLBACK_TOKEN', 'ANAIRA_DOKU_CLIENT_ID', 'ANAIRA_DOKU_SECRET_KEY', 'ANAIRA_DOKU_SHARED_KEY', 'ANAIRA_INDOPAY_MERCHANT_ID', 'ANAIRA_INDOPAY_API_KEY', 'ANAIRA_QRIS_IMAGE_PATH', 'ANAIRA_QRIS_INSTRUCTION_TEXT', 'ANAIRA_UNIONPAY_PROVIDER', 'ANAIRA_UNIONPAY_NOTES', 'ANAIRA_WHATSAPP_NUMBER');
-        foreach ( as ) {
-            [] = array('type' => 'text', 'label' => , 'name' => );
-        }
-
-        ->fields_form = array(array(
-            'form' => array(
-                'legend' => array('title' => ->l('Anaira Multi Gateway Config')),
-                'input' => ,
-                'submit' => array('title' => ->l('Save'))
-            )
-        ));
-
-         = array();
-        foreach (array_merge(, , ) as ) {
-            [] = Configuration::get();
-        }
-        ->fields_value = ;
-
-        return ->generateForm(->fields_form);
+        return $inputs;
     }
 
-    public function hookPaymentOptions()
+    protected function buildTextInputs()
     {
-        if (!->active) {
-            return;
+        $keys = array(
+            'ANAIRA_MIDTRANS_SERVER_KEY',
+            'ANAIRA_MIDTRANS_CLIENT_KEY',
+            'ANAIRA_XENDIT_SECRET_KEY',
+            'ANAIRA_XENDIT_CALLBACK_TOKEN',
+            'ANAIRA_DOKU_CLIENT_ID',
+            'ANAIRA_DOKU_SECRET_KEY',
+            'ANAIRA_DOKU_SHARED_KEY',
+            'ANAIRA_INDOPAY_MERCHANT_ID',
+            'ANAIRA_INDOPAY_API_KEY',
+            'ANAIRA_QRIS_IMAGE_PATH',
+            'ANAIRA_QRIS_INSTRUCTION_TEXT',
+            'ANAIRA_UNIONPAY_PROVIDER',
+            'ANAIRA_UNIONPAY_NOTES',
+            'ANAIRA_WHATSAPP_NUMBER',
+        );
+
+        $inputs = array();
+        foreach ($keys as $key) {
+            $inputs[] = array(
+                'type' => 'text',
+                'label' => $key,
+                'name' => $key,
+                'required' => false,
+            );
         }
-         = new PrestaShop\PrestaShop\Core\Payment\PaymentOption();
-        ->setCallToActionText(->l('Pay via Anaira Multi Payment'));
-        ->setAction(->context->link->getModuleLink(->name, 'create', array(), true));
-        ->setAdditionalInformation(->fetch('module:anairamultipayment/views/templates/hook/payment_options.tpl'));
-        return array();
+
+        return $inputs;
+    }
+
+    public function hookPaymentOptions($params)
+    {
+        if (!$this->active) {
+            return array();
+        }
+
+        $option = new PrestaShop\PrestaShop\Core\Payment\PaymentOption();
+        $option->setCallToActionText($this->l('Pay via Anaira Multi Payment'));
+        $option->setAction($this->context->link->getModuleLink($this->name, 'create', array(), true));
+        $option->setAdditionalInformation($this->fetch('module:anairamultipayment/views/templates/hook/payment_options.tpl'));
+
+        return array($option);
+    }
+
+    public function hookPaymentReturn($params)
+    {
+        return $this->display(__FILE__, 'views/templates/hook/payment_options.tpl');
     }
 }

@@ -1,0 +1,79 @@
+{
+  "brand": {
+    "name": "Anaira Glamping & Resort",
+    "tagline": "Stay, Relax & Recharge Near Curug Nangka",
+    "description": "Balcony, Porch, dan Villa dengan suasana alam, kolam, cafe, api unggun, dan area parkir.",
+    "logoBlack": "assets/brand/logo-anaira-black-transparent.png",
+    "logoWhite": "assets/brand/logo-anaira-white-transparent.png"
+  },
+  "contact": {
+    "address": "Jl. Raya Curug Nangka",
+    "googleMapsUrl": "https://maps.app.goo.gl/YVSmNtEsiK9tQNRS6",
+    "whatsappDisplay": "081399693499",
+    "whatsappInternational": "6281399693499"
+  },
+  "policies": {
+    "checkIn": "13.00",
+    "checkOut": "12.00",
+    "earlyLate": "Early check-in dan late checkout bisa disesuaikan.",
+    "cancelRefund": "Cancel DP hangus, bisa reschedule."
+  },
+  "rooms": [
+    {
+      "id": "balcony",
+      "name": "Balcony",
+      "quantity": 6,
+      "capacity": "Max 4 orang",
+      "weekdayPrice": 500000,
+      "weekendPrice": 700000,
+      "facilities": ["AC", "Android TV", "Amenities"],
+      "image": "assets/images/rooms/balcony/balcony-exterior-garden.webp",
+      "description": "Unit nyaman dengan balkon dan suasana alam."
+    },
+    {
+      "id": "porch",
+      "name": "Porch",
+      "quantity": 6,
+      "capacity": "Max 4 orang",
+      "weekdayPrice": 350000,
+      "weekendPrice": 420000,
+      "facilities": ["Kipas", "Android TV", "Amenities"],
+      "image": "assets/images/rooms/porch/porch-cabin-garden.webp",
+      "description": "Cabin glamping dengan area outdoor santai."
+    },
+    {
+      "id": "villa",
+      "name": "Villa",
+      "quantity": 1,
+      "capacity": "Max 20 orang",
+      "weekdayPrice": 2100000,
+      "weekendPrice": 3000000,
+      "facilities": ["AC", "Android TV", "Kitchen", "Karaoke Set"],
+      "image": "assets/images/rooms/villa/villa-view-pool-area.webp",
+      "description": "Villa luas untuk keluarga besar dan group."
+    }
+  ],
+  "packages": [
+    { "id": "breakfast", "name": "Breakfast", "description": "Paket sarapan untuk tamu." },
+    { "id": "bbq", "name": "BBQ", "description": "Paket BBQ untuk malam santai." },
+    { "id": "honeymoon", "name": "Honeymoon", "description": "Paket romantis untuk pasangan." },
+    { "id": "family", "name": "Family", "description": "Paket keluarga dan group." }
+  ],
+  "facilities": [
+    { "id": "pool", "name": "Kolam", "image": "assets/images/facilities/pool-mountain-view.webp" },
+    { "id": "cafe", "name": "Cafe", "image": "assets/images/facilities/outdoor-table-umbrella.webp" },
+    { "id": "bonfire", "name": "Api Unggun", "image": "assets/images/facilities/garden-cabin-overview.webp" },
+    { "id": "parking", "name": "Parkir", "image": "assets/images/facilities/garden-cabin-overview.webp" }
+  ],
+  "gallery": [
+    "assets/images/gallery/gallery-01-pool.webp",
+    "assets/images/gallery/gallery-02-overview.webp",
+    "assets/images/gallery/gallery-03-corridor.webp",
+    "assets/images/gallery/gallery-04-balcony.webp",
+    "assets/images/gallery/gallery-05-porch.webp"
+  ],
+  "video": {
+    "src": "assets/video/anaira-glamping-video.mp4",
+    "poster": "assets/images/hero/hero-pool-mountain-desktop.webp"
+  }
+}
