@@ -117,6 +117,8 @@ frontend/hotelier/assets/brand/    # Logo, favicon, OG image
 frontend/hotelier/assets/images/   # Hero, rooms, facilities, gallery
 frontend/hotelier/assets/video/    # Video Anaira Glamping
 frontend/hotelier/scripts/         # Local static server
+frontend/hotelier/admin/           # Local Admin Lite editor
+frontend/hotelier/data/            # Static frontend content JSON
 modules/midtranspayment/           # Midtrans module
 modules/xenditpayment/             # Xendit module
 modules/anairamultipayment/        # Unified payment architecture
@@ -124,6 +126,8 @@ data/seed_anaira.sql               # Seeder data Anaira
 docs/ANairaGlamping.md             # Technical docs
 docs/vercel-deploy.md              # Vercel guide
 docs/LOCAL_PREVIEW_FIX.md          # Localhost troubleshooting
+docs/ADMIN_DASHBOARD_PLAN.md       # QloApps Admin vs Anaira Admin Lite
+docs/PAYMENT_GATEWAY_SETUP.md      # Payment setup checklist
 CHANGELOG_ANAIRA.md                # Project changelog
 ```
 
@@ -173,6 +177,23 @@ netstat -ano | findstr :4173
 taskkill /PID <PID> /F
 node scripts\static-server.js
 ```
+
+## Local Admin Lite
+
+Anaira Admin Lite adalah editor konten lokal untuk frontend statis. Ini bukan pengganti QloApps Back Office dan tidak boleh dipakai sebagai admin publik.
+
+```powershell
+cd "E:\Vibes CODING\AnairaGlamping\frontend\hotelier"
+node scripts\admin-server.js
+```
+
+Buka:
+
+```text
+http://localhost:4173/admin/
+```
+
+Admin Lite mengedit `frontend/hotelier/data/site-content.json`, dapat upload gambar ke `assets/images/uploads/`, lalu menjalankan rebuild HTML. Setelah itu perubahan tetap perlu commit dan push ke GitHub agar Vercel redeploy.
 
 ---
 

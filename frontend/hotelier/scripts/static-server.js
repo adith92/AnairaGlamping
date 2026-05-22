@@ -12,6 +12,8 @@ const routeMap = {
   '/gallery': '/gallery.html',
   '/packages': '/packages.html',
   '/contact': '/contact.html',
+  '/admin': '/admin/index.html',
+  '/admin/': '/admin/index.html',
 };
 
 const contentTypes = {
