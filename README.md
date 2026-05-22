@@ -71,3 +71,5 @@ Jika CLI belum ada:
 
 ## License
 Lisensi QloApps asli tetap dipertahankan (OSL/AFL sesuai upstream).
+
+## Vercel Git Deploy Guide`r`nLihat panduan lengkap di `docs/vercel-deploy.md` untuk setup root directory `frontend/hotelier` dan preview deployment berbasis GitHub.`r`n

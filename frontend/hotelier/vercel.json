@@ -1,1 +1,21 @@
-{"cleanUrls": true, "rewrites": [{"source": "/", "destination": "/index.html"}]}
+{
+  "version": 2,
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/rooms", "destination": "/rooms.html" },
+    { "source": "/gallery", "destination": "/gallery.html" },
+    { "source": "/packages", "destination": "/packages.html" },
+    { "source": "/contact", "destination": "/contact.html" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "anaira-glamping-hotelier",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static Hotelier frontend for Anaira Glamping & Resort",
+  "scripts": {
+    "dev": "serve . -l 4173",
+    "start": "serve . -l 4173",
+    "preview": "serve . -l 4173"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}
