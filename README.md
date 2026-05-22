@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/adith92/AnairaGlamping/feature/anaira-glamping/frontend/hotelier/assets/brand/logo-anaira-black-transparent.png" alt="Anaira Glamping & Resort" width="420">
+  <img src="frontend/hotelier/assets/brand/logo-anaira-black-transparent.png" alt="Anaira Glamping & Resort" width="420">
 </p>
 
 # 🏕️ Anaira Glamping & Resort
@@ -15,7 +15,7 @@
 | Area | Status |
 |---|---|
 | Frontend Hotelier | ✅ Siap preview |
-| Logo & visual assets | ✅ Terpasang di branch feature |
+| Logo & visual assets | ✅ Terpasang |
 | Google Maps link | ✅ Terpasang |
 | WhatsApp booking | ✅ Terpasang |
 | Vercel preview | ✅ Sudah pernah berhasil |
@@ -123,8 +123,24 @@ modules/anairamultipayment/        # Unified payment architecture
 data/seed_anaira.sql               # Seeder data Anaira
 docs/ANairaGlamping.md             # Technical docs
 docs/vercel-deploy.md              # Vercel guide
+docs/LOCAL_PREVIEW_FIX.md          # Localhost troubleshooting
 CHANGELOG_ANAIRA.md                # Project changelog
 ```
+
+---
+
+## 🖼️ Final Visual Assets
+
+| Asset | Path |
+|---|---|
+| Logo black | `frontend/hotelier/assets/brand/logo-anaira-black-transparent.png` |
+| Logo white | `frontend/hotelier/assets/brand/logo-anaira-white-transparent.png` |
+| Favicon | `frontend/hotelier/assets/brand/favicon.ico` |
+| OG image | `frontend/hotelier/assets/brand/og-anaira-glamping.jpg` |
+| Hero desktop | `frontend/hotelier/assets/images/hero/hero-pool-mountain-desktop.webp` |
+| Hero mobile | `frontend/hotelier/assets/images/hero/hero-pool-mountain-mobile.webp` |
+| Gallery | `frontend/hotelier/assets/images/gallery/` |
+| Video | `frontend/hotelier/assets/video/anaira-glamping-video.mp4` |
 
 ---
 
@@ -148,6 +164,14 @@ Alternatif PowerShell launcher:
 ```powershell
 cd "E:\Vibes CODING\AnairaGlamping\frontend\hotelier"
 .\scripts\start-local.ps1
+```
+
+Kalau port bentrok:
+
+```powershell
+netstat -ano | findstr :4173
+taskkill /PID <PID> /F
+node scripts\static-server.js
 ```
 
 ---
@@ -177,6 +201,20 @@ npx.cmd vercel --prod
 
 ---
 
+## 🖥️ Shared Hosting Backend
+
+Untuk backend QloApps:
+
+1. Upload source backend ke shared hosting.
+2. Buat database MySQL.
+3. Import QloApps schema dan `data/seed_anaira.sql`.
+4. Update `app/config/parameters.php`.
+5. Aktifkan modul payment di admin.
+6. Isi sandbox credentials provider.
+7. Set HTTPS dan callback URL provider.
+
+---
+
 ## ✅ Deploy Readiness
 
 ### Siap untuk preview
@@ -201,6 +239,14 @@ npx.cmd vercel --prod
 ---
 
 ## 🧾 Changelog Ringkas
+
+Lihat changelog project khusus Anaira di:
+
+```text
+CHANGELOG_ANAIRA.md
+```
+
+Ringkasan:
 
 - ✅ Fork QloApps menjadi Anaira Glamping.
 - ✅ Frontend Hotelier static ditambahkan.

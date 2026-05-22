@@ -1,0 +1,11 @@
+{
+  "name": "anaira-glamping-hotelier",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static Hotelier frontend for Anaira Glamping & Resort",
+  "scripts": {
+    "dev": "node scripts/static-server.js",
+    "start": "node scripts/static-server.js",
+    "preview": "node scripts/static-server.js"
+  }
+}
