@@ -1,103 +1,241 @@
-<div align="center">
-	<a href="https://www.qloapps.com"><img src="https://forums.qloapps.com/assets/uploads/system/site-logo.png?v=hkl8e1230fo" alt="QloApps"></a>
-	<br>
-	<p>
-		<b>QloApps - An open source and free platform to launch your own hotel booking website</b>
-	</p>
-</div>
-
 <p align="center">
-	<a href="https://qloapps.com/download/"><img src="https://img.shields.io/badge/Download-Download%20QloApps%20-brightgreen" alt="Download"></a>
-	<a href="https://docs.qloapps.com/"><img src="https://img.shields.io/badge/Documentation-Blog-yellowgreen" alt="Documentation"></a>
-	<a href="https://forums.qloapps.com/"><img src="https://img.shields.io/badge/Forum-Help%2FSupport-green" alt="Forum"></a>
-	<a href="https://qloapps.com/addons/"><img src="https://img.shields.io/badge/Addons-Plugins-blueviolet" alt="Addons"></a>
-	<a href="https://qloapps.com/contact/"><img src="https://img.shields.io/badge/Contact-Get%20In%20Touch-blue" alt="Contact us"></a>
-	<a href="/LICENSE.md"><img src="https://img.shields.io/badge/License-OSL%20V3-green" alt="License"></a>
+  <img src="https://raw.githubusercontent.com/adith92/AnairaGlamping/feature/anaira-glamping/frontend/hotelier/assets/brand/logo-anaira-black-transparent.png" alt="Anaira Glamping & Resort" width="420">
 </p>
 
-## Topics
-- [Topics](#topics)
-	- [Introduction](#introduction)
-	- [Requirements](#requirements)
-		- [Hosted Server Configurations](#hosted-server-configurations)
-		- [Local Server Configurations](#local-server-configurations)
-	- [Installation and Configuration](#installation-and-configuration)
-	- [License](#license)
-	- [Security Vulnerabilities](#security-vulnerabilities)
-	- [Documentation & Demo](#documentation--demo)
-		- [QloApps Documentation](#qloapps-documentation)
-		- [QloApps Demo](#qloapps-demo)
-	- [Contribute](#contribute)
-	- [Credits](#credits)
+# 🏕️ Anaira Glamping & Resort
 
+**Anaira Glamping & Resort** adalah aplikasi booking glamping berbasis **QloApps** yang dikembangkan ulang untuk kebutuhan resort, villa, dan glamping di area **Jl. Raya Curug Nangka**. Project ini menggabungkan **backend hotel reservation QloApps**, **frontend Hotelier static responsive**, dan arsitektur payment Indonesia seperti **QRIS, Midtrans, Xendit, DOKU, Indopay/custom acquirer**, serta flow **UnionPay-capable** via provider/acquirer.
 
-### Introduction
+> Status saat ini: **MVP frontend sudah jalan di Vercel preview, backend QloApps/payment sudah masuk branch feature, tapi local backend PHP lint masih pending karena PHP belum tersedia di mesin local.**
 
-QloApps is one kind of a true open-source hotel reservation system and a booking engine. The system is dedicated to channeling the power of the open-source community to serve the hospitality industry.
+---
 
-From small independent hotels to big hotel chains, QloApps is a one-stop solution for all your hotel business needs.
+## 🚀 Progress Terbaru
 
-You will be able to launch your hotel website, showcase your property and take and manage bookings.
+| Area | Status |
+|---|---|
+| Frontend Hotelier | ✅ Siap preview |
+| Logo & visual assets | ✅ Terpasang di branch feature |
+| Google Maps link | ✅ Terpasang |
+| WhatsApp booking | ✅ Terpasang |
+| Vercel preview | ✅ Sudah pernah berhasil |
+| Local static server | ✅ Ada script Node |
+| Midtrans module | 🟡 Scaffold + hardening |
+| Xendit module | 🟡 Scaffold + hardening |
+| Multi-payment module | 🟡 Baseline architecture |
+| DOKU adapter | 🟡 Stub/plan |
+| Indopay adapter | 🟡 Stub, butuh docs resmi |
+| PHP lint/test | ⚠️ Pending install PHP |
+| Production deploy | ⏳ Belum final |
 
-### Requirements
+---
 
-In order to install QloApps you will need the following server configurations for hosted and local serves.
-The system compatibility will also be checked by the system with installation and if the server is not compatible then the installation will not move ahead.
+## ✨ Fitur Utama
 
-#### Hosted Server Configurations
+### 🏡 Website Glamping Responsive
 
-* **Web server**: Apache 1.3, Apache 2.x, Nginx or Microsoft IIS
-* **PHP  version**: PHP 8.1+ to PHP 8.4
-* **MySQL version**:  5.7+ to 8.4 installed with a database created
-* SSH or FTP access (ask your hosting service for your credentials)
-* In the PHP configuration ask your provider to set memory_limit to "128M", upload_max_filesize to "16M" ,    max_execution_time to "500" and allow_url_fopen "on"
-* SSL certificate if you plan to process payments internally (not using PayPal for instance)
-* **Required PHP extensions**: PDO_MySQL, cURL, OpenSSL, SOAP, GD, SimpleXML, DOM, Zip, Phar
+- Frontend static berbasis **Hotelier**.
+- Mobile responsive untuk tamu yang booking dari HP.
+- Halaman utama, kamar, galeri, paket, dan kontak.
+- Hero image, gallery, video, favicon, OG image, dan brand logo Anaira.
+- CTA booking langsung ke WhatsApp.
 
-#### Local Server Configurations
+### 🛏️ Room & Rate Management
 
-* **Supported operating system**: Windows, Mac, and Linux
-* **A prepared package**: WampServer (for Windows), Xampp (for Windows and Mac) or EasyPHP (for Windows)
-* **Web server**: Apache 1.3, Apache 2.x, Nginx or Microsoft IIS
-* **PHP**: PHP 8.1+ to PHP 8.4
-* **MySQL** 5.7+ to 8.4 installed with a database created
-* In the PHP configuration, set memory_limit to "128M", upload_max_filesize to "16M" and max_execution_time to "500"
-* **Required PHP extensions**: PDO_MySQL, cURL, OpenSSL, SOAP, GD, SimpleXML, DOM, Zip, Phar
+| Unit | Qty | Kapasitas | Weekday | Weekend |
+|---|---:|---:|---:|---:|
+| Balcony | 6 | 4 orang | Rp500.000 | Rp700.000 |
+| Porch | 6 | 4 orang | Rp350.000 | Rp420.000 |
+| Villa | 1 | 20 orang | Rp2.100.000 | Rp3.000.000 |
 
-### Installation and Configuration
+**Balcony**: AC, Android TV, amenities.  
+**Porch**: Kipas, Android TV, amenities.  
+**Villa**: AC, Android TV, kitchen, karaoke set.
 
-**1.** You can install QloApps easily after downloading QloApps. There are easy steps for the installation process. Please visit [QloApps Installation Guide](https://qloapps.com/install-qloapps/) and follow the steps for the successful installation.
+### 🎁 Paket Tambahan
 
-**2.** Or you can install QloApps with docker image. For the docker image of QloApps, please visit [Dockerize image of QloApps](https://hub.docker.com/r/webkul/qloapps_docker) <br>
-* Docker pull command
-~~~
-docker pull webkul/qloapps_docker
-~~~
+- 🍳 Breakfast
+- 🔥 BBQ
+- 💐 Honeymoon
+- 👨‍👩‍👧 Family package
 
-### License
+### 📍 Lokasi & Kontak
 
-QloApps Core is licensed under OSL-3.0 and Modules authored by Webkul have their applicable license, LICENSE.md, kept inside their root directories, while other modules are licensed under AFL-3.0.
+- **Lokasi**: Jl. Raya Curug Nangka
+- **Google Maps**: https://maps.app.goo.gl/YVSmNtEsiK9tQNRS6
+- **WhatsApp reservasi**: 081399693499
+- **International format**: 6281399693499
 
-The online copy of OSL-3.0 can be found at [https://opensource.org/licenses/OSL-3.0](https://opensource.org/licenses/OSL-3.0).
+### ⏰ Kebijakan Operasional
 
-The online copy of AFL-3.0 can be found at [https://opensource.org/licenses/AFL-3.0](https://opensource.org/licenses/AFL-3.0).
+- Check-in: **13.00**
+- Check-out: **12.00**
+- Early check-in dan late checkout bisa disesuaikan.
+- Cancel: **DP hangus**, tapi bisa **reschedule**.
 
-### Security Vulnerabilities
+### 🏊 Fasilitas Umum
 
-Please don't disclose security vulnerabilities publicly. If you find any security vulnerability in QloApps then please email us: mailto:support@qloapps.com.
+- Kolam
+- Cafe
+- Api unggun
+- Parkir
+- Outdoor seating
+- Mountain/nature view
 
-### Documentation & Demo
+---
 
-#### QloApps Documentation
-[https://docs.qloapps.com](https://docs.qloapps.com)
-#### QloApps Demo
-**Link** : https://demo.qloapps.com </br>
-**username** : demo@demo.com </br>
-**Password** : demodemo </br>
+## 💳 Payment Gateway Architecture
 
-### Contribute
-As a PHP developer who has command on PHP and MySQL and also knows how to use Git or GitHub efficiently, can contribute to code enhancements via pull requests.<br>
-For more information about the contribution process please check **[Contribute to QloApps](/CONTRIBUTING.md)**
+Project ini disiapkan untuk payment Indonesia, tapi tetap aman karena tidak menyimpan secret di source code.
 
-### Credits
-Crafted with :heart: at [Webkul](https://webkul.com)
+| Provider | Status |
+|---|---|
+| Manual QRIS | ✅ Supported |
+| WhatsApp reservation | ✅ Supported |
+| Midtrans | 🟡 Scaffold |
+| Xendit | 🟡 Scaffold |
+| DOKU | 🟡 Adapter plan |
+| Indopay | 🟡 Stub |
+| UnionPay | 🟡 Via acquirer |
+
+### 🔐 Security Notes
+
+- Tidak ada hardcoded API key.
+- Sandbox dan production dipisah via config.
+- Webhook harus diverifikasi signature/token.
+- Idempotency memakai `last_event_hash`.
+- Amount mismatch harus ditolak.
+- Log tidak boleh menyimpan full secret.
+
+---
+
+## 📁 Struktur Project Penting
+
+```text
+frontend/hotelier/                 # Static frontend demo Vercel
+frontend/hotelier/assets/brand/    # Logo, favicon, OG image
+frontend/hotelier/assets/images/   # Hero, rooms, facilities, gallery
+frontend/hotelier/assets/video/    # Video Anaira Glamping
+frontend/hotelier/scripts/         # Local static server
+modules/midtranspayment/           # Midtrans module
+modules/xenditpayment/             # Xendit module
+modules/anairamultipayment/        # Unified payment architecture
+data/seed_anaira.sql               # Seeder data Anaira
+docs/ANairaGlamping.md             # Technical docs
+docs/vercel-deploy.md              # Vercel guide
+CHANGELOG_ANAIRA.md                # Project changelog
+```
+
+---
+
+## 🧪 Local Preview
+
+Kalau `http://localhost:4173/` menampilkan **ERR_CONNECTION_REFUSED**, artinya server local belum jalan. Jalankan dulu:
+
+```powershell
+cd "E:\Vibes CODING\AnairaGlamping\frontend\hotelier"
+node scripts\static-server.js
+```
+
+Lalu buka:
+
+```text
+http://localhost:4173/
+```
+
+Alternatif PowerShell launcher:
+
+```powershell
+cd "E:\Vibes CODING\AnairaGlamping\frontend\hotelier"
+.\scripts\start-local.ps1
+```
+
+---
+
+## 🌐 Vercel Demo Frontend
+
+Frontend Vercel harus memakai root directory:
+
+```text
+frontend/hotelier
+```
+
+Run preview:
+
+```powershell
+cd "E:\Vibes CODING\AnairaGlamping\frontend\hotelier"
+npx.cmd vercel --yes
+```
+
+Production deploy hanya dilakukan setelah local preview dan visual review aman:
+
+```powershell
+npx.cmd vercel --prod
+```
+
+> Catatan: project ini adalah hybrid. **Frontend static bisa di Vercel**, sedangkan **backend QloApps/PHP lebih cocok di shared hosting/VPS**.
+
+---
+
+## ✅ Deploy Readiness
+
+### Siap untuk preview
+
+- ✅ Frontend static.
+- ✅ Vercel config.
+- ✅ Logo dan visual assets.
+- ✅ WhatsApp booking.
+- ✅ Google Maps link.
+- ✅ Local static server script.
+
+### Belum final production
+
+- ⚠️ PHP belum dilint di mesin local.
+- ⚠️ Payment gateway perlu sandbox credential.
+- ⚠️ Webhook harus diuji end-to-end.
+- ⚠️ Backend QloApps harus dites di environment PHP 8.1+.
+- ⚠️ Admin panel perlu smoke test setelah import DB.
+
+**Kesimpulan:** aplikasi **siap untuk frontend preview/demo**, tapi **belum 100% production-ready** untuk transaksi real sampai PHP lint, sandbox payment, webhook, dan shared hosting backend selesai diuji.
+
+---
+
+## 🧾 Changelog Ringkas
+
+- ✅ Fork QloApps menjadi Anaira Glamping.
+- ✅ Frontend Hotelier static ditambahkan.
+- ✅ Room/unit data Anaira dimasukkan.
+- ✅ Payment module Midtrans dan Xendit dibuat.
+- ✅ Unified payment architecture `anairamultipayment` ditambahkan.
+- ✅ Vercel static frontend disiapkan.
+- ✅ Visual assets Anaira ditambahkan.
+- ✅ Local Node static server dibuat.
+- 🟡 PHP/runtime QA masih pending.
+
+---
+
+## 📌 PR & Development Flow
+
+Branch aktif:
+
+```text
+feature/anaira-glamping
+```
+
+Target PR:
+
+```text
+develop
+```
+
+Workflow:
+
+```text
+Codex edit → local preview → push branch → Vercel preview → visual review → merge → production deploy
+```
+
+---
+
+## 📜 License
+
+Project ini adalah fork dari QloApps. Lisensi asli QloApps tetap dipertahankan sesuai upstream (**OSL/AFL**). Custom branding dan integrasi Anaira ditambahkan untuk kebutuhan Anaira Glamping & Resort.
