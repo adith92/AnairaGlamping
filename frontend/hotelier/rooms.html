@@ -9,26 +9,220 @@
 <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
 <meta property="og:image" content="assets/brand/og-anaira-glamping.jpg">
 <style>
-:root{--bg:#f6f1e7;--ink:#1f2421;--brand:#1b7f5a;--muted:#5f635f;--card:#fff;--dark:#1d2a25}
-*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;color:var(--ink);background:var(--bg)}
-.wrap{max-width:1120px;margin:auto;padding:16px}
-.nav{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.logo{height:46px;width:auto}.menu{display:flex;gap:10px;flex-wrap:wrap}.menu a{text-decoration:none;color:var(--ink);padding:8px 10px;border-radius:8px}
-.btn{display:inline-block;background:var(--brand);color:#fff;text-decoration:none;padding:10px 14px;border-radius:10px;font-weight:600}
-.btn.alt{background:#fff;color:var(--brand);border:1px solid var(--brand)}
-.hero{position:relative;border-radius:16px;overflow:hidden}.hero img{width:100%;height:62vh;object-fit:cover;display:block}.overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.55),rgba(0,0,0,.15));display:flex;align-items:flex-end}.copy{padding:24px;color:#fff;max-width:720px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}.card{background:var(--card);border-radius:14px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.08)}.card img{width:100%;height:180px;object-fit:cover;display:block}.card .p{padding:14px}
-section{margin:22px 0}h1,h2,h3{margin:.2em 0}.muted{color:var(--muted)}
-.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}.gallery a{display:block;background:#fff;border-radius:12px;overflow:hidden}.gallery img{width:100%;height:170px;object-fit:cover;display:block}
-.video{background:#fff;padding:16px;border-radius:14px;box-shadow:0 8px 22px rgba(0,0,0,.08)}video{width:100%;border-radius:10px}
-footer{margin-top:24px;background:var(--dark);color:#f2f4f3;border-radius:16px;padding:20px}.footer-top{display:flex;align-items:center;gap:12px}.logo-white{height:40px}
-@media (max-width:700px){.hero img{height:54vh}.copy{padding:16px}.logo{height:40px}}
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+:root {
+  --bg-gradient: linear-gradient(to bottom right, #06140e, #092218, #040a08);
+  --ink: #f6f1e7;
+  --brand: #1b7f5a;
+  --brand-hover: #146546;
+  --muted: #a7eed0;
+  --card: rgba(10, 46, 32, 0.45);
+  --dark: rgba(6, 18, 14, 0.85);
+  --border: rgba(27, 127, 90, 0.2);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', Segoe UI, sans-serif;
+  color: var(--ink);
+  background: #06140e;
+  overflow-x: hidden;
+}
+.wrap { max-width: 1120px; margin: auto; padding: 24px 16px; }
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: rgba(10, 46, 32, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  padding: 14px 24px;
+  border-radius: 20px;
+}
+.logo { height: 46px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+.menu { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.menu a {
+  text-decoration: none;
+  color: rgba(246, 241, 231, 0.85);
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+.menu a:hover {
+  background: rgba(27, 127, 90, 0.25);
+  color: #a7eed0;
+}
+.btn {
+  display: inline-block;
+  background: var(--brand);
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  box-shadow: 0 4px 12px rgba(27, 127, 90, 0.2);
+}
+.btn:hover {
+  background: var(--brand-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(27, 127, 90, 0.3);
+}
+.btn.alt {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f6f1e7;
+  border: 1px solid var(--border);
+  box-shadow: none;
+  backdrop-filter: blur(8px);
+}
+.btn.alt:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(27, 127, 90, 0.4);
+}
+.hero {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+.hero img { width: 100%; height: 62vh; object-fit: cover; display: block; }
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(4,10,8,0.9) 20%, rgba(4,10,8,0.4) 60%, rgba(4,10,8,0.1) 100%);
+  display: flex;
+  align-items: flex-end;
+}
+.copy { padding: 32px; color: #fff; max-width: 720px; }
+.copy h1 { font-size: 2.8rem; font-weight: 800; tracking-tight; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+.card {
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(27, 127, 90, 0.4);
+  box-shadow: 0 12px 40px rgba(27, 127, 90, 0.15);
+}
+.card img { width: 100%; height: 190px; object-fit: cover; display: block; border-bottom: 1px solid var(--border); }
+.card .p { padding: 20px; }
+.card h3 { margin-top: 0; font-size: 1.3rem; color: #a7eed0; }
+section { margin: 32px 0; }
+h1, h2, h3 { margin: .2em 0; font-weight: 700; }
+h2 { font-size: 1.8rem; border-left: 4px solid var(--brand); padding-left: 12px; margin-bottom: 20px; }
+.muted { color: rgba(246, 241, 231, 0.65); font-size: 0.95rem; line-height: 1.5; }
+.gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+.gallery a {
+  display: block;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.gallery a:hover {
+  transform: scale(1.04);
+  border-color: rgba(27, 127, 90, 0.4);
+}
+.gallery img { width: 100%; height: 180px; object-fit: cover; display: block; }
+.video {
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  padding: 24px;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+video { width: 100%; border-radius: 16px; border: 1px solid var(--border); display: block; }
+footer {
+  margin-top: 40px;
+  background: var(--dark);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  color: rgba(246, 241, 231, 0.85);
+  border-radius: 24px;
+  padding: 32px 24px;
+}
+.footer-top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.logo-white { height: 40px; }
+
+/* Background animations */
+@keyframes blob {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+.animate-blob {
+  animation: blob 16s infinite alternate ease-in-out;
+}
+@keyframes float-sparkle {
+  0% { transform: translateY(105vh) scale(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.7; }
+  90% { opacity: 0.7; }
+  100% { transform: translateY(-5vh) scale(1) rotate(360deg); opacity: 0; }
+}
+.animate-float-sparkle {
+  animation: float-sparkle 22s infinite linear;
+}
+.animation-delay-2000 { animation-delay: 2s; }
+.animation-delay-4000 { animation-delay: 4s; }
+
+@media (max-width: 768px) {
+  .hero img { height: 50vh; }
+  .copy h1 { font-size: 2rem; }
+  .copy { padding: 20px; }
+  .logo { height: 40px; }
+  .nav { padding: 12px 16px; }
+}
 </style>
 </head>
-<body>
-<header class="wrap">
+<body class="min-h-screen text-[#f6f1e7] font-sans antialiased overflow-x-hidden relative">
+
+  <!-- Premium Luxurious Background Overlay -->
+  <div class="fixed inset-0 -z-50 overflow-hidden bg-gradient-to-br from-[#06140e] via-[#092218] to-[#040a08] pointer-events-none">
+    <!-- Radial mesh / grid overlay -->
+    <div class="absolute inset-0 bg-[radial-gradient(#1b7f5a_0.8px,transparent_0.8px)] [background-size:24px_24px] opacity-[0.08] mix-blend-overlay"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#040a08_80%)] opacity-80"></div>
+    
+    <!-- Shifting animated glowing blobs -->
+    <div class="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[#1b7f5a]/20 filter blur-[80px] md:blur-[120px] animate-blob"></div>
+    <div class="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-teal-800/15 filter blur-[80px] md:blur-[120px] animate-blob animation-delay-2000"></div>
+    <div class="absolute top-[40%] left-[30%] w-[40%] h-[40%] rounded-full bg-emerald-900/10 filter blur-[100px] md:blur-[150px] animate-blob animation-delay-4000"></div>
+    
+    <!-- Floating Starry Sparkles -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute w-1.5 h-1.5 bg-amber-400 rounded-full blur-[1px] animate-float-sparkle" style="left: 5%; animation-delay: 0s; animation-duration: 20s;"></div>
+      <div class="absolute w-2 h-2 bg-emerald-300 rounded-full blur-[1px] animate-float-sparkle" style="left: 25%; animation-delay: 5s; animation-duration: 27s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-white rounded-full animate-float-sparkle" style="left: 45%; animation-delay: 9s; animation-duration: 22s;"></div>
+      <div class="absolute w-2 h-2 bg-yellow-200 rounded-full blur-[1px] animate-float-sparkle" style="left: 65%; animation-delay: 3s; animation-duration: 30s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-emerald-400 rounded-full blur-[1.5px] animate-float-sparkle" style="left: 85%; animation-delay: 7s; animation-duration: 24s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-white rounded-full animate-float-sparkle" style="left: 15%; animation-delay: 13s; animation-duration: 21s;"></div>
+      <div class="absolute w-2 h-2 bg-amber-300 rounded-full blur-[1px] animate-float-sparkle" style="left: 38%; animation-delay: 11s; animation-duration: 29s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-white rounded-full blur-[1px] animate-float-sparkle" style="left: 58%; animation-delay: 15s; animation-duration: 23s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-emerald-300 rounded-full animate-float-sparkle" style="left: 75%; animation-delay: 17s; animation-duration: 26s;"></div>
+    </div>
+  </div>
+
+  <header class="wrap">
   <nav class="nav">
-    <a href="index.html"><img class="logo" src="assets/brand/logo-anaira-black-transparent.png" alt="Anaira Glamping &amp; Resort"></a>
+    <a href="index.html"><img class="logo" src="assets/brand/logo-anaira-white-transparent.png" alt="Anaira Glamping &amp; Resort"></a>
     <div class="menu">
       <a href="index.html">Home</a>
       <a href="rooms.html">Rooms</a>
@@ -39,8 +233,8 @@ footer{margin-top:24px;background:var(--dark);color:#f2f4f3;border-radius:16px;p
     </div>
   </nav>
 </header>
-<main class="wrap">
-<section><h1>Rooms & Rates</h1><p class="muted">Pilih unit sesuai kebutuhan perjalanan Anda.</p></section>
+  <main class="wrap">
+  <section><h1>Rooms & Rates</h1><p class="muted">Pilih unit sesuai kebutuhan perjalanan Anda.</p></section>
 <!-- ANAIRA:ROOMS_START -->
 <section class="grid">
 <article class="card">
@@ -78,8 +272,8 @@ footer{margin-top:24px;background:var(--dark);color:#f2f4f3;border-radius:16px;p
 </article>
 </section>
 <!-- ANAIRA:ROOMS_END -->
-</main>
-<footer class="wrap">
+  </main>
+  <footer class="wrap">
   <div class="footer-top">
     <img class="logo-white" src="assets/brand/logo-anaira-white-transparent.png" alt="Anaira logo white">
     <strong>Anaira Glamping &amp; Resort</strong>
