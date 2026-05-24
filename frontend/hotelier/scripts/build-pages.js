@@ -238,7 +238,9 @@ function nav(content) {
       <a href="gallery.html">Gallery</a>
       <a href="packages.html">Packages</a>
       <a href="contact.html">Contact</a>
-      <a class="btn" href="${wa(content)}">Book via WhatsApp</a>
+      <a href="booking.html" style="color: #a7eed0; font-weight: 600; border: 1.5px dashed rgba(27,127,90,0.5); background: rgba(27,127,90,0.15); border-radius: 12px; margin: 0 4px;">Book Online 📅</a>
+      <a href="login.html" style="font-size: 0.8rem; opacity: 0.5; margin: 0 4px;" class="hover:opacity-100">Portal Admin 🔐</a>
+      <a class="btn" href="${wa(content)}">WhatsApp</a>
     </div>
   </nav>
 </header>`;
@@ -307,7 +309,10 @@ function roomCard(content, room) {
     <p>${esc(room.facilities.join(', '))}</p>
     <p>Weekday ${rupiah(room.weekdayPrice)} - Weekend ${rupiah(room.weekendPrice)}</p>
     <p class="muted">${esc(room.description)}</p>
-    <p><a class="btn" href="${wa(content)}">Book via WhatsApp</a></p>
+    <div class="flex gap-2 mt-4" style="display: flex; gap: 8px; margin-top: 16px;">
+      <a class="btn" href="booking.html">Book Online 📅</a>
+      <a class="btn alt" href="${wa(content)}">WhatsApp</a>
+    </div>
   </div>
 </article>`;
 }
@@ -326,7 +331,11 @@ function buildIndex(content) {
     <p><strong>${esc(content.brand.tagline)}</strong></p>
     <p>${esc(content.brand.description)}</p>
     <!-- ANAIRA:BRAND_END -->
-    <p><a class="btn" href="${wa(content)}">Book via WhatsApp</a> <a class="btn alt" href="rooms.html">Rooms & Rates</a></p>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px;">
+      <a class="btn" href="booking.html">Book Online 📅</a>
+      <a class="btn alt" href="${wa(content)}">Book via WhatsApp</a>
+      <a class="btn alt" href="rooms.html">Rooms & Rates</a>
+    </div>
   </div></div>
 </section>
 <section>
@@ -384,8 +393,11 @@ function buildContact(content) {
 <section><h1>Contact & Reservation</h1>
   <p><strong>Address:</strong> ${esc(content.contact.address)}</p>
   <p><strong>WhatsApp:</strong> ${esc(content.contact.whatsappDisplay)} / ${esc(content.contact.whatsappInternational)}</p>
-  <p><a class="btn" href="${wa(content)}">Book via WhatsApp</a>
-  <a class="btn alt" href="${esc(content.contact.googleMapsUrl)}" target="_blank" rel="noopener noreferrer">Buka Google Maps</a></p>
+  <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px;">
+    <a class="btn" href="booking.html">Book Online 📅</a>
+    <a class="btn alt" href="${wa(content)}">WhatsApp</a>
+    <a class="btn alt" href="${esc(content.contact.googleMapsUrl)}" target="_blank" rel="noopener noreferrer">Buka Google Maps</a>
+  </div>
 </section>
 <!-- ANAIRA:CONTACT_END -->
 <section class="grid">
