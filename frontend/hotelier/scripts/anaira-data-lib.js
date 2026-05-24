@@ -28,7 +28,9 @@ const ANAIRA_KEYS = {
   PAYMENT:       'anaira_payment_settings',
   PAYMENT_LOGS:  'anaira_payment_logs',
   BLOCKED_DATES: 'anaira_blocked_dates',
-  SETTINGS:      'anaira_settings'
+  SETTINGS:      'anaira_settings',
+  VOUCHERS:      'anaira_vouchers',
+  DB_CONFIG:     'anaira_db_config'
 };
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -460,6 +462,18 @@ function restoreAllData(jsonString) {
  * 7. INITIALIZATION — Seed default data if localStorage is empty
  * ───────────────────────────────────────────────────────────────────────────── */
 
+const DEFAULT_VOUCHERS = [
+  { code: 'ANAIRA10', type: 'percentage', value: 10, maxUses: 100, usedCount: 0, active: true },
+  { code: 'WELCOMETOANAIRA', type: 'fixed', value: 50000, maxUses: 50, usedCount: 0, active: true }
+];
+
+const DEFAULT_DB_CONFIG = {
+  mode: "demo",
+  supabaseUrl: "",
+  supabaseKey: "",
+  apiUrl: ""
+};
+
 (function initDefaults() {
   if (!loadData(ANAIRA_KEYS.ROOMS, null)) {
     saveData(ANAIRA_KEYS.ROOMS, DEFAULT_ROOMS);
@@ -472,6 +486,12 @@ function restoreAllData(jsonString) {
   }
   if (!loadData(ANAIRA_KEYS.SETTINGS, null)) {
     saveData(ANAIRA_KEYS.SETTINGS, DEFAULT_SETTINGS);
+  }
+  if (!loadData(ANAIRA_KEYS.VOUCHERS, null)) {
+    saveData(ANAIRA_KEYS.VOUCHERS, DEFAULT_VOUCHERS);
+  }
+  if (!loadData(ANAIRA_KEYS.DB_CONFIG, null)) {
+    saveData(ANAIRA_KEYS.DB_CONFIG, DEFAULT_DB_CONFIG);
   }
 })();
 
@@ -641,6 +661,95 @@ if (typeof document !== 'undefined') {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
+ * 7.9 DATABASE ABSTRACTION LAYER (AnairaDB)
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+const AnairaDB = {
+  getConfig() {
+    return loadData(ANAIRA_KEYS.DB_CONFIG, {
+      mode: "demo",
+      supabaseUrl: "",
+      supabaseKey: "",
+      apiUrl: ""
+    });
+  },
+
+  saveConfig(config) {
+    saveData(ANAIRA_KEYS.DB_CONFIG, config);
+  },
+
+  async query(table, action, data = null, id = null) {
+    const config = this.getConfig();
+    if (config.mode === 'demo') {
+      let key = 'anaira_' + table;
+      if (action === 'GET') {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : null;
+      }
+      if (action === 'POST') {
+        localStorage.setItem(key, JSON.stringify(data));
+        return { ok: true };
+      }
+    } else {
+      try {
+        if (config.supabaseUrl && config.supabaseKey) {
+          const headers = {
+            'apikey': config.supabaseKey,
+            'Authorization': 'Bearer ' + config.supabaseKey,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+          };
+          if (action === 'GET') {
+            const res = await fetch(`${config.supabaseUrl}/rest/v1/anaira_store?key=eq.${table}`, { headers });
+            if (res.ok) {
+              const rows = await res.json();
+              return rows.length > 0 ? rows[0].data : null;
+            }
+            return null;
+          }
+          if (action === 'POST') {
+            const body = { key: table, data: data };
+            const res = await fetch(`${config.supabaseUrl}/rest/v1/anaira_store`, {
+              method: 'POST',
+              headers: { ...headers, 'Prefer': 'resolution=merge-duplicates' },
+              body: JSON.stringify(body)
+            });
+            return { ok: res.ok };
+          }
+        } else if (config.apiUrl) {
+          const res = await fetch(config.apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ table, action, data, id })
+          });
+          return res.ok ? await res.json() : null;
+        }
+      } catch (e) {
+        console.error('[AnairaDB] Database Query Error:', e);
+        let key = 'anaira_' + table;
+        if (action === 'GET') {
+          const raw = localStorage.getItem(key);
+          return raw ? JSON.parse(raw) : null;
+        }
+      }
+    }
+  },
+
+  async get(key, defaultValue) {
+    const storeKey = key.replace('anaira_', '');
+    const data = await this.query(storeKey, 'GET');
+    if (data === null || data === undefined) return defaultValue;
+    return data;
+  },
+
+  async set(key, data) {
+    try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) {}
+    const storeKey = key.replace('anaira_', '');
+    await this.query(storeKey, 'POST', data);
+  }
+};
+
+/* ─────────────────────────────────────────────────────────────────────────────
  * 8. EXPORTS (for environments that support modules)
  * ───────────────────────────────────────────────────────────────────────────── */
 
@@ -651,6 +760,8 @@ if (typeof module !== 'undefined' && module.exports) {
     DEFAULT_PRICING,
     DEFAULT_PAYMENT,
     DEFAULT_SETTINGS,
+    DEFAULT_VOUCHERS,
+    AnairaDB,
     loadData,
     saveData,
     generateId,

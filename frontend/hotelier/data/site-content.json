@@ -28,6 +28,11 @@
       "weekendPrice": 700000,
       "facilities": ["AC", "Android TV", "Amenities"],
       "image": "assets/images/rooms/balcony/balcony-exterior-garden.webp",
+      "images": [
+        "assets/images/rooms/balcony/balcony-exterior-garden.webp",
+        "assets/images/gallery/gallery-04-balcony.webp",
+        "assets/images/gallery/gallery-02-overview.webp"
+      ],
       "description": "Unit nyaman dengan balkon dan suasana alam."
     },
     {
@@ -39,6 +44,11 @@
       "weekendPrice": 420000,
       "facilities": ["Kipas", "Android TV", "Amenities"],
       "image": "assets/images/rooms/porch/porch-cabin-garden.webp",
+      "images": [
+        "assets/images/rooms/porch/porch-cabin-garden.webp",
+        "assets/images/gallery/gallery-05-porch.webp",
+        "assets/images/gallery/gallery-03-corridor.webp"
+      ],
       "description": "Cabin glamping dengan area outdoor santai."
     },
     {
@@ -50,6 +60,11 @@
       "weekendPrice": 3000000,
       "facilities": ["AC", "Android TV", "Kitchen", "Karaoke Set"],
       "image": "assets/images/rooms/villa/villa-view-pool-area.webp",
+      "images": [
+        "assets/images/rooms/villa/villa-view-pool-area.webp",
+        "assets/images/gallery/gallery-01-pool.webp",
+        "assets/images/hero/hero-pool-mountain-desktop.webp"
+      ],
       "description": "Villa luas untuk keluarga besar dan group."
     }
   ],

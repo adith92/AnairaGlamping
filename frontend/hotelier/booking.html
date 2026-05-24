@@ -785,11 +785,27 @@
               </div>
             </div>
 
+            <!-- Voucher Redemption Widget -->
+            <div class="space-y-2 text-xs">
+              <h4 class="font-bold text-darkbg uppercase tracking-wider text-[10px]">Redeem Voucher Diskon</h4>
+              <div class="flex gap-2">
+                <input type="text" id="voucherCodeInput" placeholder="Masukkan kode voucher" class="flex-grow px-3 py-2 bg-white/80 border border-gray-150 rounded-xl text-gray-800 text-xs focus:ring-1 focus:ring-brand focus:border-brand outline-none uppercase placeholder-gray-400">
+                <button onclick="applyVoucher()" id="btnApplyVoucher" class="bg-brand text-white font-semibold px-4 py-2 rounded-xl text-xs hover:bg-brand-hover transition-colors flex items-center justify-center gap-1 active:scale-95 duration-100">
+                  Klaim
+                </button>
+              </div>
+              <div id="voucherStatus" class="hidden text-[10px] font-semibold mt-1"></div>
+            </div>
+
             <!-- Bill break down -->
             <div class="border-t border-brand/10 pt-4 space-y-2 text-xs">
               <div class="flex justify-between text-gray-600">
                 <span id="labelBillBase">Sewa Kamar (0 Malam)</span>
                 <span id="summaryBillBase">Rp 0</span>
+              </div>
+              <div id="rowVoucherDiscount" class="hidden flex justify-between text-rose-600 font-semibold">
+                <span>Diskon Voucher (<span id="txtVoucherCode">-</span>)</span>
+                <span id="summaryVoucherDiscount">-Rp 0</span>
               </div>
               <div class="flex justify-between text-gray-600">
                 <span>Pajak &amp; Jasa Layanan (10% Nett)</span>
@@ -1141,6 +1157,22 @@
     // Wizard wizard states
     let currentStep = 1;
     let selectedRoom = null;
+  <!-- INTERACTIVE WIZARD & DATA BINDING JAVASCRIPT -->
+  <script>
+    // --- Application State Constants & Variables ---
+    const ROOM_RATES = {
+      'Balcony': { name: 'Balcony Suite', rate: 500000, img: 'assets/images/rooms/balcony/balcony-exterior-garden.webp' },
+      'Porch': { name: 'Porch Cabin', rate: 350000, img: 'assets/images/rooms/porch/porch-cabin-garden.webp' },
+      'Villa': { name: 'Presidential Villa', rate: 2100000, img: 'assets/images/rooms/villa/villa-view-pool-area.webp' }
+    };
+
+    // Calendar states
+    let calendarDate = new Date(2026, 4, 24); // Start at May 2026 (based on additional metadata)
+    const todayLimit = new Date(2026, 4, 24); // Today's date to disable past selections
+
+    // Wizard wizard states
+    let currentStep = 1;
+    let selectedRoom = null;
     let checkInDate = null; // Date Object
     let checkOutDate = null; // Date Object
     let arrivalSlot = null; // String
@@ -1151,65 +1183,99 @@
     let selectedPayment = null;
     let createdBooking = null; // To hold newly created booking object on checkout success
     let countdownTimer = null;
+    let activeVoucher = null; // To hold applied discount voucher
 
     // --- Mount Initiation ---
     window.addEventListener('DOMContentLoaded', () => {
       // Initialize Lucide Icons
       lucide.createIcons();
       
-      // Load and Synchronize Booking Data from localStorage
-      initLocalStorageBookings();
-      
-      // Initial render updates
-      updateWizardUI();
-      renderCalendar();
-      renderHistoryTable();
+      // Load and Synchronize Booking Data from database asynchroneously
+      initLocalStorageBookings().then(async () => {
+        // Initial render updates
+        updateWizardUI();
+        renderCalendar();
+        renderHistoryTable();
 
-      // Check if bookingId query param is present (Guest Logged In via Booking ID)
-      const urlParams = new URLSearchParams(window.location.search);
-      const bookingIdParam = urlParams.get('bookingId');
-      if (bookingIdParam) {
-        const bookings = getAllBookings();
-        const found = bookings.find(b => (b.bookingId || b.id || '').toUpperCase() === bookingIdParam.toUpperCase());
-        if (found) {
-          createdBooking = found; // Set global booking variable for PDF print
-          
-          // Display the receipt box, hide the reservation grid
-          document.getElementById('bookingGrid').classList.add('hidden');
-          document.getElementById('successPage').classList.remove('hidden');
-          
-          // Populate receipt fields
-          document.getElementById('receiptId').innerText = found.bookingId || found.id;
-          document.getElementById('receiptName').innerText = found.guestName || found.guest || '-';
-          document.getElementById('receiptWhatsapp').innerText = found.guestWhatsapp || found.phone || found.phoneNumber || '-';
-          document.getElementById('receiptRoom').innerText = found.roomType || found.room || '-';
-          document.getElementById('receiptPayment').innerText = found.paymentMethod || found.method || '-';
-          
-          const inDate = found.checkIn || found.checkInDate || '-';
-          const outDate = found.checkOut || found.checkOutDate || '-';
-          document.getElementById('receiptDates').innerText = `${inDate} s/d ${outDate}`;
-          
-          // Calculate duration nights
-          const d1 = new Date(inDate);
-          const d2 = new Date(outDate);
-          const diffMs = d2.getTime() - d1.getTime();
-          const nights = Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
-          document.getElementById('receiptArrival').innerText = `Durasi: ${nights} Malam (${found.arrivalSlot || 'Sore'})`;
-          
-          const rawAmount = found.amount || found.totalAmount || found.total || 0;
-          document.getElementById('receiptAmount').innerText = 'Rp ' + rawAmount.toLocaleString('id-ID');
-          
-          // Scroll to receipt
-          setTimeout(() => {
-            document.getElementById('successPage').scrollIntoView({ behavior: 'smooth' });
-          }, 300);
+        // Check query parameters (Guest selected room or dates from independent room pages)
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        const roomParam = urlParams.get('room');
+        const checkinParam = urlParams.get('checkin');
+        const checkoutParam = urlParams.get('checkout');
+
+        if (roomParam) {
+          const codeMap = { 'balcony': 'Balcony', 'porch': 'Porch', 'villa': 'Villa' };
+          const mapped = codeMap[roomParam.toLowerCase()];
+          if (mapped && ROOM_RATES[mapped]) {
+            selectRoom(mapped);
+          }
         }
-      }
+
+        if (checkinParam) {
+          checkInDate = new Date(checkinParam);
+          checkInDate.setHours(0, 0, 0, 0);
+        }
+        if (checkoutParam) {
+          checkOutDate = new Date(checkoutParam);
+          checkOutDate.setHours(0, 0, 0, 0);
+        }
+
+        if (checkInDate || checkOutDate) {
+          updateStayDisplays();
+          renderCalendar();
+          calculateBilling();
+          // Auto transition if room is already selected
+          if (roomParam && currentStep === 1) {
+            goToStep(2);
+          }
+        }
+
+        // Check if bookingId query param is present (Guest Logged In via Booking ID)
+        const bookingIdParam = urlParams.get('bookingId');
+        if (bookingIdParam) {
+          const bookings = await getAllBookings();
+          const found = bookings.find(b => (b.bookingId || b.id || '').toUpperCase() === bookingIdParam.toUpperCase());
+          if (found) {
+            createdBooking = found; // Set global booking variable for PDF print
+            
+            // Display the receipt box, hide the reservation grid
+            document.getElementById('bookingGrid').classList.add('hidden');
+            document.getElementById('successPage').classList.remove('hidden');
+            
+            // Populate receipt fields
+            document.getElementById('receiptId').innerText = found.bookingId || found.id;
+            document.getElementById('receiptName').innerText = found.guestName || found.guest || '-';
+            document.getElementById('receiptWhatsapp').innerText = found.guestWhatsapp || found.phone || found.phoneNumber || '-';
+            document.getElementById('receiptRoom').innerText = ROOM_RATES[found.roomType] ? ROOM_RATES[found.roomType].name : (found.roomType || found.room || '-');
+            document.getElementById('receiptPayment').innerText = found.paymentMethod || found.method || '-';
+            
+            const inDate = found.checkIn || found.checkInDate || '-';
+            const outDate = found.checkOut || found.checkOutDate || '-';
+            document.getElementById('receiptDates').innerText = `${inDate} s/d ${outDate}`;
+            
+            // Calculate duration nights
+            const d1 = new Date(inDate);
+            const d2 = new Date(outDate);
+            const diffMs = d2.getTime() - d1.getTime();
+            const nights = Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+            document.getElementById('receiptArrival').innerText = `Durasi: ${nights} Malam (${found.arrivalSlot || 'Sore'})`;
+            
+            const rawAmount = found.amount || found.totalAmount || found.total || 0;
+            document.getElementById('receiptAmount').innerText = 'Rp ' + rawAmount.toLocaleString('id-ID');
+            
+            // Scroll to receipt
+            setTimeout(() => {
+              document.getElementById('successPage').scrollIntoView({ behavior: 'smooth' });
+            }, 300);
+          }
+        }
+      });
     });
 
-    // --- Data Synchronization (LocalStorage seeding & management) ---
-    function initLocalStorageBookings() {
-      const stored = localStorage.getItem('anaira_bookings');
+    // --- Data Synchronization (AnairaDB / LocalStorage seeding & management) ---
+    async function initLocalStorageBookings() {
+      const stored = await AnairaDB.get(ANAIRA_KEYS.BOOKINGS, null);
       if (!stored) {
         // Pre-populate with 4 beautiful mock bookings matching actual room suites
         const seedBookings = [
@@ -1298,16 +1364,15 @@
             notes: ""
           }
         ];
-        localStorage.setItem('anaira_bookings', JSON.stringify(seedBookings));
+        await AnairaDB.set(ANAIRA_KEYS.BOOKINGS, seedBookings);
       }
     }
 
-    function getAllBookings() {
-      const stored = localStorage.getItem('anaira_bookings');
-      return stored ? JSON.parse(stored) : [];
+    async function getAllBookings() {
+      return await AnairaDB.get(ANAIRA_KEYS.BOOKINGS, []);
     }
 
-    function saveBooking(bookingObj) {
+    async function saveBooking(bookingObj) {
       // Ensure support for both guest-facing and admin-facing formats for 100% database compatibility
       bookingObj.id = bookingObj.bookingId || bookingObj.id;
       bookingObj.bookingId = bookingObj.id;
@@ -1324,19 +1389,19 @@
       bookingObj.method = bookingObj.paymentMethod || bookingObj.method;
       bookingObj.paymentMethod = bookingObj.method;
 
-      const bookings = getAllBookings();
+      const bookings = await getAllBookings();
       bookings.unshift(bookingObj); // Add new booking to front
-      localStorage.setItem('anaira_bookings', JSON.stringify(bookings));
+      await AnairaDB.set(ANAIRA_KEYS.BOOKINGS, bookings);
       renderHistoryTable();
     }
 
-    function deleteBooking(bookingId) {
+    async function deleteBooking(bookingId) {
       if (confirm(`Apakah Anda yakin ingin menghapus data booking ${bookingId}?`)) {
-        let bookings = getAllBookings();
+        let bookings = await getAllBookings();
         bookings = bookings.filter(b => b.bookingId !== bookingId);
-        localStorage.setItem('anaira_bookings', JSON.stringify(bookings));
+        await AnairaDB.set(ANAIRA_KEYS.BOOKINGS, bookings);
         renderHistoryTable();
-        showNotification("Sampah", "Booking berhasil dihapus dari database lokal.", "trash-2", "text-rose-600 bg-rose-50");
+        showNotification("Sampah", "Booking berhasil dihapus dari database.", "trash-2", "text-rose-600 bg-rose-50");
       }
     }
 
@@ -1423,6 +1488,67 @@
         updateWizardUI();
         document.getElementById('bookingGrid').scrollIntoView({ behavior: 'smooth' });
       }
+    }
+
+    // --- VOUCHER REDEMPTION SYSTEM ---
+    async function applyVoucher() {
+      const codeInput = document.getElementById('voucherCodeInput').value.trim().toUpperCase();
+      const statusDiv = document.getElementById('voucherStatus');
+      const btn = document.getElementById('btnApplyVoucher');
+
+      if (!codeInput) {
+        statusDiv.className = "text-rose-600 text-[10px] font-semibold mt-1 block";
+        statusDiv.innerText = "Silakan masukkan kode voucher terlebih dahulu.";
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = "Memproses...";
+
+      try {
+        const vouchers = await AnairaDB.get(ANAIRA_KEYS.VOUCHERS, DEFAULT_VOUCHERS);
+        const found = vouchers.find(v => v.code.toUpperCase() === codeInput);
+
+        if (!found) {
+          statusDiv.className = "text-rose-600 text-[10px] font-semibold mt-1 block";
+          statusDiv.innerText = "Kode voucher tidak valid.";
+          activeVoucher = null;
+        } else if (!found.active) {
+          statusDiv.className = "text-rose-600 text-[10px] font-semibold mt-1 block";
+          statusDiv.innerText = "Voucher ini sedang tidak aktif.";
+          activeVoucher = null;
+        } else if (found.usedCount >= found.maxUses) {
+          statusDiv.className = "text-rose-600 text-[10px] font-semibold mt-1 block";
+          statusDiv.innerText = "Kuota penggunaan voucher telah habis.";
+          activeVoucher = null;
+        } else {
+          activeVoucher = found;
+          statusDiv.className = "text-emerald-600 text-[10px] font-semibold mt-1 block";
+          const discountDesc = found.type === 'percentage' ? `${found.value}%` : `Rp ${formatRupiah(found.value)}`;
+          statusDiv.innerText = `Voucher ${found.code} berhasil dipasang! Diskon ${discountDesc}`;
+          showNotification("Voucher Diaplikasikan", `Diskon ${discountDesc} berhasil ditambahkan ke reservasi Anda.`, "ticket", "text-emerald-600 bg-emerald-50");
+        }
+      } catch (e) {
+        console.error("Voucher apply error:", e);
+        statusDiv.className = "text-rose-600 text-[10px] font-semibold mt-1 block";
+        statusDiv.innerText = "Gagal memproses voucher diskon.";
+        activeVoucher = null;
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "Klaim";
+        calculateBilling();
+      }
+    }
+
+    function calculateVoucherDiscount(basePrice) {
+      if (!activeVoucher) return 0;
+      let discountAmount = 0;
+      if (activeVoucher.type === 'percentage') {
+        discountAmount = Math.round(basePrice * (activeVoucher.value / 100));
+      } else if (activeVoucher.type === 'fixed') {
+        discountAmount = activeVoucher.value;
+      }
+      return Math.min(discountAmount, basePrice);
     }
 
     function goToStep(stepNum) {
@@ -1756,12 +1882,24 @@
       }
 
       const basePrice = roomRate * nights;
-      const tax = basePrice * 0.10; // 10% tax
-      const totalAmount = basePrice + tax;
+      const discountAmount = calculateVoucherDiscount(basePrice);
+      const baseAfterDiscount = Math.max(0, basePrice - discountAmount);
+      const tax = baseAfterDiscount * 0.10; // 10% tax
+      const totalAmount = baseAfterDiscount + tax;
 
       // Update right summary displays
       document.getElementById('labelBillBase').innerText = `Sewa Kamar (${nights} Malam)`;
       document.getElementById('summaryBillBase').innerText = `Rp ${formatRupiah(basePrice)}`;
+      
+      const rowDiscount = document.getElementById('rowVoucherDiscount');
+      if (discountAmount > 0) {
+        rowDiscount.classList.remove('hidden');
+        document.getElementById('txtVoucherCode').innerText = activeVoucher.code;
+        document.getElementById('summaryVoucherDiscount').innerText = `-Rp ${formatRupiah(discountAmount)}`;
+      } else {
+        rowDiscount.classList.add('hidden');
+      }
+
       document.getElementById('summaryBillTax').innerText = `Rp ${formatRupiah(tax)}`;
       document.getElementById('summaryBillTotal').innerText = `Rp ${formatRupiah(totalAmount)}`;
     }
@@ -1793,8 +1931,10 @@
         roomRate = ROOM_RATES[selectedRoom].rate;
       }
       const basePrice = roomRate * nights;
-      const tax = basePrice * 0.10;
-      return basePrice + tax;
+      const discountAmount = calculateVoucherDiscount(basePrice);
+      const baseAfterDiscount = Math.max(0, basePrice - discountAmount);
+      const tax = baseAfterDiscount * 0.10;
+      return baseAfterDiscount + tax;
     }
 
     function closePaymentModal(type) {
@@ -1868,7 +2008,7 @@
       document.getElementById(actionId).classList.add('hidden');
       document.getElementById(loaderId).classList.remove('hidden');
 
-      setTimeout(() => {
+      setTimeout(async () => {
         // Complete checkout transaction
         clearInterval(countdownTimer);
         document.getElementById(`modal${type}`).classList.add('hidden');
@@ -1908,8 +2048,27 @@
           notes: guestNotes
         };
 
+        // Record Voucher details in booking
+        if (activeVoucher) {
+          createdBooking.voucherCode = activeVoucher.code;
+          const basePrice = ROOM_RATES[selectedRoom].rate * nights;
+          createdBooking.discount = calculateVoucherDiscount(basePrice);
+          
+          // Increment usedCount of voucher in database
+          try {
+            const vouchers = await AnairaDB.get(ANAIRA_KEYS.VOUCHERS, DEFAULT_VOUCHERS);
+            const idx = vouchers.findIndex(v => v.code.toUpperCase() === activeVoucher.code.toUpperCase());
+            if (idx !== -1) {
+              vouchers[idx].usedCount = (vouchers[idx].usedCount || 0) + 1;
+              await AnairaDB.set(ANAIRA_KEYS.VOUCHERS, vouchers);
+            }
+          } catch(e) {
+            console.error("Failed to update voucher use count:", e);
+          }
+        }
+
         // Save to Database
-        saveBooking(createdBooking);
+        await saveBooking(createdBooking);
 
         // Populate success receipt fields
         document.getElementById('receiptId').innerText = createdBooking.bookingId;

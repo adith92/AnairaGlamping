@@ -43,7 +43,7 @@ function head(content, title, description) {
 <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
 <meta property="og:image" content="assets/brand/og-anaira-glamping.jpg">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
 :root {
   --bg-gradient: linear-gradient(to bottom right, #06140e, #092218, #040a08);
   --ink: #f6f1e7;
@@ -314,12 +314,527 @@ function roomCard(content, room) {
     <p>${esc(room.facilities.join(', '))}</p>
     <p>Weekday ${rupiah(room.weekdayPrice)} - Weekend ${rupiah(room.weekendPrice)}</p>
     <p class="muted">${esc(room.description)}</p>
-    <div class="flex gap-2 mt-4" style="display: flex; gap: 8px; margin-top: 16px;">
-      <a class="btn" href="booking.html">Book Online 📅</a>
+    <div class="flex gap-2 mt-4" style="display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap;">
+      <a class="btn" href="rooms/${room.id}.html">Lihat Detail 🔍</a>
+      <a class="btn alt" href="booking.html?room=${room.id}">Pesan Sekarang 📅</a>
       <a class="btn alt" href="${wa(content)}">WhatsApp</a>
     </div>
   </div>
 </article>`;
+}
+
+function buildRoomDetailPage(content, room) {
+  const images = room.images || [room.image];
+  
+  // Render gallery indicators and images for a premium slideshow
+  const slideshowHtml = `
+  <div class="relative w-full rounded-2xl overflow-hidden shadow-xl border border-white/10 aspect-video">
+    <div id="slideshow-container" class="relative w-full h-full">
+      ${images.map((img, idx) => `
+        <div class="slide-item absolute inset-0 transition-opacity duration-500 ease-in-out ${idx === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}" data-slide-index="${idx}">
+          <img src="../${esc(img)}" alt="${esc(room.name)} detail ${idx + 1}" class="w-full h-full object-cover">
+        </div>
+      `).join('')}
+    </div>
+    
+    <!-- Controls -->
+    <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/40 hover:bg-brand text-white p-2.5 rounded-full backdrop-blur-md transition-colors border border-white/10 active:scale-90 flex items-center justify-center">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+    <button onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/40 hover:bg-brand text-white p-2.5 rounded-full backdrop-blur-md transition-colors border border-white/10 active:scale-90 flex items-center justify-center">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+    </button>
+    
+    <!-- Dots Indicators -->
+    <div class="absolute bottom-4 left-1/2 -translate-y-0.5 -translate-x-1/2 z-20 flex gap-2 bg-black/30 px-3.5 py-1.5 rounded-full backdrop-blur-md border border-white/10">
+      ${images.map((_, idx) => `
+        <button onclick="goToSlide(${idx})" class="slide-dot w-2 h-2 rounded-full transition-all ${idx === 0 ? 'bg-brand scale-125' : 'bg-white/40'}" data-slide-dot="${idx}"></button>
+      `).join('')}
+    </div>
+  </div>
+  
+  <!-- Thumbnail list -->
+  <div class="grid grid-cols-3 sm:grid-cols-4 gap-3 mt-3">
+    ${images.map((img, idx) => `
+      <div onclick="goToSlide(${idx})" class="thumb-item cursor-pointer rounded-xl overflow-hidden border-2 ${idx === 0 ? 'border-brand shadow-md scale-[1.02]' : 'border-white/10 hover:border-brand/40'} aspect-video transition-all duration-200" data-thumb-index="${idx}">
+        <img src="../${esc(img)}" alt="Thumbnail ${idx + 1}" class="w-full h-full object-cover">
+      </div>
+    `).join('')}
+  </div>
+  `;
+
+  const amenitiesChecklist = room.facilities.map(item => `
+    <div class="flex items-center gap-2.5 bg-brand-950/20 px-4 py-3 rounded-xl border border-white/5 backdrop-blur-sm">
+      <span class="w-5 h-5 rounded-full bg-brand/20 border border-brand/40 flex items-center justify-center">
+        <svg class="w-3.5 h-3.5 text-emerald-400 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+      </span>
+      <span class="text-sm font-semibold text-slate-200">${esc(item)}</span>
+    </div>
+  `).join('\n');
+
+  const pageBody = `
+  <section class="mt-4">
+    <!-- Back to Rooms button -->
+    <a href="../rooms.html" class="inline-flex items-center gap-2 text-brand hover:text-brand-hover text-sm font-bold transition-all hover:-translate-x-1 mb-5">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
+      Kembali ke Kamar & Tarif
+    </a>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <!-- Left Column: Media & Descriptions (7 Cols) -->
+      <div class="lg:col-span-7 space-y-6">
+        <!-- Interactive Multi-Photo Gallery -->
+        <div class="bg-black/15 backdrop-blur-md border border-white/10 p-4 sm:p-5 rounded-3xl shadow-xl">
+          <h2 class="text-xl font-serif font-bold text-white mb-4 border-l-4 border-brand pl-3 flex items-center justify-between">
+            <span>Galeri Foto Premium</span>
+            <span class="text-xs bg-brand/10 text-brand px-2.5 py-1 rounded-full font-sans font-semibold">${images.length} Foto</span>
+          </h2>
+          ${slideshowHtml}
+        </div>
+        
+        <!-- Description -->
+        <div class="bg-black/15 backdrop-blur-md border border-white/10 p-5 sm:p-6 rounded-3xl shadow-xl space-y-4">
+          <h2 class="text-xl font-serif font-bold text-white border-l-4 border-brand pl-3">Deskripsi Kamar</h2>
+          <p class="text-slate-300 text-sm sm:text-base leading-relaxed font-medium">${esc(room.description)}</p>
+          <div class="grid grid-cols-2 gap-4 pt-2 text-xs border-t border-white/5 mt-4">
+            <div class="bg-brand-950/15 p-3 rounded-2xl border border-white/5">
+              <span class="block text-slate-400 uppercase tracking-wider text-[10px] mb-0.5">Kapasitas Unit</span>
+              <strong class="text-sm font-bold text-brand">${esc(room.capacity)}</strong>
+            </div>
+            <div class="bg-brand-950/15 p-3 rounded-2xl border border-white/5">
+              <span class="block text-slate-400 uppercase tracking-wider text-[10px] mb-0.5">Ketersediaan Unit</span>
+              <strong class="text-sm font-bold text-brand">${esc(room.quantity)} Unit Tersedia</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Checklist Amenities -->
+        <div class="bg-black/15 backdrop-blur-md border border-white/10 p-5 sm:p-6 rounded-3xl shadow-xl space-y-4">
+          <h2 class="text-xl font-serif font-bold text-white border-l-4 border-brand pl-3">Fasilitas Unit</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            ${amenitiesChecklist}
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Booking Widget & Flex Pricing (5 Cols) -->
+      <div class="lg:col-span-5 sticky top-24 space-y-6">
+        <!-- Interactive Pricing & Availability Card -->
+        <div class="bg-black/25 backdrop-blur-xl border border-white/15 p-6 rounded-3xl shadow-2xl relative overflow-hidden">
+          <div class="absolute -top-12 -left-12 w-28 h-28 bg-brand/5 rounded-full blur-xl"></div>
+          
+          <div class="relative z-10 space-y-5">
+            <div>
+              <span class="text-xs bg-brand text-white font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2 inline-block">Best Rate Guarantee</span>
+              <h1 class="text-3xl font-serif font-extrabold text-white tracking-tight">${esc(room.name)} Suite</h1>
+            </div>
+
+            <!-- Rate Display (Flexible Price / Promo Option) -->
+            <div class="bg-white/5 p-4 rounded-2xl border border-white/5 space-y-2.5">
+              <span class="block text-slate-400 uppercase tracking-wider text-[10px] font-bold">Harga Sewa Kamar</span>
+              <div class="flex flex-col gap-1.5 divide-y divide-white/5">
+                <div class="flex justify-between items-center py-1">
+                  <span class="text-slate-300 text-sm font-medium">Weekday (Senin - Kamis):</span>
+                  <div class="text-right">
+                    <strong class="text-lg text-white font-serif font-bold">${rupiah(room.weekdayPrice)}</strong>
+                    <span class="text-[10px] text-slate-400 block">per malam (Nett)</span>
+                  </div>
+                </div>
+                <div class="flex justify-between items-center pt-2.5">
+                  <span class="text-slate-300 text-sm font-medium">Weekend (Jumat - Minggu):</span>
+                  <div class="text-right">
+                    <strong class="text-lg text-white font-serif font-bold">${rupiah(room.weekendPrice)}</strong>
+                    <span class="text-[10px] text-slate-400 block">per malam (Nett)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Date Checker scheduler Widget -->
+            <div class="space-y-3 pt-2">
+              <h3 class="text-sm font-bold text-white uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                Cek Tanggal & Estimasi Harga
+              </h3>
+              
+              <div class="grid grid-cols-2 gap-3 text-xs">
+                <div class="space-y-1">
+                  <label class="block text-[10px] text-slate-400 uppercase font-semibold">Check-In</label>
+                  <input type="date" id="dateCheckIn" class="w-full bg-white/10 hover:bg-white/15 border border-white/10 rounded-xl px-3 py-2 text-white focus:ring-1 focus:ring-brand focus:border-brand outline-none" min="2026-05-24">
+                </div>
+                <div class="space-y-1">
+                  <label class="block text-[10px] text-slate-400 uppercase font-semibold">Check-Out</label>
+                  <input type="date" id="dateCheckOut" class="w-full bg-white/10 hover:bg-white/15 border border-white/10 rounded-xl px-3 py-2 text-white focus:ring-1 focus:ring-brand focus:border-brand outline-none" min="2026-05-24">
+                </div>
+              </div>
+              
+              <div id="dateEstimatorBox" class="hidden bg-brand/5 border border-brand/20 p-3.5 rounded-2xl text-xs space-y-1.5 transition-all duration-200">
+                <div class="flex justify-between text-slate-300 font-medium">
+                  <span>Durasi Menginap:</span>
+                  <strong id="estNights" class="text-brand font-bold">-</strong>
+                </div>
+                <div class="flex justify-between text-slate-300 font-medium">
+                  <span>Estimasi Biaya:</span>
+                  <strong id="estPrice" class="text-white font-bold">-</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Booking buttons -->
+            <div class="flex flex-col gap-3 pt-2">
+              <button onclick="bookRoomOnline('${room.id}')" class="w-full py-3.5 bg-brand hover:bg-brand-hover active:scale-98 text-white font-extrabold rounded-xl shadow-lg transition-all duration-150 inline-flex items-center justify-center gap-2 text-sm flex items-center justify-center">
+                Pesan Sekarang (Online) 📅
+              </button>
+              <a href="${wa(content)}" class="w-full py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold rounded-xl text-center transition-all inline-flex items-center justify-center gap-2 text-sm backdrop-blur-sm">
+                Hubungi via WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Premium Slider and Pricing Logic JavaScript -->
+  <script>
+    // Slide index state
+    let activeSlide = 0;
+    const totalSlides = ${images.length};
+
+    function prevSlide() {
+      goToSlide((activeSlide - 1 + totalSlides) % totalSlides);
+    }
+
+    function nextSlide() {
+      goToSlide((activeSlide + 1) % totalSlides);
+    }
+
+    function goToSlide(idx) {
+      activeSlide = idx;
+      
+      // Update Slide items opacity and z-index
+      document.querySelectorAll('.slide-item').forEach(item => {
+        const index = parseInt(item.getAttribute('data-slide-index'));
+        if (index === idx) {
+          item.className = "slide-item absolute inset-0 transition-opacity duration-500 ease-in-out opacity-100 z-10";
+        } else {
+          item.className = "slide-item absolute inset-0 transition-opacity duration-500 ease-in-out opacity-0 z-0";
+        }
+      });
+      
+      // Update dots bg color
+      document.querySelectorAll('.slide-dot').forEach(dot => {
+        const index = parseInt(dot.getAttribute('data-slide-dot'));
+        if (index === idx) {
+          dot.className = "slide-dot w-2 h-2 rounded-full transition-all bg-brand scale-125";
+        } else {
+          dot.className = "slide-dot w-2 h-2 rounded-full transition-all bg-white/40";
+        }
+      });
+      
+      // Update thumbnails styling
+      document.querySelectorAll('.thumb-item').forEach(thumb => {
+        const index = parseInt(thumb.getAttribute('data-thumb-index'));
+        if (index === idx) {
+          thumb.className = "thumb-item cursor-pointer rounded-xl overflow-hidden border-2 border-brand shadow-md scale-[1.02] aspect-video transition-all duration-200";
+        } else {
+          thumb.className = "thumb-item cursor-pointer rounded-xl overflow-hidden border-2 border-white/10 hover:border-brand/40 aspect-video transition-all duration-200";
+        }
+      });
+    }
+
+    // Dynamic Live Price Estimator logic
+    const inInput = document.getElementById('dateCheckIn');
+    const outInput = document.getElementById('dateCheckOut');
+    const estBox = document.getElementById('dateEstimatorBox');
+    
+    // Set today limits on calendar min dates
+    const today = new Date('2026-05-24'); // Fixed matching context metadata
+    const todayStr = today.toISOString().slice(0, 10);
+    inInput.min = todayStr;
+    outInput.min = todayStr;
+
+    inInput.addEventListener('change', () => {
+      outInput.min = inInput.value;
+      calculateEstimate();
+    });
+    outInput.addEventListener('change', calculateEstimate);
+
+    function calculateEstimate() {
+      const inVal = inInput.value;
+      const outVal = outInput.value;
+
+      if (!inVal || !outVal) {
+        estBox.classList.add('hidden');
+        return;
+      }
+
+      const d1 = new Date(inVal);
+      const d2 = new Date(outVal);
+      const diffMs = d2.getTime() - d1.getTime();
+      const nights = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+      if (nights <= 0) {
+        estBox.classList.add('hidden');
+        return;
+      }
+
+      let totalRate = 0;
+      let tempDate = new Date(d1);
+      
+      const weekdayPrice = ${room.weekdayPrice};
+      const weekendPrice = ${room.weekendPrice};
+
+      for (let i = 0; i < nights; i++) {
+        const day = tempDate.getDay();
+        // Weekend is Friday (5) and Saturday (6) and Sunday (0)
+        if (day === 0 || day === 5 || day === 6) {
+          totalRate += weekendPrice;
+        } else {
+          totalRate += weekdayPrice;
+        }
+        tempDate.setDate(tempDate.getDate() + 1);
+      }
+
+      // Add 10% tax
+      const totalCost = Math.round(totalRate * 1.10);
+
+      document.getElementById('estNights').innerText = nights + ' Malam';
+      document.getElementById('estPrice').innerText = 'Rp ' + totalCost.toLocaleString('id-ID');
+      estBox.classList.remove('hidden');
+    }
+
+    function bookRoomOnline(roomId) {
+      const inVal = inInput.value;
+      const outVal = outInput.value;
+      
+      let url = '../booking.html?room=' + encodeURIComponent(roomId);
+      if (inVal) url += '&checkin=' + encodeURIComponent(inVal);
+      if (outVal) url += '&checkout=' + encodeURIComponent(outVal);
+      
+      window.location.href = url;
+    }
+  </script>
+  `;
+
+  // Wrap in custom layout with adapted parent path prefix
+  const relativeHead = `<title>Anaira Glamping & Resort | ${esc(room.name)}</title>
+<meta name="description" content="${esc(room.description)}">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="../assets/brand/favicon.ico">
+<link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png">
+<meta property="og:image" content="../assets/brand/og-anaira-glamping.jpg">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
+:root {
+  --bg-gradient: linear-gradient(to bottom right, #06140e, #092218, #040a08);
+  --ink: #f6f1e7;
+  --brand: #1b7f5a;
+  --brand-hover: #146546;
+  --muted: #a7eed0;
+  --card: rgba(10, 46, 32, 0.45);
+  --dark: rgba(6, 18, 14, 0.85);
+  --border: rgba(27, 127, 90, 0.2);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', Segoe UI, sans-serif;
+  color: var(--ink);
+  background: #06140e;
+  overflow-x: hidden;
+}
+.wrap { max-width: 1120px; margin: auto; padding: 24px 16px; }
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: rgba(10, 46, 32, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  padding: 14px 24px;
+  border-radius: 20px;
+}
+.logo { height: 46px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+.menu { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.menu a {
+  text-decoration: none;
+  color: rgba(246, 241, 231, 0.85);
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+.menu a:hover {
+  background: rgba(27, 127, 90, 0.25);
+  color: #a7eed0;
+}
+.btn {
+  display: inline-block;
+  background: var(--brand);
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  box-shadow: 0 4px 12px rgba(27, 127, 90, 0.2);
+}
+.btn:hover {
+  background: var(--brand-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(27, 127, 90, 0.3);
+}
+.btn.alt {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f6f1e7;
+  border: 1px solid var(--border);
+  box-shadow: none;
+  backdrop-filter: blur(8px);
+}
+.btn.alt:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(27, 127, 90, 0.4);
+}
+section { margin: 32px 0; }
+h1, h2, h3 { margin: .2em 0; font-weight: 700; }
+h2 { font-size: 1.8rem; border-left: 4px solid var(--brand); padding-left: 12px; margin-bottom: 20px; }
+.muted { color: rgba(246, 241, 231, 0.65); font-size: 0.95rem; line-height: 1.5; }
+footer {
+  margin-top: 40px;
+  background: var(--dark);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  color: rgba(246, 241, 231, 0.85);
+  border-radius: 24px;
+  padding: 32px 24px;
+}
+.footer-top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.logo-white { height: 40px; }
+
+@keyframes blob {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+.animate-blob {
+  animation: blob 16s infinite alternate ease-in-out;
+}
+@keyframes float-sparkle {
+  0% { transform: translateY(105vh) scale(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.7; }
+  90% { opacity: 0.7; }
+  100% { transform: translateY(-5vh) scale(1) rotate(360deg); opacity: 0; }
+}
+.animate-float-sparkle {
+  animation: float-sparkle 22s infinite linear;
+}
+.animation-delay-2000 { animation-delay: 2s; }
+.animation-delay-4000 { animation-delay: 4s; }
+
+@media (max-width: 768px) {
+  .logo { height: 40px; }
+  .nav { padding: 12px 16px; }
+}
+</style>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: '#1b7f5a',
+          'brand-hover': '#146546',
+          'brand-950': '#051810',
+          darkbg: '#06140e'
+        }
+      }
+    }
+  }
+</script>
+<!-- Shared Data Library -->
+<script src="../scripts/anaira-data-lib.js"></script>
+`;
+
+  const relativeNav = `<header class="wrap">
+  <nav class="nav">
+    <a href="../index.html"><img class="logo" src="../${esc(content.brand.logoWhite)}" alt="${esc(content.brand.name)}"></a>
+    <div class="menu">
+      <a href="../index.html">Home</a>
+      <a href="../rooms.html">Rooms</a>
+      <a href="../gallery.html">Gallery</a>
+      <a href="../packages.html">Packages</a>
+      <a href="../contact.html">Contact</a>
+      <a href="../booking.html" style="color: #a7eed0; font-weight: 600; border: 1.5px dashed rgba(27,127,90,0.5); background: rgba(27,127,90,0.15); border-radius: 12px; margin: 0 4px;">Book Online 📅</a>
+      <a href="../login.html" style="font-size: 0.8rem; opacity: 0.5; margin: 0 4px;" class="hover:opacity-100">Manage Booking 🔐</a>
+      <a class="btn" href="${wa(content)}">WhatsApp</a>
+      <div style="display: flex; gap: 4px; align-items: center; margin-left: 8px; border-left: 1px solid rgba(27,127,90,0.3); padding-left: 8px;">
+        <button onclick="setAnairaLanguage('id')" id="lang-id" style="background: none; border: none; color: #a7eed0; font-size: 0.8rem; font-weight: 700; cursor: pointer; opacity: 1; padding: 2px 4px; font-family: inherit; transition: opacity 0.2s;">ID</button>
+        <span style="opacity: 0.3; font-size: 0.8rem;">|</span>
+        <button onclick="setAnairaLanguage('en')" id="lang-en" style="background: none; border: none; color: #a7eed0; font-size: 0.8rem; font-weight: 400; cursor: pointer; opacity: 0.4; padding: 2px 4px; font-family: inherit; transition: opacity 0.2s;">EN</button>
+      </div>
+    </div>
+  </nav>
+</header>`;
+
+  const relativeFooter = `<footer class="wrap">
+  <div class="footer-top">
+    <img class="logo-white" src="../${esc(content.brand.logoWhite)}" alt="Anaira logo white">
+    <strong>${esc(content.brand.name)}</strong>
+  </div>
+  <p>${esc(content.contact.address)}</p>
+  <p>Check-in ${esc(content.policies.checkIn)} - Check-out ${esc(content.policies.checkOut)} - ${esc(content.policies.earlyLate)} - ${esc(content.policies.cancelRefund)}</p>
+  <p>Fasilitas: ${esc(content.facilities.map((item) => item.name).join(', '))}.</p>
+</footer>`;
+
+  return `<!doctype html>
+<html lang="id">
+<head>
+${relativeHead}
+</head>
+<body class="min-h-screen text-[#f6f1e7] font-sans antialiased overflow-x-hidden relative font-sans">
+
+  <!-- Premium Luxurious Background Overlay -->
+  <div class="fixed inset-0 -z-50 overflow-hidden bg-gradient-to-br from-[#06140e] via-[#092218] to-[#040a08] pointer-events-none">
+    <!-- Radial mesh / grid overlay -->
+    <div class="absolute inset-0 bg-[radial-gradient(#1b7f5a_0.8px,transparent_0.8px)] [background-size:24px_24px] opacity-[0.08] mix-blend-overlay"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#040a08_80%)] opacity-80"></div>
+    
+    <!-- Shifting animated glowing blobs -->
+    <div class="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[#1b7f5a]/20 filter blur-[80px] md:blur-[120px] animate-blob"></div>
+    <div class="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-teal-800/15 filter blur-[80px] md:blur-[120px] animate-blob animation-delay-2000"></div>
+    <div class="absolute top-[40%] left-[30%] w-[40%] h-[40%] rounded-full bg-emerald-900/10 filter blur-[100px] md:blur-[150px] animate-blob animation-delay-4000"></div>
+    
+    <!-- Floating Starry Sparkles -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute w-1.5 h-1.5 bg-amber-400 rounded-full blur-[1px] animate-float-sparkle" style="left: 5%; animation-delay: 0s; animation-duration: 20s;"></div>
+      <div class="absolute w-2 h-2 bg-emerald-300 rounded-full blur-[1px] animate-float-sparkle" style="left: 25%; animation-delay: 5s; animation-duration: 27s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-white rounded-full animate-float-sparkle" style="left: 45%; animation-delay: 9s; animation-duration: 22s;"></div>
+      <div class="absolute w-2 h-2 bg-yellow-200 rounded-full blur-[1px] animate-float-sparkle" style="left: 65%; animation-delay: 3s; animation-duration: 30s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-emerald-400 rounded-full blur-[1.5px] animate-float-sparkle" style="left: 85%; animation-delay: 7s; animation-duration: 24s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-white rounded-full animate-float-sparkle" style="left: 15%; animation-delay: 13s; animation-duration: 21s;"></div>
+      <div class="absolute w-2 h-2 bg-amber-300 rounded-full blur-[1px] animate-float-sparkle" style="left: 38%; animation-delay: 11s; animation-duration: 29s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-white rounded-full blur-[1px] animate-float-sparkle" style="left: 58%; animation-delay: 15s; animation-duration: 23s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-emerald-300 rounded-full animate-float-sparkle" style="left: 75%; animation-delay: 17s; animation-duration: 26s;"></div>
+    </div>
+  </div>
+
+  ${relativeNav}
+  <main class="wrap">
+  ${pageBody}
+  </main>
+  ${relativeFooter}
+</body>
+</html>`;
 }
 
 function buildIndex(content) {
@@ -417,7 +932,32 @@ function buildAll() {
   writePage('gallery.html', buildGallery(content));
   writePage('packages.html', buildPackages(content));
   writePage('contact.html', buildContact(content));
-  return { ok: true, pages: ['index.html', 'rooms.html', 'gallery.html', 'packages.html', 'contact.html'] };
+  
+  // Dynamic generation of independent room pages
+  const roomsDir = path.join(root, 'rooms');
+  if (!fs.existsSync(roomsDir)) {
+    fs.mkdirSync(roomsDir, { recursive: true });
+  }
+
+  const generatedRoomPages = [];
+  content.rooms.forEach(room => {
+    const filename = path.join('rooms', `${room.id}.html`);
+    const html = buildRoomDetailPage(content, room);
+    writePage(filename, html);
+    generatedRoomPages.push(filename);
+  });
+
+  return { 
+    ok: true, 
+    pages: [
+      'index.html', 
+      'rooms.html', 
+      'gallery.html', 
+      'packages.html', 
+      'contact.html',
+      ...generatedRoomPages
+    ] 
+  };
 }
 
 if (require.main === module) {

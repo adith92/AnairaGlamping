@@ -245,6 +245,10 @@
           <i data-lucide="image" class="w-4 h-4"></i>
           Gallery
         </a>
+        <a href="#" id="nav-vouchers" onclick="switchSection('vouchers');return false;" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-300 hover:bg-brand-900/30 hover:text-brand-200 font-medium transition-all text-sm">
+          <i data-lucide="ticket" class="w-4 h-4"></i>
+          Vouchers
+        </a>
 
         <div class="text-[9px] uppercase tracking-widest text-[#f6f1e7]/30 font-bold px-4 pt-4 pb-2">Sistem</div>
         
@@ -825,6 +829,35 @@
         </div>
       </div>
 
+      <!-- ===================== SECTION: VOUCHERS ===================== -->
+      <div id="section-vouchers" class="section-content hidden max-w-7xl mx-auto">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xl font-bold text-white">Manajemen Voucher Diskon</h3>
+          <button onclick="openVoucherModal()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-[#07130f] font-bold text-sm transition-all">
+            <i data-lucide="plus" class="w-4 h-4"></i> Tambah Voucher
+          </button>
+        </div>
+        <div class="glass-panel rounded-3xl p-6 md:p-8 glow-effect">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-[#1b7f5a]/10 text-[#f6f1e7]/40 uppercase tracking-wider text-[11px] font-bold">
+                  <th class="py-4 px-4">Kode Voucher</th>
+                  <th class="py-4 px-4">Tipe</th>
+                  <th class="py-4 px-4">Nilai Diskon</th>
+                  <th class="py-4 px-4 text-center">Batas Penggunaan</th>
+                  <th class="py-4 px-4 text-center">Terpakai</th>
+                  <th class="py-4 px-4 text-center">Status</th>
+                  <th class="py-4 px-4 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="vouchers-table-body" class="divide-y divide-[#1b7f5a]/5 text-sm text-[#f6f1e7]/95">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       <!-- ===================== SECTION: SETTINGS ===================== -->
       <div id="section-settings" class="section-content hidden max-w-7xl mx-auto">
         <h3 class="text-xl font-bold text-white mb-6">Pengaturan Sistem</h3>
@@ -969,7 +1002,40 @@
             </div>
           </div>
 
-          <!-- F. Data Management -->
+          <!-- F. Database Settings (Demo vs Live) -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect">
+            <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="database" class="w-4 h-4 text-emerald-400"></i> Mode Database</h4>
+            <div class="space-y-3">
+              <div>
+                <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Mode Penyimpanan</label>
+                <select id="db-mode" onchange="toggleDbFields()" class="w-full px-3 py-2 rounded-lg glass-input text-xs appearance-none cursor-pointer">
+                  <option value="demo">Demo Mode (LocalStorage)</option>
+                  <option value="live">Live Mode (Supabase SQL / Shared Hosting API)</option>
+                </select>
+              </div>
+              
+              <!-- Live Database Settings -->
+              <div id="db-live-fields" class="hidden space-y-3 pt-2 border-t border-[#1b7f5a]/20">
+                <p class="text-[9px] text-brand-200">Masukkan kredensial database live Anda (Supabase PostgreSQL) untuk menyimpan data ke Cloud SQL secara aman.</p>
+                <div>
+                  <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Supabase URL</label>
+                  <input id="db-supabase-url" type="url" class="w-full px-3 py-2 rounded-lg glass-input text-xs" placeholder="https://xxxxxx.supabase.co">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Supabase Anon Key</label>
+                  <input id="db-supabase-key" type="password" class="w-full px-3 py-2 rounded-lg glass-input text-xs" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+                </div>
+                
+                <p class="text-[9px] text-brand-200 pt-2 border-t border-[#1b7f5a]/10">ATAU gunakan jembatan API PHP-MySQL jika dideploy ke Shared Hosting (cPanel):</p>
+                <div>
+                  <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Shared Hosting Custom API URL</label>
+                  <input id="db-api-url" type="url" class="w-full px-3 py-2 rounded-lg glass-input text-xs" placeholder="https://domain-anda.com/api.php">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- G. Data Management -->
           <div class="glass-panel-dark rounded-2xl p-5 glow-effect">
             <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="database" class="w-4 h-4 text-brand-200"></i> Manajemen Data</h4>
             <div class="space-y-3">
@@ -1357,7 +1423,13 @@
         </div>
         <div>
           <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Foto Kamar (Path/URL)</label>
-          <input id="room-image" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs" placeholder="e.g. assets/images/rooms/balcony/balcony-exterior-garden.webp">
+          <div class="flex gap-2">
+            <input id="room-image" type="text" class="flex-1 px-3 py-2 rounded-lg glass-input text-xs" placeholder="e.g. assets/images/rooms/balcony/balcony-exterior-garden.webp">
+            <label class="px-3 py-2 rounded-lg bg-brand-700/40 hover:bg-brand-700/60 text-brand-200 border border-brand-500/20 text-xs font-bold cursor-pointer flex items-center justify-center gap-1 active:scale-95 transition-all">
+              <i data-lucide="upload" class="w-3.5 h-3.5"></i> Unggah
+              <input type="file" accept="image/*" onchange="uploadFileFromPC(event, 'room-image')" class="hidden">
+            </label>
+          </div>
         </div>
         <div>
           <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Deskripsi</label>
@@ -1410,10 +1482,65 @@
       <form id="gallery-form" onsubmit="handleSaveGallery(event)" class="space-y-4">
         <div>
           <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">URL / Path Foto</label>
-          <input required id="gallery-image-path" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs" placeholder="e.g. assets/images/gallery/gallery-new.webp">
+          <div class="flex gap-2">
+            <input required id="gallery-image-path" type="text" class="flex-1 px-3 py-2 rounded-lg glass-input text-xs" placeholder="e.g. assets/images/gallery/gallery-new.webp">
+            <label class="px-3 py-2 rounded-lg bg-brand-700/40 hover:bg-brand-700/60 text-brand-200 border border-brand-500/20 text-xs font-bold cursor-pointer flex items-center justify-center gap-1 active:scale-95 transition-all">
+              <i data-lucide="upload" class="w-3.5 h-3.5"></i> Unggah
+              <input type="file" accept="image/*" onchange="uploadFileFromPC(event, 'gallery-image-path')" class="hidden">
+            </label>
+          </div>
         </div>
         <div class="flex justify-end gap-3 pt-4 border-t border-[#1b7f5a]/20">
           <button type="button" onclick="closeGalleryModal()" class="px-5 py-2.5 rounded-xl border border-[#f6f1e7]/20 text-[#f6f1e7]/80 hover:text-white hover:bg-white/5 transition-all text-sm font-bold">Batal</button>
+          <button type="submit" class="px-6 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-[#07130f] text-sm font-bold transition-all">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL: VOUCHER CRUD ===================== -->
+  <div id="modal-voucher" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="glass-modal w-full max-w-md rounded-3xl p-6 md:p-8 shadow-2xl relative">
+      <div class="flex items-center justify-between border-b border-[#1b7f5a]/20 pb-4 mb-6">
+        <h3 id="voucher-modal-title" class="text-xl font-extrabold text-white">Tambah Voucher</h3>
+        <button onclick="closeVoucherModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-all">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+      <form id="voucher-form" onsubmit="handleSaveVoucher(event)" class="space-y-4">
+        <input type="hidden" id="voucher-edit-id">
+        <div>
+          <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Kode Voucher</label>
+          <input required id="voucher-code" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs" placeholder="e.g. ANAIRA10">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Tipe Diskon</label>
+            <select id="voucher-type" class="w-full px-3 py-2 rounded-lg glass-input text-xs appearance-none">
+              <option value="percentage">Persentase (%)</option>
+              <option value="fixed">Nominal Rupiah (Rp)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Nilai Diskon</label>
+            <input required id="voucher-value" type="number" min="1" class="w-full px-3 py-2 rounded-lg glass-input text-xs" placeholder="e.g. 10 atau 50000">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Batas Penggunaan</label>
+            <input required id="voucher-max-uses" type="number" min="1" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="100">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Status</label>
+            <select id="voucher-active" class="w-full px-3 py-2 rounded-lg glass-input text-xs appearance-none">
+              <option value="true">Aktif</option>
+              <option value="false">Non-Aktif</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex justify-end gap-3 pt-4 border-t border-[#1b7f5a]/20">
+          <button type="button" onclick="closeVoucherModal()" class="px-5 py-2.5 rounded-xl border border-[#f6f1e7]/20 text-[#f6f1e7]/80 hover:text-white hover:bg-white/5 transition-all text-sm font-bold">Batal</button>
           <button type="submit" class="px-6 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-[#07130f] text-sm font-bold transition-all">Simpan</button>
         </div>
       </form>
@@ -1697,6 +1824,9 @@
       if (currentSection === 'calendar') renderCalendar();
       if (currentSection === 'guests') renderGuestsTable();
       if (currentSection === 'payments') renderPayments();
+      if (currentSection === 'packages') renderPackagesTable();
+      if (currentSection === 'gallery') renderGalleryGrid();
+      if (currentSection === 'vouchers') renderVouchersTable();
       if (currentSection === 'settings') loadSettings();
     }
 
@@ -2564,6 +2694,194 @@
       }
     }
 
+    // ==================== PC FILE UPLOAD TO SERVER ====================
+    async function uploadFileFromPC(event, targetInputId) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const labelBtn = event.target.closest('label');
+      const originalText = labelBtn.innerHTML;
+      labelBtn.innerHTML = '<i class="w-3.5 h-3.5 animate-spin border-2 border-brand-200 border-t-transparent rounded-full"></i>...';
+      labelBtn.style.pointerEvents = 'none';
+
+      try {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = async function () {
+          const base64Content = reader.result.split(',')[1];
+          const payload = {
+            filename: file.name,
+            folder: targetInputId.includes('room') ? 'rooms' : 'gallery',
+            base64: base64Content
+          };
+
+          const res = await fetch('/api/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (!res.ok) throw new Error('Gagal mengunggah file ke server');
+          const data = await res.json();
+          if (data.ok && data.path) {
+            document.getElementById(targetInputId).value = data.path;
+            alert('File berhasil diunggah langsung dari PC Anda!');
+          } else {
+            throw new Error(data.error || 'Unknown error');
+          }
+        };
+      } catch (err) {
+        alert('Gagal mengunggah file: ' + err.message);
+      } finally {
+        labelBtn.innerHTML = originalText;
+        labelBtn.style.pointerEvents = 'auto';
+      }
+    }
+
+    // ==================== DUAL-MODE DATABASE SETTINGS ====================
+    function toggleDbFields() {
+      const mode = document.getElementById('db-mode').value;
+      const fields = document.getElementById('db-live-fields');
+      if (mode === 'live') {
+        fields.classList.remove('hidden');
+      } else {
+        fields.classList.add('hidden');
+      }
+    }
+
+    // ==================== VOUCHERS CRUD SYSTEM ====================
+    function getVouchers() {
+      const data = localStorage.getItem('anaira_vouchers');
+      if (!data) {
+        const defaultVouchers = [
+          { code: 'ANAIRA10', type: 'percentage', value: 10, maxUses: 100, usedCount: 0, active: true },
+          { code: 'WELCOMETOANAIRA', type: 'fixed', value: 50000, maxUses: 50, usedCount: 0, active: true }
+        ];
+        localStorage.setItem('anaira_vouchers', JSON.stringify(defaultVouchers));
+        return defaultVouchers;
+      }
+      try { return JSON.parse(data); }
+      catch(e) { return []; }
+    }
+
+    function saveVouchers(vouchers) {
+      localStorage.setItem('anaira_vouchers', JSON.stringify(vouchers));
+    }
+
+    function renderVouchersTable() {
+      const vouchers = getVouchers();
+      const tbody = document.getElementById('vouchers-table-body');
+      tbody.innerHTML = '';
+      if (vouchers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="py-8 text-center text-xs text-[#f6f1e7]/40">Belum ada kode voucher terdaftar.</td></tr>';
+        return;
+      }
+      vouchers.forEach(v => {
+        const typeBadge = v.type === 'percentage' ? 'Persentase (%)' : 'Rupiah (Rp)';
+        const valText = v.type === 'percentage' ? `${v.value}%` : formatIDR(v.value);
+        const statusBadge = v.active
+          ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950/50 text-emerald-400 border border-emerald-500/20">Aktif</span>'
+          : '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-950/50 text-red-400 border border-red-500/20">Non-Aktif</span>';
+
+        tbody.innerHTML += `
+          <tr class="hover:bg-white/5 transition-all text-xs">
+            <td class="py-4 px-4 font-bold text-white font-mono tracking-wide">${v.code}</td>
+            <td class="py-4 px-4">${typeBadge}</td>
+            <td class="py-4 px-4 font-mono font-bold">${valText}</td>
+            <td class="py-4 px-4 text-center font-mono">${v.maxUses}</td>
+            <td class="py-4 px-4 text-center font-mono">${v.usedCount || 0}</td>
+            <td class="py-4 px-4 text-center">${statusBadge}</td>
+            <td class="py-4 px-4 text-center">
+              <div class="flex items-center justify-center gap-1.5">
+                <button onclick="openVoucherModal('${v.code}')" class="p-1.5 bg-brand-700/20 hover:bg-brand-700/40 text-brand-200 rounded-lg transition-all border border-brand-500/20" title="Edit">
+                  <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                </button>
+                <button onclick="deleteVoucher('${v.code}')" class="p-1.5 bg-red-950/20 hover:bg-red-950/40 text-red-400 rounded-lg transition-all border border-red-500/20" title="Hapus">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </td>
+          </tr>`;
+      });
+      lucide.createIcons();
+    }
+
+    function openVoucherModal(voucherCode) {
+      const modal = document.getElementById('modal-voucher');
+      document.getElementById('voucher-form').reset();
+      document.getElementById('voucher-edit-id').value = '';
+
+      if (voucherCode) {
+        const vouchers = getVouchers();
+        const v = vouchers.find(x => x.code === voucherCode);
+        if (v) {
+          document.getElementById('voucher-modal-title').textContent = 'Edit Voucher';
+          document.getElementById('voucher-edit-id').value = v.code;
+          document.getElementById('voucher-code').value = v.code;
+          document.getElementById('voucher-type').value = v.type;
+          document.getElementById('voucher-value').value = v.value;
+          document.getElementById('voucher-max-uses').value = v.maxUses;
+          document.getElementById('voucher-active').value = String(v.active !== false);
+        }
+      } else {
+        document.getElementById('voucher-modal-title').textContent = 'Tambah Voucher';
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      lucide.createIcons();
+    }
+
+    function closeVoucherModal() {
+      document.getElementById('modal-voucher').classList.add('hidden');
+      document.getElementById('modal-voucher').classList.remove('flex');
+    }
+
+    function handleSaveVoucher(e) {
+      e.preventDefault();
+      const vouchers = getVouchers();
+      const editId = document.getElementById('voucher-edit-id').value;
+      const codeInput = document.getElementById('voucher-code').value.trim().toUpperCase();
+
+      const voucherData = {
+        code: codeInput,
+        type: document.getElementById('voucher-type').value,
+        value: Number(document.getElementById('voucher-value').value),
+        maxUses: Number(document.getElementById('voucher-max-uses').value),
+        usedCount: 0,
+        active: document.getElementById('voucher-active').value === 'true',
+      };
+
+      if (editId) {
+        const idx = vouchers.findIndex(v => v.code === editId);
+        if (idx !== -1) {
+          voucherData.usedCount = vouchers[idx].usedCount || 0;
+          vouchers[idx] = voucherData;
+        }
+      } else {
+        // Check duplicate
+        if (vouchers.some(v => v.code === codeInput)) {
+          alert('Kode voucher tersebut sudah terdaftar!');
+          return;
+        }
+        vouchers.push(voucherData);
+      }
+
+      saveVouchers(vouchers);
+      closeVoucherModal();
+      renderVouchersTable();
+      syncSiteContent();
+    }
+
+    function deleteVoucher(voucherCode) {
+      if (!confirm('Hapus voucher ini?')) return;
+      let vouchers = getVouchers();
+      vouchers = vouchers.filter(v => v.code !== voucherCode);
+      saveVouchers(vouchers);
+      renderVouchersTable();
+      syncSiteContent();
+    }
+
     // ==================== CALENDAR ====================
     let calYear, calMonth;
     (function initCalDate() {
@@ -2908,6 +3226,14 @@
       if (s.depositPct !== undefined) document.getElementById('set-deposit-pct').value = s.depositPct;
       if (s.refundPolicy) document.getElementById('set-refund-policy').value = s.refundPolicy;
       if (s.sessionTimeout) document.getElementById('set-session-timeout').value = s.sessionTimeout;
+
+      // Load Database config Mode
+      const dbCfg = AnairaDB.getConfig();
+      document.getElementById('db-mode').value = dbCfg.mode || 'demo';
+      document.getElementById('db-supabase-url').value = dbCfg.supabaseUrl || '';
+      document.getElementById('db-supabase-key').value = dbCfg.supabaseKey || '';
+      document.getElementById('db-api-url').value = dbCfg.apiUrl || '';
+      toggleDbFields();
     }
 
     function saveSettings() {
@@ -2930,6 +3256,16 @@
         sessionTimeout: Number(document.getElementById('set-session-timeout').value)
       };
       localStorage.setItem('anaira_settings', JSON.stringify(s));
+
+      // Save Database config Mode
+      const dbCfg = {
+        mode: document.getElementById('db-mode').value,
+        supabaseUrl: document.getElementById('db-supabase-url').value.trim(),
+        supabaseKey: document.getElementById('db-supabase-key').value.trim(),
+        apiUrl: document.getElementById('db-api-url').value.trim(),
+      };
+      AnairaDB.saveConfig(dbCfg);
+
       syncSiteContent();
       alert('Pengaturan berhasil disimpan!');
     }
