@@ -1162,6 +1162,47 @@
       updateWizardUI();
       renderCalendar();
       renderHistoryTable();
+
+      // Check if bookingId query param is present (Guest Logged In via Booking ID)
+      const urlParams = new URLSearchParams(window.location.search);
+      const bookingIdParam = urlParams.get('bookingId');
+      if (bookingIdParam) {
+        const bookings = getAllBookings();
+        const found = bookings.find(b => (b.bookingId || b.id || '').toUpperCase() === bookingIdParam.toUpperCase());
+        if (found) {
+          createdBooking = found; // Set global booking variable for PDF print
+          
+          // Display the receipt box, hide the reservation grid
+          document.getElementById('bookingGrid').classList.add('hidden');
+          document.getElementById('successPage').classList.remove('hidden');
+          
+          // Populate receipt fields
+          document.getElementById('receiptId').innerText = found.bookingId || found.id;
+          document.getElementById('receiptName').innerText = found.guestName || found.guest || '-';
+          document.getElementById('receiptWhatsapp').innerText = found.guestWhatsapp || found.phone || found.phoneNumber || '-';
+          document.getElementById('receiptRoom').innerText = found.roomType || found.room || '-';
+          document.getElementById('receiptPayment').innerText = found.paymentMethod || found.method || '-';
+          
+          const inDate = found.checkIn || found.checkInDate || '-';
+          const outDate = found.checkOut || found.checkOutDate || '-';
+          document.getElementById('receiptDates').innerText = `${inDate} s/d ${outDate}`;
+          
+          // Calculate duration nights
+          const d1 = new Date(inDate);
+          const d2 = new Date(outDate);
+          const diffMs = d2.getTime() - d1.getTime();
+          const nights = Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+          document.getElementById('receiptArrival').innerText = `Durasi: ${nights} Malam (${found.arrivalSlot || 'Sore'})`;
+          
+          const rawAmount = found.amount || found.totalAmount || found.total || 0;
+          document.getElementById('receiptAmount').innerText = 'Rp ' + rawAmount.toLocaleString('id-ID');
+          
+          // Scroll to receipt
+          setTimeout(() => {
+            document.getElementById('successPage').scrollIntoView({ behavior: 'smooth' });
+          }, 300);
+        }
+      }
     });
 
     // --- Data Synchronization (LocalStorage seeding & management) ---

@@ -196,8 +196,8 @@
             onerror="this.src='https://placehold.co/180x60/1b7f5a/ffffff?text=Anaira+Resort'"
           >
         </div>
-        <h2 class="font-outfit text-2xl font-bold text-white tracking-wide">Gerbang Masuk</h2>
-        <p class="text-xs text-white/50 mt-1">Gunakan Akun Anda untuk mengakses portal Anaira</p>
+        <h2 class="font-outfit text-2xl font-bold text-white tracking-wide">Portal Tamu &amp; Pengelola</h2>
+        <p class="text-xs text-white/50 mt-1">Masukkan Booking ID untuk melacak pesanan (Kosongkan Sandi), atau Username Admin</p>
       </div>
 
       <!-- Error Warning Banner -->
@@ -224,7 +224,7 @@
             for="identifier" 
             class="absolute left-4 top-4 text-white/40 text-sm pointer-events-none origin-[0]"
           >
-            Email atau Username Admin
+            Booking ID Tamu (e.g. ANR-2026-92813) atau Username Admin
           </label>
           <!-- Validation Status Indicators -->
           <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
@@ -349,6 +349,7 @@
     function validateIdentifier() {
       const value = identifierInput.value.trim();
       const isAdmin = value === 'admin';
+      const isBookingId = value.toUpperCase().startsWith('ANR-');
       const isValidEmail = emailRegex.test(value);
 
       // Clean state
@@ -362,7 +363,7 @@
 
       if (value === '') {
         identifierInput.classList.add('border-white/10');
-      } else if (isAdmin || isValidEmail) {
+      } else if (isAdmin || isBookingId || isValidEmail) {
         identifierInput.classList.add('border-emerald-500', 'focus:border-emerald-500', 'focus:ring-emerald-500');
         checkIcon.classList.remove('hidden');
       } else {
@@ -384,7 +385,7 @@
 
       if (value === '') {
         passwordInput.classList.add('border-white/10');
-      } else if (value.length >= 6) {
+      } else if (value.length >= 6 || identifierInput.value.trim().toUpperCase().startsWith('ANR-')) {
         passwordInput.classList.add('border-emerald-500', 'focus:border-emerald-500', 'focus:ring-emerald-500');
         passwordCheckIcon.classList.remove('hidden');
       } else {
@@ -419,8 +420,9 @@
     });
 
     presetUserBtn.addEventListener('click', () => {
-      identifierInput.value = 'user@anaira.com';
-      passwordInput.value = 'password123';
+      // Seed a default booking ID for user autofill
+      identifierInput.value = 'ANR-2026-92813';
+      passwordInput.value = '';
       validateIdentifier();
       validatePassword();
     });
@@ -437,9 +439,25 @@
 
       let redirectUrl = '';
       let isSuccess = false;
+      let isBookingId = false;
 
+      // Check if it's a Booking ID
+      if (identifier.toUpperCase().startsWith('ANR-')) {
+        const stored = localStorage.getItem('anaira_bookings');
+        const bookings = stored ? JSON.parse(stored) : [];
+        const found = bookings.find(b => (b.bookingId || b.id || '').toUpperCase() === identifier.toUpperCase());
+        
+        if (found) {
+          sessionStorage.setItem('guestBookingId', found.bookingId || found.id);
+          redirectUrl = `booking.html?bookingId=${found.bookingId || found.id}`;
+          isSuccess = true;
+          isBookingId = true;
+        } else {
+          showError('Maaf, Booking ID tidak ditemukan di sistem. Gunakan preset "Isi User" untuk demo.');
+        }
+      }
       // Check admin credentials
-      if (identifier === 'admin') {
+      else if (identifier === 'admin') {
         if (password === '221221') {
           sessionStorage.setItem('isAdmin', 'true');
           redirectUrl = 'admin/pms.html';
@@ -448,7 +466,7 @@
           showError('Password Admin tidak sesuai.');
         }
       } 
-      // Check user credentials
+      // Check user email login (generic booking)
       else if (emailRegex.test(identifier)) {
         sessionStorage.setItem('userEmail', identifier);
         redirectUrl = 'booking.html';
@@ -456,11 +474,11 @@
       } 
       // Invalid input formats
       else {
-        showError('Format Email tidak valid atau Username Admin tidak dikenali.');
+        showError('Format Booking ID, Email tidak valid, atau Username Admin tidak dikenali.');
       }
 
       if (isSuccess) {
-        runSuccessAnimation(redirectUrl);
+        runSuccessAnimation(redirectUrl, isBookingId);
       }
     });
 
@@ -477,16 +495,25 @@
     }
 
     // Premium 0% to 100% success loading animation
-    function runSuccessAnimation(redirectUrl) {
+    function runSuccessAnimation(redirectUrl, isBookingId = false) {
       successOverlay.classList.remove('hidden');
       
       let progress = 0;
-      const statusSteps = [
+      const adminSteps = [
         { limit: 25, text: 'Memverifikasi kredensial aman...' },
         { limit: 55, text: 'Membuat token sesi terenkripsi...' },
         { limit: 85, text: 'Mengamankan gerbang masuk Anaira...' },
         { limit: 100, text: 'Otentikasi sukses! Mengalihkan...' }
       ];
+      
+      const guestSteps = [
+        { limit: 25, text: 'Memvalidasi Booking ID di database...' },
+        { limit: 55, text: 'Mencocokkan tanggal & unit kamar...' },
+        { limit: 85, text: 'Menyiapkan invoice & tiket digital...' },
+        { limit: 100, text: 'Data ditemukan! Memuat tiket Anda...' }
+      ];
+      
+      const statusSteps = isBookingId ? guestSteps : adminSteps;
       
       const interval = setInterval(() => {
         progress += Math.floor(Math.random() * 8) + 4; // increment randomly between 4 and 11
