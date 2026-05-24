@@ -70,14 +70,34 @@
         transform: translate(30px, -50px) scale(1.1);
       }
       66% {
-        transform: translate(-20px, 20px) scale(0.9);
+        transform: translate(-20px, 20px) scale(0.95);
       }
       100% {
         transform: translate(0px, 0px) scale(1);
       }
     }
     .animate-blob {
-      animation: blob 12s infinite alternate ease-in-out;
+      animation: blob 15s infinite alternate ease-in-out;
+    }
+
+    @keyframes float-sparkle {
+      0% {
+        transform: translateY(105vh) scale(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.8;
+      }
+      90% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-5vh) scale(1) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    .animate-float-sparkle {
+      animation: float-sparkle 20s infinite linear;
     }
 
     @keyframes shake {
@@ -97,16 +117,34 @@
     }
   </style>
 </head>
-<body class="bg-[#070d0a] min-h-screen text-slate-100 flex items-center justify-center font-sans overflow-x-hidden relative">
+<body class="bg-gradient-to-br from-[#06140e] via-[#092218] to-[#040a08] min-h-screen text-slate-100 flex items-center justify-center font-sans overflow-x-hidden relative">
 
-  <!-- Gorgeous shifting background blobs -->
-  <div class="absolute inset-0 z-0 overflow-hidden">
+  <!-- Premium Luxurious Background Overlay -->
+  <div class="fixed inset-0 -z-50 overflow-hidden bg-gradient-to-br from-[#06140e] via-[#092218] to-[#040a08] pointer-events-none">
+    <!-- Radial mesh / grid overlay -->
+    <div class="absolute inset-0 bg-[radial-gradient(#1b7f5a_0.8px,transparent_0.8px)] [background-size:24px_24px] opacity-[0.08] mix-blend-overlay"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#040a08_80%)] opacity-80"></div>
+    
+    <!-- Shifting animated glowing blobs -->
     <!-- Forest Green Blob -->
-    <div class="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-brand-600/20 filter blur-[80px] md:blur-[120px] animate-blob"></div>
+    <div class="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-brand-600/25 filter blur-[80px] md:blur-[120px] animate-blob"></div>
     <!-- Teal/Cyan Blob -->
-    <div class="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-teal-800/15 filter blur-[80px] md:blur-[120px] animate-blob animation-delay-2000"></div>
+    <div class="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-teal-800/20 filter blur-[80px] md:blur-[120px] animate-blob animation-delay-2000"></div>
     <!-- Deep Emerald Blob -->
-    <div class="absolute top-[40%] left-[30%] w-[40%] h-[40%] rounded-full bg-emerald-900/10 filter blur-[100px] md:blur-[150px] animate-blob animation-delay-4000"></div>
+    <div class="absolute top-[40%] left-[30%] w-[40%] h-[40%] rounded-full bg-emerald-900/15 filter blur-[100px] md:blur-[150px] animate-blob animation-delay-4000"></div>
+    
+    <!-- Floating Starry Sparkles -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute w-1.5 h-1.5 bg-amber-400 rounded-full blur-[1px] animate-float-sparkle" style="left: 10%; animation-delay: 0s; animation-duration: 15s;"></div>
+      <div class="absolute w-2 h-2 bg-emerald-300 rounded-full blur-[1px] animate-float-sparkle" style="left: 30%; animation-delay: 3s; animation-duration: 22s;"></div>
+      <div class="absolute w-1 h-1 bg-white rounded-full animate-float-sparkle" style="left: 55%; animation-delay: 7s; animation-duration: 18s;"></div>
+      <div class="absolute w-2 h-2 bg-yellow-200 rounded-full blur-[1px] animate-float-sparkle" style="left: 75%; animation-delay: 1.5s; animation-duration: 25s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-emerald-400 rounded-full blur-[1.5px] animate-float-sparkle" style="left: 90%; animation-delay: 5s; animation-duration: 20s;"></div>
+      <div class="absolute w-1 h-1 bg-white rounded-full animate-float-sparkle" style="left: 20%; animation-delay: 11s; animation-duration: 16s;"></div>
+      <div class="absolute w-2 h-2 bg-amber-300 rounded-full blur-[1px] animate-float-sparkle" style="left: 45%; animation-delay: 9s; animation-duration: 24s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-white rounded-full blur-[1px] animate-float-sparkle" style="left: 65%; animation-delay: 13s; animation-duration: 19s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-emerald-300 rounded-full animate-float-sparkle" style="left: 80%; animation-delay: 15s; animation-duration: 21s;"></div>
+    </div>
   </div>
 
   <!-- Back to Home Floating Button -->

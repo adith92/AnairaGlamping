@@ -89,13 +89,83 @@
     .glow-effect {
       box-shadow: 0 0 40px rgba(27, 127, 90, 0.15);
     }
+
+    /* Blob & Sparkle animations */
+    @keyframes blob {
+      0% {
+        transform: translate(0px, 0px) scale(1);
+      }
+      33% {
+        transform: translate(35px, -60px) scale(1.1);
+      }
+      66% {
+        transform: translate(-25px, 25px) scale(0.95);
+      }
+      100% {
+        transform: translate(0px, 0px) scale(1);
+      }
+    }
+    .animate-blob {
+      animation: blob 16s infinite alternate ease-in-out;
+    }
+
+    @keyframes float-sparkle {
+      0% {
+        transform: translateY(105vh) scale(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.8;
+      }
+      90% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-5vh) scale(1) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    .animate-float-sparkle {
+      animation: float-sparkle 22s infinite linear;
+    }
+    
+    .animation-delay-2000 {
+      animation-delay: 2s;
+    }
+    .animation-delay-4000 {
+      animation-delay: 4s;
+    }
   </style>
 </head>
-<body class="bg-gradient-to-br from-[#07130f] via-[#0c2219] to-[#040a08] min-h-screen text-[#f6f1e7] font-sans antialiased overflow-x-hidden relative">
+<body class="bg-gradient-to-br from-[#06140e] via-[#092218] to-[#040a08] min-h-screen text-[#f6f1e7] font-sans antialiased overflow-x-hidden relative">
 
-  <!-- Glowing background blobs -->
-  <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-brand-700/20 rounded-full blur-[150px] pointer-events-none"></div>
-  <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#1b7f5a]/10 rounded-full blur-[150px] pointer-events-none"></div>
+  <!-- Premium Luxurious Background Overlay -->
+  <div class="fixed inset-0 -z-50 overflow-hidden bg-gradient-to-br from-[#06140e] via-[#092218] to-[#040a08] pointer-events-none">
+    <!-- Radial mesh / grid overlay -->
+    <div class="absolute inset-0 bg-[radial-gradient(#1b7f5a_0.8px,transparent_0.8px)] [background-size:24px_24px] opacity-[0.08] mix-blend-overlay"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#040a08_80%)] opacity-80"></div>
+    
+    <!-- Shifting animated glowing blobs -->
+    <!-- Forest Green Blob -->
+    <div class="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-brand-600/25 filter blur-[80px] md:blur-[120px] animate-blob"></div>
+    <!-- Teal/Cyan Blob -->
+    <div class="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-teal-800/20 filter blur-[80px] md:blur-[120px] animate-blob animation-delay-2000"></div>
+    <!-- Deep Emerald Blob -->
+    <div class="absolute top-[40%] left-[30%] w-[40%] h-[40%] rounded-full bg-emerald-900/15 filter blur-[100px] md:blur-[150px] animate-blob animation-delay-4000"></div>
+    
+    <!-- Floating Starry Sparkles -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute w-1.5 h-1.5 bg-amber-400 rounded-full blur-[1px] animate-float-sparkle" style="left: 5%; animation-delay: 0s; animation-duration: 20s;"></div>
+      <div class="absolute w-2 h-2 bg-emerald-300 rounded-full blur-[1px] animate-float-sparkle" style="left: 25%; animation-delay: 5s; animation-duration: 27s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-white rounded-full animate-float-sparkle" style="left: 45%; animation-delay: 9s; animation-duration: 22s;"></div>
+      <div class="absolute w-2 h-2 bg-yellow-200 rounded-full blur-[1px] animate-float-sparkle" style="left: 65%; animation-delay: 3s; animation-duration: 30s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-emerald-400 rounded-full blur-[1.5px] animate-float-sparkle" style="left: 85%; animation-delay: 7s; animation-duration: 24s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-white rounded-full animate-float-sparkle" style="left: 15%; animation-delay: 13s; animation-duration: 21s;"></div>
+      <div class="absolute w-2 h-2 bg-amber-300 rounded-full blur-[1px] animate-float-sparkle" style="left: 38%; animation-delay: 11s; animation-duration: 29s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-white rounded-full blur-[1px] animate-float-sparkle" style="left: 58%; animation-delay: 15s; animation-duration: 23s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-emerald-300 rounded-full animate-float-sparkle" style="left: 75%; animation-delay: 17s; animation-duration: 26s;"></div>
+    </div>
+  </div>
 
   <!-- Strict Route Guard Warning Overlay (Akses Ditolak) -->
   <div id="unauthorized-overlay" class="fixed inset-0 z-50 hidden items-center justify-center bg-[#050d0a] p-4 text-center">
@@ -668,19 +738,87 @@
       }
     }
 
+    // Unification mapper to support both guest and admin properties perfectly
+    function normalizeBookings(bookings) {
+      if (!Array.isArray(bookings)) return [];
+      return bookings.map(b => {
+        if (!b || typeof b !== 'object') return b;
+        const normalized = { ...b };
+        
+        // id <-> bookingId
+        if (normalized.bookingId !== undefined && normalized.id === undefined) {
+          normalized.id = normalized.bookingId;
+        } else if (normalized.id !== undefined && normalized.bookingId === undefined) {
+          normalized.bookingId = normalized.id;
+        }
+
+        // guest <-> guestName
+        if (normalized.guestName !== undefined && normalized.guest === undefined) {
+          normalized.guest = normalized.guestName;
+        } else if (normalized.guest !== undefined && normalized.guestName === undefined) {
+          normalized.guestName = normalized.guest;
+        }
+
+        // email <-> guestEmail
+        if (normalized.guestEmail !== undefined && normalized.email === undefined) {
+          normalized.email = normalized.guestEmail;
+        } else if (normalized.email !== undefined && normalized.guestEmail === undefined) {
+          normalized.guestEmail = normalized.email;
+        }
+
+        // room <-> roomType
+        if (normalized.roomType !== undefined && normalized.room === undefined) {
+          normalized.room = normalized.roomType;
+        } else if (normalized.room !== undefined && normalized.roomType === undefined) {
+          normalized.roomType = normalized.room;
+        }
+
+        // method <-> paymentMethod
+        if (normalized.paymentMethod !== undefined && normalized.method === undefined) {
+          normalized.method = normalized.paymentMethod;
+        } else if (normalized.method !== undefined && normalized.paymentMethod === undefined) {
+          normalized.paymentMethod = normalized.method;
+        }
+
+        // checkIn <-> checkin
+        if (normalized.checkin !== undefined && normalized.checkIn === undefined) {
+          normalized.checkIn = normalized.checkin;
+        } else if (normalized.checkIn !== undefined && normalized.checkin === undefined) {
+          normalized.checkin = normalized.checkIn;
+        }
+
+        // checkOut <-> checkout
+        if (normalized.checkout !== undefined && normalized.checkOut === undefined) {
+          normalized.checkOut = normalized.checkout;
+        } else if (normalized.checkOut !== undefined && normalized.checkout === undefined) {
+          normalized.checkout = normalized.checkOut;
+        }
+
+        return normalized;
+      });
+    }
+
     // Get bookings database
     function getBookings() {
       const data = localStorage.getItem('anaira_bookings');
       if (!data) {
-        localStorage.setItem('anaira_bookings', JSON.stringify(defaultBookings));
-        return defaultBookings;
+        const normalizedDefault = normalizeBookings(defaultBookings);
+        localStorage.setItem('anaira_bookings', JSON.stringify(normalizedDefault));
+        return normalizedDefault;
       }
-      return JSON.parse(data);
+      try {
+        const parsed = JSON.parse(data);
+        return normalizeBookings(parsed);
+      } catch (e) {
+        console.error("Failed to parse bookings:", e);
+        return [];
+      }
     }
 
     // Save bookings database
     function saveBookings(bookings) {
-      localStorage.setItem('anaira_bookings', JSON.stringify(bookings));
+      const normalized = normalizeBookings(bookings);
+      localStorage.setItem('anaira_bookings', JSON.stringify(normalized));
       initDashboard();
     }
 
@@ -862,17 +1000,32 @@
       // Generate unique Booking ID
       const randomPart = Math.floor(10000 + Math.random() * 90000);
       const bookingId = `ANR-2026-${randomPart}`;
+      const guestVal = document.getElementById('add-guest').value.trim();
+      const emailVal = document.getElementById('add-email').value.trim();
+      const roomVal = document.getElementById('add-room').value;
+      const checkInVal = document.getElementById('add-checkin').value;
+      const checkOutVal = document.getElementById('add-checkout').value;
+      const methodVal = document.getElementById('add-method').value;
+      const amountVal = Number(document.getElementById('add-amount').value);
+      const statusVal = document.getElementById('add-status').value;
 
       const newBooking = {
         id: bookingId,
-        guest: document.getElementById('add-guest').value.trim(),
-        email: document.getElementById('add-email').value.trim(),
-        room: document.getElementById('add-room').value,
-        checkIn: document.getElementById('add-checkin').value,
-        checkOut: document.getElementById('add-checkout').value,
-        method: document.getElementById('add-method').value,
-        amount: Number(document.getElementById('add-amount').value),
-        status: document.getElementById('add-status').value
+        bookingId: bookingId,
+        guest: guestVal,
+        guestName: guestVal,
+        email: emailVal,
+        guestEmail: emailVal,
+        room: roomVal,
+        roomType: roomVal,
+        checkIn: checkInVal,
+        checkin: checkInVal,
+        checkOut: checkOutVal,
+        checkout: checkOutVal,
+        method: methodVal,
+        paymentMethod: methodVal,
+        amount: amountVal,
+        status: statusVal
       };
 
       const bookings = getBookings();
@@ -885,20 +1038,20 @@
     // Modal Control: EDIT BOOKING
     function openEditModal(bookingId) {
       const bookings = getBookings();
-      const booking = bookings.find(b => b.id === bookingId);
+      const booking = bookings.find(b => b.id === bookingId || b.bookingId === bookingId);
       if (!booking) return;
 
-      document.getElementById('edit-booking-id').textContent = booking.id;
-      document.getElementById('edit-id-tracker').value = booking.id;
+      document.getElementById('edit-booking-id').textContent = booking.id || booking.bookingId;
+      document.getElementById('edit-id-tracker').value = booking.id || booking.bookingId;
 
-      document.getElementById('edit-guest').value = booking.guest;
-      document.getElementById('edit-email').value = booking.email;
-      document.getElementById('edit-room').value = booking.room;
-      document.getElementById('edit-checkin').value = booking.checkIn;
-      document.getElementById('edit-checkout').value = booking.checkOut;
-      document.getElementById('edit-method').value = booking.method;
-      document.getElementById('edit-amount').value = booking.amount;
-      document.getElementById('edit-status').value = booking.status;
+      document.getElementById('edit-guest').value = booking.guest || booking.guestName || '';
+      document.getElementById('edit-email').value = booking.email || booking.guestEmail || '';
+      document.getElementById('edit-room').value = booking.room || booking.roomType || 'Balcony';
+      document.getElementById('edit-checkin').value = booking.checkIn || booking.checkin || '';
+      document.getElementById('edit-checkout').value = booking.checkOut || booking.checkout || '';
+      document.getElementById('edit-method').value = booking.method || booking.paymentMethod || 'Transfer Bank (BCA)';
+      document.getElementById('edit-amount').value = booking.amount || 0;
+      document.getElementById('edit-status').value = booking.status || 'Paid';
 
       const modal = document.getElementById('modal-edit');
       modal.classList.remove('hidden');
@@ -915,17 +1068,32 @@
       e.preventDefault();
       const id = document.getElementById('edit-id-tracker').value;
       const bookings = getBookings();
-      const index = bookings.findIndex(b => b.id === id);
+      const index = bookings.findIndex(b => b.id === id || b.bookingId === id);
 
       if (index !== -1) {
-        bookings[index].guest = document.getElementById('edit-guest').value.trim();
-        bookings[index].email = document.getElementById('edit-email').value.trim();
-        bookings[index].room = document.getElementById('edit-room').value;
-        bookings[index].checkIn = document.getElementById('edit-checkin').value;
-        bookings[index].checkOut = document.getElementById('edit-checkout').value;
-        bookings[index].method = document.getElementById('edit-method').value;
-        bookings[index].amount = Number(document.getElementById('edit-amount').value);
-        bookings[index].status = document.getElementById('edit-status').value;
+        const guestVal = document.getElementById('edit-guest').value.trim();
+        const emailVal = document.getElementById('edit-email').value.trim();
+        const roomVal = document.getElementById('edit-room').value;
+        const checkInVal = document.getElementById('edit-checkin').value;
+        const checkOutVal = document.getElementById('edit-checkout').value;
+        const methodVal = document.getElementById('edit-method').value;
+        const amountVal = Number(document.getElementById('edit-amount').value);
+        const statusVal = document.getElementById('edit-status').value;
+
+        bookings[index].guest = guestVal;
+        bookings[index].guestName = guestVal;
+        bookings[index].email = emailVal;
+        bookings[index].guestEmail = emailVal;
+        bookings[index].room = roomVal;
+        bookings[index].roomType = roomVal;
+        bookings[index].checkIn = checkInVal;
+        bookings[index].checkin = checkInVal;
+        bookings[index].checkOut = checkOutVal;
+        bookings[index].checkout = checkOutVal;
+        bookings[index].method = methodVal;
+        bookings[index].paymentMethod = methodVal;
+        bookings[index].amount = amountVal;
+        bookings[index].status = statusVal;
 
         saveBookings(bookings);
       }
@@ -936,12 +1104,12 @@
     // Modal Control: DELETE BOOKING
     function openDeleteModal(bookingId) {
       const bookings = getBookings();
-      const booking = bookings.find(b => b.id === bookingId);
+      const booking = bookings.find(b => b.id === bookingId || b.bookingId === bookingId);
       if (!booking) return;
 
-      document.getElementById('delete-guest-name').textContent = booking.guest;
-      document.getElementById('delete-booking-id-text').textContent = booking.id;
-      document.getElementById('delete-id-tracker').value = booking.id;
+      document.getElementById('delete-guest-name').textContent = booking.guest || booking.guestName;
+      document.getElementById('delete-booking-id-text').textContent = booking.id || booking.bookingId;
+      document.getElementById('delete-id-tracker').value = booking.id || booking.bookingId;
 
       const modal = document.getElementById('modal-delete');
       modal.classList.remove('hidden');
@@ -956,7 +1124,7 @@
     function handleDeleteBooking() {
       const id = document.getElementById('delete-id-tracker').value;
       let bookings = getBookings();
-      bookings = bookings.filter(b => b.id !== id);
+      bookings = bookings.filter(b => b.id !== id && b.bookingId !== id);
       saveBookings(bookings);
 
       closeDeleteModal();

@@ -45,20 +45,20 @@
       --brand: #1b7f5a;
     }
     body {
-      background-color: var(--bg);
+      background-color: transparent;
       color: #1f2421;
     }
     .glass-card {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
     }
     .glass-card-dark {
-      background: rgba(29, 42, 37, 0.95);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(18, 30, 25, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
     /* QRIS Scanner Laser effect */
     .laser-line {
@@ -93,12 +93,86 @@
       -webkit-appearance: none;
       margin: 0;
     }
+
+    /* Blob & Sparkle animations */
+    @keyframes blob {
+      0% {
+        transform: translate(0px, 0px) scale(1);
+      }
+      33% {
+        transform: translate(35px, -60px) scale(1.1);
+      }
+      66% {
+        transform: translate(-25px, 25px) scale(0.95);
+      }
+      100% {
+        transform: translate(0px, 0px) scale(1);
+      }
+    }
+    .animate-blob {
+      animation: blob 16s infinite alternate ease-in-out;
+    }
+
+    @keyframes float-sparkle {
+      0% {
+        transform: translateY(105vh) scale(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.8;
+      }
+      90% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-5vh) scale(1) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    .animate-float-sparkle {
+      animation: float-sparkle 22s infinite linear;
+    }
+    
+    .animation-delay-2000 {
+      animation-delay: 2s;
+    }
+    .animation-delay-4000 {
+      animation-delay: 4s;
+    }
   </style>
 </head>
-<body class="font-sans antialiased text-ink min-h-screen flex flex-col">
+<body class="font-sans antialiased text-ink min-h-screen flex flex-col relative">
+
+  <!-- Premium Luxurious Background Overlay -->
+  <div class="fixed inset-0 -z-50 overflow-hidden bg-gradient-to-br from-[#06140e] via-[#092218] to-[#040a08] pointer-events-none">
+    <!-- Radial mesh / grid overlay -->
+    <div class="absolute inset-0 bg-[radial-gradient(#1b7f5a_0.8px,transparent_0.8px)] [background-size:24px_24px] opacity-[0.08] mix-blend-overlay"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#040a08_80%)] opacity-80"></div>
+    
+    <!-- Shifting animated glowing blobs -->
+    <!-- Forest Green Blob -->
+    <div class="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-brand-600/25 filter blur-[80px] md:blur-[120px] animate-blob"></div>
+    <!-- Teal/Cyan Blob -->
+    <div class="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-teal-800/20 filter blur-[80px] md:blur-[120px] animate-blob animation-delay-2000"></div>
+    <!-- Deep Emerald Blob -->
+    <div class="absolute top-[40%] left-[30%] w-[40%] h-[40%] rounded-full bg-emerald-900/15 filter blur-[100px] md:blur-[150px] animate-blob animation-delay-4000"></div>
+    
+    <!-- Floating Starry Sparkles -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute w-1.5 h-1.5 bg-amber-400 rounded-full blur-[1px] animate-float-sparkle" style="left: 8%; animation-delay: 0s; animation-duration: 18s;"></div>
+      <div class="absolute w-2 h-2 bg-emerald-300 rounded-full blur-[1px] animate-float-sparkle" style="left: 28%; animation-delay: 4s; animation-duration: 25s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-white rounded-full animate-float-sparkle" style="left: 48%; animation-delay: 8s; animation-duration: 20s;"></div>
+      <div class="absolute w-2 h-2 bg-yellow-200 rounded-full blur-[1px] animate-float-sparkle" style="left: 68%; animation-delay: 2s; animation-duration: 28s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-emerald-400 rounded-full blur-[1.5px] animate-float-sparkle" style="left: 88%; animation-delay: 6s; animation-duration: 23s;"></div>
+      <div class="absolute w-1 h-1 bg-white rounded-full animate-float-sparkle" style="left: 18%; animation-delay: 12s; animation-duration: 19s;"></div>
+      <div class="absolute w-2 h-2 bg-amber-300 rounded-full blur-[1px] animate-float-sparkle" style="left: 40%; animation-delay: 10s; animation-duration: 27s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-white rounded-full blur-[1px] animate-float-sparkle" style="left: 60%; animation-delay: 14s; animation-duration: 22s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-emerald-300 rounded-full animate-float-sparkle" style="left: 78%; animation-delay: 16s; animation-duration: 24s;"></div>
+    </div>
+  </div>
 
   <!-- Header Navigation (Consistent with Anaira Theme) -->
-  <header class="w-full bg-white/95 border-b border-brand/10 sticky top-0 z-30 transition-all duration-300">
+  <header class="w-full bg-white/80 backdrop-blur-md border-b border-brand/10 sticky top-0 z-30 transition-all duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
       <a href="index.html" class="flex items-center gap-2 hover:opacity-90 transition-opacity">
         <img class="h-10 sm:h-12 w-auto" src="assets/brand/logo-anaira-black-transparent.png" alt="Anaira Glamping &amp; Resort" onerror="this.src='https://raw.githubusercontent.com/adith92/AnairaGlamping/main/frontend/hotelier/assets/brand/logo-anaira-black-transparent.png';">
@@ -733,64 +807,7 @@
       </aside>
     </div>
 
-    <!-- ADMIN PANEL: Beautiful Interactive Bookings History & Sync Realtime List -->
-    <section class="mt-16 border-t border-brand/10 pt-12">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-        <div>
-          <h2 class="text-2xl sm:text-3xl font-serif font-bold text-darkbg flex items-center gap-2">
-            <i data-lucide="database" class="text-brand"></i> Panel Pengelola Reservasi
-          </h2>
-          <p class="text-gray-500 text-sm mt-0.5">Sinkronisasi local-storage realtime. Lacak, kelola, cetak invoice, dan hubungi tamu lewat WhatsApp.</p>
-        </div>
-        
-        <!-- Search and Filter tools -->
-        <div class="flex flex-wrap items-center gap-3">
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-              <i data-lucide="search" class="w-4 h-4"></i>
-            </div>
-            <input type="text" id="adminSearch" oninput="renderHistoryTable()" placeholder="Cari nama / booking ID..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand/20 bg-white text-xs sm:text-sm w-44 sm:w-60">
-          </div>
 
-          <select id="adminFilter" onchange="renderHistoryTable()" class="py-2 px-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand/20 bg-white text-xs sm:text-sm">
-            <option value="All">Semua Unit</option>
-            <option value="Balcony">Balcony</option>
-            <option value="Porch">Porch</option>
-            <option value="Villa">Villa</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Bookings Table Block -->
-      <div class="bg-white border border-brand/10 rounded-2xl shadow-md overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200 text-left text-xs sm:text-sm">
-            <thead class="bg-brand/5 text-brand font-semibold uppercase tracking-wider text-[10px] sm:text-xs">
-              <tr>
-                <th scope="col" class="px-4 sm:px-6 py-4">Booking ID</th>
-                <th scope="col" class="px-4 sm:px-6 py-4">Tamu &amp; WhatsApp</th>
-                <th scope="col" class="px-4 sm:px-6 py-4">Unit Suite</th>
-                <th scope="col" class="px-4 sm:px-6 py-4">Check-in &amp; Check-out</th>
-                <th scope="col" class="px-4 sm:px-6 py-4">Total Biaya</th>
-                <th scope="col" class="px-4 sm:px-6 py-4">Metode Bayar</th>
-                <th scope="col" class="px-4 sm:px-6 py-4">Status</th>
-                <th scope="col" class="px-4 sm:px-6 py-4 text-center">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="adminHistoryTableBody" class="divide-y divide-gray-150 text-gray-700">
-              <!-- Loaded Dynamically via localStorage -->
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Empty state placeholder for database -->
-        <div id="adminHistoryEmpty" class="hidden text-center py-10 text-gray-400 space-y-2">
-          <i data-lucide="folder-open" class="w-12 h-12 mx-auto opacity-50"></i>
-          <p class="text-sm font-semibold">Tidak ada data booking terdaftar</p>
-          <p class="text-xs">Silakan lakukan booking baru untuk mengisi riwayat transaksi.</p>
-        </div>
-      </div>
-    </section>
 
   </main>
 
@@ -1155,64 +1172,84 @@
         const seedBookings = [
           {
             bookingId: "ANR-2026-48192",
+            id: "ANR-2026-48192",
             guestName: "Aditya Pratama",
+            guest: "Aditya Pratama",
             guestEmail: "aditya.pratama@gmail.com",
+            email: "aditya.pratama@gmail.com",
             guestWhatsapp: "+6281234567890",
             roomType: "Villa",
+            room: "Villa",
             checkIn: "2026-05-10",
             checkOut: "2026-05-12",
             nights: 2,
             amount: 4620000, // 2 nights x 2.1m = 4.2m + 10% tax = 4.62m
             arrivalSlot: "Afternoon (12:00 - 18:00)",
             paymentMethod: "INDOPAY QRIS",
+            method: "INDOPAY QRIS",
             bookingDate: "2026-05-08",
             status: "Paid",
             notes: "Minta disiapkan fasilitas barbecue keluarga"
           },
           {
             bookingId: "ANR-2026-92813",
+            id: "ANR-2026-92813",
             guestName: "Siti Rahmawati",
+            guest: "Siti Rahmawati",
             guestEmail: "siti.rahma@yahoo.com",
+            email: "siti.rahma@yahoo.com",
             guestWhatsapp: "085712345678",
             roomType: "Balcony",
+            room: "Balcony",
             checkIn: "2026-05-18",
             checkOut: "2026-05-20",
             nights: 2,
             amount: 1100000, // 2 nights x 500k = 1m + 10% tax = 1.1m
             arrivalSlot: "Morning (08:00 - 12:00)",
             paymentMethod: "Midtrans Snap",
+            method: "Midtrans Snap",
             bookingDate: "2026-05-15",
             status: "Paid",
             notes: "Kamar yang menghadap ke kolam utama"
           },
           {
             bookingId: "ANR-2026-10482",
+            id: "ANR-2026-10482",
             guestName: "Budi Santoso",
+            guest: "Budi Santoso",
             guestEmail: "budi.santoso@outlook.com",
+            email: "budi.santoso@outlook.com",
             guestWhatsapp: "+6281987654321",
             roomType: "Porch",
+            room: "Porch",
             checkIn: "2026-05-22",
             checkOut: "2026-05-25",
             nights: 3,
             amount: 1155000, // 3 nights x 350k = 1.05m + 10% tax = 1.155m
             arrivalSlot: "Evening (18:00 - 22:00)",
             paymentMethod: "Xendit Invoice",
+            method: "Xendit Invoice",
             bookingDate: "2026-05-20",
             status: "Paid",
             notes: "Minta disiapkan api unggun malam pertama"
           },
           {
             bookingId: "ANR-2026-73629",
+            id: "ANR-2026-73629",
             guestName: "Diana Wijaya",
+            guest: "Diana Wijaya",
             guestEmail: "diana.w@gmail.com",
+            email: "diana.w@gmail.com",
             guestWhatsapp: "081122334455",
             roomType: "Balcony",
+            room: "Balcony",
             checkIn: "2026-05-28",
             checkOut: "2026-05-29",
             nights: 1,
             amount: 550000, // 1 night x 500k = 500k + 10% tax = 550k
             arrivalSlot: "Afternoon (12:00 - 18:00)",
             paymentMethod: "INDOPAY QRIS",
+            method: "INDOPAY QRIS",
             bookingDate: "2026-05-24",
             status: "Paid",
             notes: ""
@@ -1228,6 +1265,22 @@
     }
 
     function saveBooking(bookingObj) {
+      // Ensure support for both guest-facing and admin-facing formats for 100% database compatibility
+      bookingObj.id = bookingObj.bookingId || bookingObj.id;
+      bookingObj.bookingId = bookingObj.id;
+      
+      bookingObj.guest = bookingObj.guestName || bookingObj.guest;
+      bookingObj.guestName = bookingObj.guest;
+      
+      bookingObj.email = bookingObj.guestEmail || bookingObj.email;
+      bookingObj.guestEmail = bookingObj.email;
+      
+      bookingObj.room = bookingObj.roomType || bookingObj.room;
+      bookingObj.roomType = bookingObj.room;
+      
+      bookingObj.method = bookingObj.paymentMethod || bookingObj.method;
+      bookingObj.paymentMethod = bookingObj.method;
+
       const bookings = getAllBookings();
       bookings.unshift(bookingObj); // Add new booking to front
       localStorage.setItem('anaira_bookings', JSON.stringify(bookings));
@@ -1792,16 +1845,21 @@
         
         createdBooking = {
           bookingId: newBookingId,
+          id: newBookingId,
           guestName: guestName,
+          guest: guestName,
           guestEmail: guestEmail,
+          email: guestEmail,
           guestWhatsapp: guestWhatsapp,
           roomType: selectedRoom,
+          room: selectedRoom,
           checkIn: formatDateString(checkInDate),
           checkOut: formatDateString(checkOutDate),
           nights: nights,
           amount: totalAmount,
           arrivalSlot: arrivalSlot,
           paymentMethod: selectedPayment,
+          method: selectedPayment,
           bookingDate: formatDateString(new Date()),
           status: 'Paid',
           notes: guestNotes
@@ -2054,85 +2112,9 @@
     }
 
     // --- BOOKING HISTORY ADMIN TABLE RENDER & SEARCH ---
-    function renderHistoryTable() {
-      const tbody = document.getElementById('adminHistoryTableBody');
-      const emptyState = document.getElementById('adminHistoryEmpty');
-      tbody.innerHTML = '';
+    function renderHistoryTable() {}
 
-      const query = document.getElementById('adminSearch').value.toLowerCase().trim();
-      const filter = document.getElementById('adminFilter').value;
-
-      let bookings = getAllBookings();
-
-      // Apply Filter by Tipe Kamar
-      if (filter !== 'All') {
-        bookings = bookings.filter(b => b.roomType === filter);
-      }
-
-      // Apply Search filter
-      if (query !== '') {
-        bookings = bookings.filter(b => 
-          b.guestName.toLowerCase().includes(query) || 
-          b.bookingId.toLowerCase().includes(query)
-        );
-      }
-
-      if (bookings.length === 0) {
-        tbody.innerHTML = '';
-        emptyState.classList.remove('hidden');
-        return;
-      }
-
-      emptyState.classList.add('hidden');
-
-      bookings.forEach(b => {
-        const tr = document.createElement('tr');
-        tr.className = "hover:bg-brand/5 transition-colors border-b border-gray-100";
-        
-        tr.innerHTML = `
-          <td class="px-4 sm:px-6 py-4 font-bold text-brand font-mono">${b.bookingId}</td>
-          <td class="px-4 sm:px-6 py-4">
-            <div class="font-semibold text-gray-800">${b.guestName}</div>
-            <div class="text-[11px] text-gray-400 font-mono">${b.guestEmail}</div>
-            <a href="https://wa.me/${cleanPhoneForWa(b.guestWhatsapp)}?text=Halo%20${encodeURIComponent(b.guestName)}%2C%20kami%20dari%20pihak%20Anaira%20Glamping%20ingin%20mengonfirmasi%20reservasi%20Anda%20dengan%20ID%20${b.bookingId}." target="_blank" class="inline-flex items-center gap-1 text-[11px] text-emerald-600 hover:underline font-bold mt-1">
-              <i data-lucide="phone" class="w-3 h-3"></i> ${b.guestWhatsapp}
-            </a>
-          </td>
-          <td class="px-4 sm:px-6 py-4 font-serif font-bold text-darkbg">${b.roomType}</td>
-          <td class="px-4 sm:px-6 py-4">
-            <div class="font-medium">${formatIndoStringDate(b.checkIn)}</div>
-            <div class="text-[11px] text-gray-400">s/d ${formatIndoStringDate(b.checkOut)} (${b.nights} Malam)</div>
-          </td>
-          <td class="px-4 sm:px-6 py-4 font-bold text-gray-900">Rp ${formatRupiah(b.amount)}</td>
-          <td class="px-4 sm:px-6 py-4 text-xs font-semibold text-gray-500">${b.paymentMethod}</td>
-          <td class="px-4 sm:px-6 py-4">
-            <span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full text-[10px] border border-emerald-200">
-              <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span> Paid
-            </span>
-          </td>
-          <td class="px-4 sm:px-6 py-4 text-center">
-            <div class="flex items-center justify-center gap-2">
-              <button onclick="triggerPrintForId('${b.bookingId}')" title="Cetak Invoice" class="p-2 bg-brand/10 hover:bg-brand text-brand hover:text-white rounded-xl transition-all duration-150 active:scale-95 shadow-sm">
-                <i data-lucide="printer" class="w-4 h-4"></i>
-              </button>
-              <button onclick="deleteBooking('${b.bookingId}')" title="Hapus Booking" class="p-2 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white rounded-xl transition-all duration-150 active:scale-95 shadow-sm">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-              </button>
-            </div>
-          </td>
-        `;
-
-        tbody.appendChild(tr);
-      });
-
-      lucide.createIcons();
-    }
-
-    function scrollToHistory() {
-      const historyTable = document.getElementById('adminSearch');
-      historyTable.scrollIntoView({ behavior: 'smooth' });
-      historyTable.focus();
-    }
+    function scrollToHistory() {}
 
     // --- REUSABLE HELPER UTILITIES ---
     
