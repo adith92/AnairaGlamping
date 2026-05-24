@@ -135,6 +135,19 @@
     .animation-delay-4000 {
       animation-delay: 4s;
     }
+
+    /* Calendar cell styles */
+    .cal-available { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); }
+    .cal-partial  { background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.3); }
+    .cal-full     { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); }
+    .cal-blocked  { background: rgba(100, 100, 100, 0.25); border-color: rgba(100, 100, 100, 0.4); }
+
+    /* Sidebar nav active */
+    .nav-active {
+      background: rgba(14, 76, 52, 0.4);
+      color: #a7eed0;
+      border: 1px solid rgba(27, 127, 90, 0.2);
+    }
   </style>
 </head>
 <body class="bg-gradient-to-br from-[#06140e] via-[#092218] to-[#040a08] min-h-screen text-[#f6f1e7] font-sans antialiased overflow-x-hidden relative">
@@ -146,11 +159,8 @@
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#040a08_80%)] opacity-80"></div>
     
     <!-- Shifting animated glowing blobs -->
-    <!-- Forest Green Blob -->
     <div class="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-brand-600/25 filter blur-[80px] md:blur-[120px] animate-blob"></div>
-    <!-- Teal/Cyan Blob -->
     <div class="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-teal-800/20 filter blur-[80px] md:blur-[120px] animate-blob animation-delay-2000"></div>
-    <!-- Deep Emerald Blob -->
     <div class="absolute top-[40%] left-[30%] w-[40%] h-[40%] rounded-full bg-emerald-900/15 filter blur-[100px] md:blur-[150px] animate-blob animation-delay-4000"></div>
     
     <!-- Floating Starry Sparkles -->
@@ -185,8 +195,8 @@
   <!-- Main Authenticated Layout wrapper -->
   <div id="pms-wrapper" class="hidden min-h-screen flex flex-col md:flex-row">
     
-    <!-- Sidebar Navigation -->
-    <aside class="w-full md:w-64 bg-[#06120e]/80 border-b md:border-b-0 md:border-r border-[#1b7f5a]/20 flex flex-col z-20 backdrop-blur-md">
+    <!-- ===================== SIDEBAR NAVIGATION ===================== -->
+    <aside class="w-full md:w-64 bg-[#06120e]/80 border-b md:border-b-0 md:border-r border-[#1b7f5a]/20 flex flex-col z-20 backdrop-blur-md md:min-h-screen md:sticky md:top-0">
       <!-- Brand Area -->
       <div class="p-6 border-b border-[#1b7f5a]/20 flex items-center gap-3">
         <img class="h-10 w-auto" src="../assets/brand/logo-anaira-white-transparent.png" alt="Anaira Glamping">
@@ -197,18 +207,61 @@
       </div>
       
       <!-- Nav Links -->
-      <nav class="flex-1 p-4 space-y-2">
-        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-brand-700/40 text-brand-200 font-medium transition-all border border-brand-500/20">
-          <i data-lucide="layout-dashboard" class="w-5 h-5 text-brand-200"></i>
+      <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+        <div class="text-[9px] uppercase tracking-widest text-[#f6f1e7]/30 font-bold px-4 pt-2 pb-2">Utama</div>
+        
+        <a href="#" id="nav-dashboard" onclick="switchSection('dashboard');return false;" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl nav-active font-medium transition-all text-sm">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
           Dashboard
         </a>
-        <a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-brand-900/30 hover:text-brand-200 font-medium transition-all">
-          <i data-lucide="edit" class="w-5 h-5"></i>
+        <a href="#" id="nav-bookings" onclick="switchSection('bookings');return false;" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-300 hover:bg-brand-900/30 hover:text-brand-200 font-medium transition-all text-sm">
+          <i data-lucide="calendar-check" class="w-4 h-4"></i>
+          Bookings
+        </a>
+        <a href="#" id="nav-rooms" onclick="switchSection('rooms');return false;" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-300 hover:bg-brand-900/30 hover:text-brand-200 font-medium transition-all text-sm">
+          <i data-lucide="home" class="w-4 h-4"></i>
+          Rooms / Villas
+        </a>
+        <a href="#" id="nav-calendar" onclick="switchSection('calendar');return false;" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-300 hover:bg-brand-900/30 hover:text-brand-200 font-medium transition-all text-sm">
+          <i data-lucide="calendar-range" class="w-4 h-4"></i>
+          Calendar
+        </a>
+
+        <div class="text-[9px] uppercase tracking-widest text-[#f6f1e7]/30 font-bold px-4 pt-4 pb-2">Manajemen</div>
+        
+        <a href="#" id="nav-guests" onclick="switchSection('guests');return false;" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-300 hover:bg-brand-900/30 hover:text-brand-200 font-medium transition-all text-sm">
+          <i data-lucide="users" class="w-4 h-4"></i>
+          Guests
+        </a>
+        <a href="#" id="nav-payments" onclick="switchSection('payments');return false;" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-300 hover:bg-brand-900/30 hover:text-brand-200 font-medium transition-all text-sm">
+          <i data-lucide="credit-card" class="w-4 h-4"></i>
+          Payments
+        </a>
+        <a href="#" id="nav-packages" onclick="switchSection('packages');return false;" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-300 hover:bg-brand-900/30 hover:text-brand-200 font-medium transition-all text-sm">
+          <i data-lucide="gift" class="w-4 h-4"></i>
+          Packages
+          <span class="ml-auto text-[8px] bg-amber-950/60 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded-full font-bold">SOON</span>
+        </a>
+        <a href="#" id="nav-gallery" onclick="switchSection('gallery');return false;" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-300 hover:bg-brand-900/30 hover:text-brand-200 font-medium transition-all text-sm">
+          <i data-lucide="image" class="w-4 h-4"></i>
+          Gallery
+          <span class="ml-auto text-[8px] bg-amber-950/60 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded-full font-bold">SOON</span>
+        </a>
+
+        <div class="text-[9px] uppercase tracking-widest text-[#f6f1e7]/30 font-bold px-4 pt-4 pb-2">Sistem</div>
+        
+        <a href="index.html" id="nav-content-editor" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-300 hover:bg-brand-900/30 hover:text-brand-200 font-medium transition-all text-sm">
+          <i data-lucide="edit" class="w-4 h-4"></i>
           Content Editor
         </a>
-        <a href="../rooms.html" target="_blank" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-brand-900/30 hover:text-brand-200 font-medium transition-all">
-          <i data-lucide="eye" class="w-5 h-5"></i>
-          Lihat Web Utama
+        <a href="#" id="nav-settings" onclick="switchSection('settings');return false;" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-300 hover:bg-brand-900/30 hover:text-brand-200 font-medium transition-all text-sm">
+          <i data-lucide="settings" class="w-4 h-4"></i>
+          Settings
+        </a>
+        <a href="../index.html" target="_blank" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-300 hover:bg-brand-900/30 hover:text-brand-200 font-medium transition-all text-sm">
+          <i data-lucide="eye" class="w-4 h-4"></i>
+          View Website
+          <i data-lucide="external-link" class="w-3 h-3 ml-auto opacity-40"></i>
         </a>
       </nav>
 
@@ -231,21 +284,20 @@
       </div>
     </aside>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 p-6 md:p-10 overflow-y-auto max-w-7xl mx-auto w-full">
-      <!-- Top header bar -->
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+    <!-- ===================== MAIN CONTENT AREA ===================== -->
+    <main class="flex-1 p-6 md:p-10 overflow-y-auto w-full">
+      <!-- Top header bar (always visible) -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 max-w-7xl mx-auto">
         <div>
           <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
-            Anaira Glamping PMS <span class="text-xs bg-brand-700/60 text-brand-200 border border-brand-500/30 px-2 py-0.5 rounded-full font-normal">v1.2.0</span>
+            Anaira Glamping PMS <span class="text-xs bg-brand-700/60 text-brand-200 border border-brand-500/30 px-2 py-0.5 rounded-full font-normal">v2.0.0</span>
           </h2>
-          <p class="text-[#f6f1e7]/60 text-sm mt-1">Sistem Manajemen Reservasi &amp; Okupansi Hotel Real-Time</p>
+          <p class="text-[#f6f1e7]/60 text-sm mt-1">Sistem Manajemen Properti & Reservasi Hotel Real-Time</p>
         </div>
-        <!-- Right controls (Time and manual booking trigger) -->
         <div class="flex items-center gap-4">
           <div class="hidden lg:flex flex-col text-right">
             <span class="text-xs text-[#f6f1e7]/40 uppercase tracking-widest font-semibold">Waktu Server</span>
-            <span id="server-time" class="text-sm font-semibold text-brand-200 font-mono">2026-05-24 15:17:12</span>
+            <span id="server-time" class="text-sm font-semibold text-brand-200 font-mono">--</span>
           </div>
           <button onclick="openAddModal()" class="flex items-center gap-2 px-5 py-3 rounded-xl bg-brand-500 hover:bg-brand-600 active:scale-95 text-[#07130f] font-bold text-sm tracking-wide shadow-lg shadow-brand-950/40 transition-all border border-brand-200/20">
             <i data-lucide="plus-circle" class="w-5 h-5"></i>
@@ -254,172 +306,686 @@
         </div>
       </div>
 
-      <!-- Quick Metrics Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-10">
+      <!-- ===================== SECTION: DASHBOARD ===================== -->
+      <div id="section-dashboard" class="section-content max-w-7xl mx-auto">
         
-        <!-- Total Revenue -->
-        <div class="glass-panel-dark rounded-2xl p-5 glow-effect relative overflow-hidden flex flex-col justify-between">
-          <div class="absolute top-2 right-2 w-16 h-16 bg-brand-500/5 rounded-full blur-xl"></div>
-          <div class="flex items-center justify-between mb-4">
-            <span class="text-xs text-[#f6f1e7]/60 font-semibold tracking-wide uppercase">Total Pendapatan</span>
-            <div class="p-2 bg-emerald-950/40 border border-emerald-500/20 rounded-xl text-emerald-400">
-              <i data-lucide="wallet" class="w-5 h-5"></i>
+        <!-- Quick Metrics Grid - Row 1 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
+          <!-- Total Revenue (Paid) -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect relative overflow-hidden">
+            <div class="absolute top-2 right-2 w-16 h-16 bg-brand-500/5 rounded-full blur-xl"></div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs text-[#f6f1e7]/60 font-semibold tracking-wide uppercase">Total Pendapatan</span>
+              <div class="p-2 bg-emerald-950/40 border border-emerald-500/20 rounded-xl text-emerald-400">
+                <i data-lucide="wallet" class="w-5 h-5"></i>
+              </div>
             </div>
-          </div>
-          <div>
             <h3 id="stat-revenue" class="text-xl lg:text-2xl font-extrabold text-white tracking-tight font-mono">Rp 0</h3>
             <p class="text-[10px] text-emerald-400 mt-1 flex items-center gap-1">
               <i data-lucide="trending-up" class="w-3 h-3"></i>
               <span>Dari booking berbayar (Paid)</span>
             </p>
           </div>
-        </div>
 
-        <!-- Active Bookings -->
-        <div class="glass-panel-dark rounded-2xl p-5 glow-effect relative overflow-hidden flex flex-col justify-between">
-          <div class="absolute top-2 right-2 w-16 h-16 bg-blue-500/5 rounded-full blur-xl"></div>
-          <div class="flex items-center justify-between mb-4">
-            <span class="text-xs text-[#f6f1e7]/60 font-semibold tracking-wide uppercase">Booking Aktif</span>
-            <div class="p-2 bg-blue-950/40 border border-blue-500/20 rounded-xl text-blue-400">
-              <i data-lucide="calendar-check" class="w-5 h-5"></i>
+          <!-- Pending Revenue -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect relative overflow-hidden">
+            <div class="absolute top-2 right-2 w-16 h-16 bg-amber-500/5 rounded-full blur-xl"></div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs text-[#f6f1e7]/60 font-semibold tracking-wide uppercase">Pending Revenue</span>
+              <div class="p-2 bg-amber-950/40 border border-amber-500/20 rounded-xl text-amber-400">
+                <i data-lucide="clock" class="w-5 h-5"></i>
+              </div>
             </div>
+            <h3 id="stat-pending-revenue" class="text-xl lg:text-2xl font-extrabold text-white tracking-tight font-mono">Rp 0</h3>
+            <p class="text-[10px] text-amber-400 mt-1 flex items-center gap-1">
+              <span>Menunggu pembayaran</span>
+            </p>
           </div>
-          <div>
+
+          <!-- Active Bookings -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect relative overflow-hidden">
+            <div class="absolute top-2 right-2 w-16 h-16 bg-blue-500/5 rounded-full blur-xl"></div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs text-[#f6f1e7]/60 font-semibold tracking-wide uppercase">Booking Aktif</span>
+              <div class="p-2 bg-blue-950/40 border border-blue-500/20 rounded-xl text-blue-400">
+                <i data-lucide="calendar-check" class="w-5 h-5"></i>
+              </div>
+            </div>
             <h3 id="stat-active" class="text-2xl lg:text-3xl font-extrabold text-white tracking-tight font-mono">0</h3>
             <p class="text-[10px] text-blue-400 mt-1 flex items-center gap-1">
-              <span>Status Paid &amp; Pending</span>
+              <span>Status Paid, Pending & Checked-in</span>
+            </p>
+          </div>
+
+          <!-- Total Guests -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect relative overflow-hidden">
+            <div class="absolute top-2 right-2 w-16 h-16 bg-purple-500/5 rounded-full blur-xl"></div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs text-[#f6f1e7]/60 font-semibold tracking-wide uppercase">Total Tamu</span>
+              <div class="p-2 bg-purple-950/40 border border-purple-500/20 rounded-xl text-purple-400">
+                <i data-lucide="users" class="w-5 h-5"></i>
+              </div>
+            </div>
+            <h3 id="stat-total-guests" class="text-2xl lg:text-3xl font-extrabold text-white tracking-tight font-mono">0</h3>
+            <p class="text-[10px] text-purple-400 mt-1 flex items-center gap-1">
+              <span>Tamu unik terdaftar</span>
             </p>
           </div>
         </div>
 
-        <!-- Balcony Occupancy -->
-        <div class="glass-panel-dark rounded-2xl p-5 glow-effect relative overflow-hidden flex flex-col justify-between">
-          <div class="absolute top-2 right-2 w-16 h-16 bg-brand-500/5 rounded-full blur-xl"></div>
-          <div class="flex items-center justify-between mb-4">
-            <span class="text-xs text-[#f6f1e7]/60 font-semibold tracking-wide uppercase">Okupansi Balcony</span>
-            <span id="balcony-pct" class="text-xs font-bold text-brand-200">0%</span>
-          </div>
-          <div>
+        <!-- Quick Metrics Grid - Row 2: Occupancy -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-6">
+          <!-- Balcony Occupancy -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect relative overflow-hidden">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs text-[#f6f1e7]/60 font-semibold tracking-wide uppercase">Okupansi Balcony</span>
+              <span id="balcony-pct" class="text-xs font-bold text-brand-200">0%</span>
+            </div>
             <div class="flex items-end justify-between mb-1">
-              <h3 id="stat-balcony" class="text-lg lg:text-xl font-extrabold text-white font-mono">0 / 6</h3>
+              <h3 id="stat-balcony" class="text-lg font-extrabold text-white font-mono">0 / 6</h3>
               <span class="text-[9px] text-[#f6f1e7]/40">Kamar Aktif</span>
             </div>
-            <!-- Progress bar -->
             <div class="w-full bg-[#050d0a] h-2 rounded-full overflow-hidden border border-brand-500/10">
               <div id="balcony-progress" class="bg-brand-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
             </div>
           </div>
-        </div>
 
-        <!-- Porch Occupancy -->
-        <div class="glass-panel-dark rounded-2xl p-5 glow-effect relative overflow-hidden flex flex-col justify-between">
-          <div class="absolute top-2 right-2 w-16 h-16 bg-brand-500/5 rounded-full blur-xl"></div>
-          <div class="flex items-center justify-between mb-4">
-            <span class="text-xs text-[#f6f1e7]/60 font-semibold tracking-wide uppercase">Okupansi Porch</span>
-            <span id="porch-pct" class="text-xs font-bold text-brand-200">0%</span>
-          </div>
-          <div>
+          <!-- Porch Occupancy -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect relative overflow-hidden">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs text-[#f6f1e7]/60 font-semibold tracking-wide uppercase">Okupansi Porch</span>
+              <span id="porch-pct" class="text-xs font-bold text-brand-200">0%</span>
+            </div>
             <div class="flex items-end justify-between mb-1">
-              <h3 id="stat-porch" class="text-lg lg:text-xl font-extrabold text-white font-mono">0 / 6</h3>
+              <h3 id="stat-porch" class="text-lg font-extrabold text-white font-mono">0 / 6</h3>
               <span class="text-[9px] text-[#f6f1e7]/40">Kamar Aktif</span>
             </div>
-            <!-- Progress bar -->
             <div class="w-full bg-[#050d0a] h-2 rounded-full overflow-hidden border border-brand-500/10">
               <div id="porch-progress" class="bg-brand-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
             </div>
           </div>
-        </div>
 
-        <!-- Villa Occupancy -->
-        <div class="glass-panel-dark rounded-2xl p-5 glow-effect relative overflow-hidden flex flex-col justify-between">
-          <div class="absolute top-2 right-2 w-16 h-16 bg-amber-500/5 rounded-full blur-xl"></div>
-          <div class="flex items-center justify-between mb-4">
-            <span class="text-xs text-[#f6f1e7]/60 font-semibold tracking-wide uppercase">Okupansi Villa</span>
-            <span id="villa-pct" class="text-xs font-bold text-brand-200">0%</span>
-          </div>
-          <div>
+          <!-- Villa Occupancy -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect relative overflow-hidden">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs text-[#f6f1e7]/60 font-semibold tracking-wide uppercase">Okupansi Villa</span>
+              <span id="villa-pct" class="text-xs font-bold text-brand-200">0%</span>
+            </div>
             <div class="flex items-end justify-between mb-1">
-              <h3 id="stat-villa" class="text-lg lg:text-xl font-extrabold text-white font-mono">0 / 1</h3>
+              <h3 id="stat-villa" class="text-lg font-extrabold text-white font-mono">0 / 1</h3>
               <span class="text-[9px] text-[#f6f1e7]/40">Unit Aktif</span>
             </div>
-            <!-- Progress bar -->
             <div class="w-full bg-[#050d0a] h-2 rounded-full overflow-hidden border border-brand-500/10">
               <div id="villa-progress" class="bg-amber-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
             </div>
           </div>
         </div>
 
-      </div>
-
-      <!-- Main Database Panel -->
-      <div class="glass-panel rounded-3xl p-6 md:p-8 glow-effect">
-        <!-- Search & Filter Controls header -->
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6 border-b border-[#1b7f5a]/20 pb-6">
-          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:max-w-xl">
-            <!-- Search bar -->
-            <div class="relative flex-1">
-              <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#f6f1e7]/40">
-                <i data-lucide="search" class="w-4 h-4"></i>
-              </span>
-              <input id="search-input" oninput="renderTable()" type="text" placeholder="Cari nama tamu, email, room, atau ID booking..." class="w-full pl-10 pr-4 py-2.5 rounded-xl glass-input text-sm">
-            </div>
-            <!-- Status Filter -->
-            <div class="relative">
-              <select id="status-filter" onchange="renderTable()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl glass-input text-sm focus:ring-0 appearance-none pr-10 cursor-pointer">
-                <option value="All">Semua Status</option>
-                <option value="Paid">Paid</option>
-                <option value="Pending">Pending</option>
-                <option value="Refunded">Refunded</option>
-              </select>
-              <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-[#f6f1e7]/40">
-                <i data-lucide="chevron-down" class="w-4 h-4"></i>
-              </span>
+        <!-- Dashboard Row 3: Status Breakdown + Revenue by Room + Avg Booking -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
+          <!-- Booking by Status -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect">
+            <h4 class="text-xs font-bold text-[#f6f1e7]/60 uppercase tracking-wider mb-4">Booking berdasarkan Status</h4>
+            <div id="dash-status-badges" class="flex flex-wrap gap-2">
+              <!-- Rendered by JS -->
             </div>
           </div>
-          <div class="text-xs text-[#f6f1e7]/50 font-semibold flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
-            Terhubung ke LocalStorage database
+          <!-- Revenue by Room Type -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect">
+            <h4 class="text-xs font-bold text-[#f6f1e7]/60 uppercase tracking-wider mb-4">Pendapatan per Tipe Kamar</h4>
+            <div id="dash-revenue-room" class="space-y-3">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+          <!-- Avg Booking Value -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect">
+            <h4 class="text-xs font-bold text-[#f6f1e7]/60 uppercase tracking-wider mb-4">Rata-rata Nilai Booking</h4>
+            <div class="flex items-center justify-center h-24">
+              <h3 id="dash-avg-booking" class="text-2xl font-extrabold text-brand-200 font-mono">Rp 0</h3>
+            </div>
+            <p class="text-center text-[10px] text-[#f6f1e7]/40">Dari semua booking berbayar (Paid)</p>
           </div>
         </div>
 
-        <!-- Bookings Dynamic Table -->
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="border-b border-[#1b7f5a]/10 text-[#f6f1e7]/40 uppercase tracking-wider text-[11px] font-bold">
-                <th class="py-4 px-4">Booking ID &amp; Guest</th>
-                <th class="py-4 px-4">Kontak / Email</th>
-                <th class="py-4 px-4">Room &amp; Dates</th>
-                <th class="py-4 px-4 text-right">Pembayaran</th>
-                <th class="py-4 px-4 text-center">Status</th>
-                <th class="py-4 px-4 text-center">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="bookings-table-body" class="divide-y divide-[#1b7f5a]/5 text-sm text-[#f6f1e7]/95">
-              <!-- Rendered Dynamically -->
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Empty state placeholder -->
-        <div id="empty-state" class="hidden text-center py-12 flex flex-col items-center justify-center">
-          <div class="w-16 h-16 rounded-full bg-[#1b7f5a]/10 flex items-center justify-center text-brand-500 mb-4 border border-[#1b7f5a]/20">
-            <i data-lucide="inbox" class="w-8 h-8"></i>
+        <!-- Dashboard Row 4: Upcoming Check-ins & Check-outs -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
+          <!-- Upcoming Check-ins -->
+          <div class="glass-panel rounded-2xl p-5 glow-effect">
+            <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+              <i data-lucide="log-in" class="w-4 h-4 text-brand-200"></i> Check-In (7 hari ke depan)
+            </h4>
+            <div id="dash-checkins" class="space-y-2 max-h-48 overflow-y-auto text-sm">
+              <p class="text-[#f6f1e7]/40 text-xs">Tidak ada check-in dalam 7 hari ke depan.</p>
+            </div>
           </div>
-          <h4 class="text-lg font-bold text-white mb-1">Tidak Ada Booking Ditemukan</h4>
-          <p class="text-[#f6f1e7]/50 text-sm max-w-sm">Coba ubah filter status atau kata kunci pencarian Anda, atau tambahkan tamu baru secara manual.</p>
+          <!-- Upcoming Check-outs -->
+          <div class="glass-panel rounded-2xl p-5 glow-effect">
+            <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+              <i data-lucide="log-out" class="w-4 h-4 text-red-400"></i> Check-Out (7 hari ke depan)
+            </h4>
+            <div id="dash-checkouts" class="space-y-2 max-h-48 overflow-y-auto text-sm">
+              <p class="text-[#f6f1e7]/40 text-xs">Tidak ada check-out dalam 7 hari ke depan.</p>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- ===================== SECTION: BOOKINGS ===================== -->
+      <div id="section-bookings" class="section-content hidden max-w-7xl mx-auto">
+        <div class="glass-panel rounded-3xl p-6 md:p-8 glow-effect">
+          <!-- Search & Filter Controls header -->
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6 border-b border-[#1b7f5a]/20 pb-6">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:max-w-2xl">
+              <!-- Search bar -->
+              <div class="relative flex-1">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#f6f1e7]/40">
+                  <i data-lucide="search" class="w-4 h-4"></i>
+                </span>
+                <input id="search-input" oninput="renderTable()" type="text" placeholder="Cari nama tamu, email, room, atau ID booking..." class="w-full pl-10 pr-4 py-2.5 rounded-xl glass-input text-sm">
+              </div>
+              <!-- Status Filter -->
+              <div class="relative">
+                <select id="status-filter" onchange="renderTable()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl glass-input text-sm focus:ring-0 appearance-none pr-10 cursor-pointer">
+                  <option value="All">Semua Status</option>
+                  <option value="Paid">Paid</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Checked-in">Checked-in</option>
+                  <option value="Checked-out">Checked-out</option>
+                  <option value="Cancelled">Cancelled</option>
+                  <option value="Refunded">Refunded</option>
+                </select>
+                <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-[#f6f1e7]/40">
+                  <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                </span>
+              </div>
+              <!-- Room Type Filter -->
+              <div class="relative">
+                <select id="room-filter" onchange="renderTable()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl glass-input text-sm focus:ring-0 appearance-none pr-10 cursor-pointer">
+                  <option value="All">Semua Tipe</option>
+                  <option value="Balcony">Balcony</option>
+                  <option value="Porch">Porch</option>
+                  <option value="Villa">Villa</option>
+                </select>
+                <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-[#f6f1e7]/40">
+                  <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                </span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <button onclick="exportBookingsCSV()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-brand-500/30 text-brand-200 hover:bg-brand-700/20 transition-all text-xs font-bold">
+                <i data-lucide="download" class="w-4 h-4"></i>
+                Export CSV
+              </button>
+              <div class="text-xs text-[#f6f1e7]/50 font-semibold flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+                LocalStorage DB
+              </div>
+            </div>
+          </div>
+
+          <!-- Bookings Dynamic Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-[#1b7f5a]/10 text-[#f6f1e7]/40 uppercase tracking-wider text-[11px] font-bold">
+                  <th class="py-4 px-4">Booking ID & Guest</th>
+                  <th class="py-4 px-4">Kontak</th>
+                  <th class="py-4 px-4">Room & Dates</th>
+                  <th class="py-4 px-4 text-right">Pembayaran</th>
+                  <th class="py-4 px-4 text-center">Status</th>
+                  <th class="py-4 px-4 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="bookings-table-body" class="divide-y divide-[#1b7f5a]/5 text-sm text-[#f6f1e7]/95">
+                <!-- Rendered Dynamically -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Empty state placeholder -->
+          <div id="empty-state" class="hidden text-center py-12 flex flex-col items-center justify-center">
+            <div class="w-16 h-16 rounded-full bg-[#1b7f5a]/10 flex items-center justify-center text-brand-500 mb-4 border border-[#1b7f5a]/20">
+              <i data-lucide="inbox" class="w-8 h-8"></i>
+            </div>
+            <h4 class="text-lg font-bold text-white mb-1">Tidak Ada Booking Ditemukan</h4>
+            <p class="text-[#f6f1e7]/50 text-sm max-w-sm">Coba ubah filter status atau kata kunci pencarian Anda, atau tambahkan tamu baru secara manual.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== SECTION: ROOMS / VILLAS ===================== -->
+      <div id="section-rooms" class="section-content hidden max-w-7xl mx-auto">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xl font-bold text-white">Manajemen Kamar & Villa</h3>
+          <button onclick="openRoomModal()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-[#07130f] font-bold text-sm transition-all">
+            <i data-lucide="plus" class="w-4 h-4"></i> Tambah Kamar
+          </button>
+        </div>
+        <div class="glass-panel rounded-3xl p-6 md:p-8 glow-effect">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-[#1b7f5a]/10 text-[#f6f1e7]/40 uppercase tracking-wider text-[11px] font-bold">
+                  <th class="py-4 px-4">Nama Kamar</th>
+                  <th class="py-4 px-4">Jumlah</th>
+                  <th class="py-4 px-4">Kapasitas</th>
+                  <th class="py-4 px-4">Harga Weekday</th>
+                  <th class="py-4 px-4">Harga Weekend</th>
+                  <th class="py-4 px-4">Fasilitas</th>
+                  <th class="py-4 px-4 text-center">Status</th>
+                  <th class="py-4 px-4 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="rooms-table-body" class="divide-y divide-[#1b7f5a]/5 text-sm text-[#f6f1e7]/95">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== SECTION: CALENDAR ===================== -->
+      <div id="section-calendar" class="section-content hidden max-w-7xl mx-auto">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+          <h3 class="text-xl font-bold text-white">Kalender Ketersediaan</h3>
+          <div class="flex items-center gap-3">
+            <button onclick="changeCalMonth(-1)" class="p-2 rounded-xl border border-brand-500/20 text-brand-200 hover:bg-brand-700/20 transition-all">
+              <i data-lucide="chevron-left" class="w-5 h-5"></i>
+            </button>
+            <span id="cal-month-label" class="text-sm font-bold text-white min-w-[140px] text-center">Mei 2026</span>
+            <button onclick="changeCalMonth(1)" class="p-2 rounded-xl border border-brand-500/20 text-brand-200 hover:bg-brand-700/20 transition-all">
+              <i data-lucide="chevron-right" class="w-5 h-5"></i>
+            </button>
+            <button onclick="openBlockDateModal()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-600/80 hover:bg-red-700 text-white font-bold text-xs transition-all">
+              <i data-lucide="ban" class="w-4 h-4"></i> Block Dates
+            </button>
+          </div>
+        </div>
+        <!-- Calendar Legend -->
+        <div class="flex flex-wrap gap-4 mb-4 text-xs text-[#f6f1e7]/60">
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded cal-available border"></span> Available</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded cal-partial border"></span> Partial</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded cal-full border"></span> Full</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded cal-blocked border"></span> Blocked</span>
+        </div>
+        <div class="glass-panel rounded-3xl p-4 md:p-6 glow-effect overflow-x-auto">
+          <div id="calendar-grid" class="min-w-[700px]">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== SECTION: GUESTS ===================== -->
+      <div id="section-guests" class="section-content hidden max-w-7xl mx-auto">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xl font-bold text-white">Database Tamu</h3>
+          <div class="relative w-64">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#f6f1e7]/40">
+              <i data-lucide="search" class="w-4 h-4"></i>
+            </span>
+            <input id="guest-search" oninput="renderGuestsTable()" type="text" placeholder="Cari tamu..." class="w-full pl-10 pr-4 py-2.5 rounded-xl glass-input text-sm">
+          </div>
+        </div>
+        <div class="glass-panel rounded-3xl p-6 md:p-8 glow-effect">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-[#1b7f5a]/10 text-[#f6f1e7]/40 uppercase tracking-wider text-[11px] font-bold">
+                  <th class="py-4 px-4">Nama Tamu</th>
+                  <th class="py-4 px-4">Email</th>
+                  <th class="py-4 px-4">Phone</th>
+                  <th class="py-4 px-4 text-center">Total Booking</th>
+                  <th class="py-4 px-4">Terakhir Menginap</th>
+                  <th class="py-4 px-4 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="guests-table-body" class="divide-y divide-[#1b7f5a]/5 text-sm text-[#f6f1e7]/95">
+              </tbody>
+            </table>
+          </div>
+          <div id="guests-empty" class="hidden text-center py-12">
+            <p class="text-[#f6f1e7]/50 text-sm">Belum ada data tamu. Tambahkan booking untuk membuat record tamu otomatis.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== SECTION: PAYMENTS ===================== -->
+      <div id="section-payments" class="section-content hidden max-w-7xl mx-auto">
+        <h3 class="text-xl font-bold text-white mb-6">Pembayaran & Konfigurasi</h3>
+        
+        <!-- Warning Banner -->
+        <div class="glass-panel-dark rounded-2xl p-4 mb-6 border border-amber-500/20 flex items-start gap-3">
+          <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-400 shrink-0 mt-0.5"></i>
+          <div>
+            <p class="text-sm font-bold text-amber-300">Frontend Demo Only</p>
+            <p class="text-xs text-[#f6f1e7]/60">Secret API keys untuk payment gateways (Midtrans, Xendit) harus disimpan di backend. Konfigurasi di bawah hanya untuk placeholder & UI demo.</p>
+          </div>
+        </div>
+
+        <!-- Payment Logs -->
+        <div class="glass-panel rounded-3xl p-6 glow-effect mb-6">
+          <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+            <i data-lucide="receipt" class="w-4 h-4 text-brand-200"></i> Log Pembayaran
+          </h4>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-[#1b7f5a]/10 text-[#f6f1e7]/40 uppercase tracking-wider text-[11px] font-bold">
+                  <th class="py-3 px-4">Payment ID</th>
+                  <th class="py-3 px-4">Booking ID</th>
+                  <th class="py-3 px-4">Metode</th>
+                  <th class="py-3 px-4 text-right">Jumlah</th>
+                  <th class="py-3 px-4 text-center">Status</th>
+                  <th class="py-3 px-4">Tanggal</th>
+                  <th class="py-3 px-4">Catatan</th>
+                </tr>
+              </thead>
+              <tbody id="payment-logs-body" class="divide-y divide-[#1b7f5a]/5 text-sm text-[#f6f1e7]/95">
+              </tbody>
+            </table>
+          </div>
+          <div id="payment-logs-empty" class="hidden text-center py-8">
+            <p class="text-[#f6f1e7]/50 text-sm">Belum ada log pembayaran.</p>
+          </div>
+        </div>
+
+        <!-- Payment Settings -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <!-- Manual QRIS -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-sm font-bold text-white flex items-center gap-2"><i data-lucide="qr-code" class="w-4 h-4 text-brand-200"></i> Manual QRIS</h4>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="pay-qris-toggle" class="sr-only peer" checked>
+                <div class="w-9 h-5 bg-gray-700 peer-checked:bg-brand-500 rounded-full peer-focus:ring-0 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></div>
+              </label>
+            </div>
+            <p class="text-xs text-[#f6f1e7]/50 mb-3">Tampilkan QR Code QRIS di halaman checkout tamu.</p>
+            <input id="pay-qris-instruction" type="text" placeholder="Instruksi pembayaran QRIS..." class="w-full px-3 py-2 rounded-lg glass-input text-xs mb-2" value="Scan QR lalu konfirmasi via WhatsApp">
+          </div>
+
+          <!-- Bank Transfer -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-sm font-bold text-white flex items-center gap-2"><i data-lucide="landmark" class="w-4 h-4 text-brand-200"></i> Transfer Bank</h4>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="pay-bank-toggle" class="sr-only peer" checked>
+                <div class="w-9 h-5 bg-gray-700 peer-checked:bg-brand-500 rounded-full peer-focus:ring-0 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></div>
+              </label>
+            </div>
+            <input id="pay-bank-name" type="text" placeholder="Nama Bank" class="w-full px-3 py-2 rounded-lg glass-input text-xs mb-2" value="BCA">
+            <input id="pay-bank-account" type="text" placeholder="No Rekening - Atas Nama" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="1234567890 - PT Anaira Glamping">
+          </div>
+
+          <!-- Midtrans -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-sm font-bold text-white flex items-center gap-2"><i data-lucide="shield" class="w-4 h-4 text-blue-400"></i> Midtrans</h4>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="pay-midtrans-toggle" class="sr-only peer">
+                <div class="w-9 h-5 bg-gray-700 peer-checked:bg-brand-500 rounded-full peer-focus:ring-0 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></div>
+              </label>
+            </div>
+            <select id="pay-midtrans-env" class="w-full px-3 py-2 rounded-lg glass-input text-xs mb-2 appearance-none">
+              <option value="sandbox">Sandbox</option>
+              <option value="production">Production</option>
+            </select>
+            <input id="pay-midtrans-client" type="text" placeholder="Client Key (frontend only)" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="">
+            <p class="text-[9px] text-red-400 mt-1">⚠ Server Key harus disimpan di backend!</p>
+          </div>
+
+          <!-- Xendit -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-sm font-bold text-white flex items-center gap-2"><i data-lucide="zap" class="w-4 h-4 text-cyan-400"></i> Xendit</h4>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="pay-xendit-toggle" class="sr-only peer">
+                <div class="w-9 h-5 bg-gray-700 peer-checked:bg-brand-500 rounded-full peer-focus:ring-0 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></div>
+              </label>
+            </div>
+            <select id="pay-xendit-env" class="w-full px-3 py-2 rounded-lg glass-input text-xs mb-2 appearance-none">
+              <option value="test">Test Mode</option>
+              <option value="live">Live Mode</option>
+            </select>
+            <p class="text-[9px] text-[#f6f1e7]/40 mt-1">Konfigurasi lengkap melalui dashboard Xendit.</p>
+          </div>
+
+          <!-- DOKU -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect opacity-60">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-sm font-bold text-white flex items-center gap-2"><i data-lucide="wallet" class="w-4 h-4 text-orange-400"></i> DOKU</h4>
+              <span class="text-[8px] bg-gray-800 text-gray-400 border border-gray-600/20 px-2 py-0.5 rounded-full font-bold">PLANNED</span>
+            </div>
+            <p class="text-xs text-[#f6f1e7]/40">Integrasi DOKU akan tersedia di versi mendatang.</p>
+          </div>
+
+          <!-- Indopay -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect opacity-60">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-sm font-bold text-white flex items-center gap-2"><i data-lucide="banknote" class="w-4 h-4 text-green-400"></i> Indopay</h4>
+              <span class="text-[8px] bg-gray-800 text-gray-400 border border-gray-600/20 px-2 py-0.5 rounded-full font-bold">PLANNED</span>
+            </div>
+            <p class="text-xs text-[#f6f1e7]/40">Integrasi Indopay akan tersedia di versi mendatang.</p>
+          </div>
+        </div>
+
+        <!-- Deposit Setting -->
+        <div class="glass-panel-dark rounded-2xl p-5 glow-effect mt-5">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="text-sm font-bold text-white">Deposit Wajib</h4>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="pay-deposit-toggle" class="sr-only peer" checked>
+              <div class="w-9 h-5 bg-gray-700 peer-checked:bg-brand-500 rounded-full peer-focus:ring-0 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></div>
+            </label>
+          </div>
+          <div class="flex items-center gap-3">
+            <label class="text-xs text-[#f6f1e7]/60">Persentase Deposit:</label>
+            <input id="pay-deposit-pct" type="number" min="0" max="100" value="50" class="w-20 px-3 py-2 rounded-lg glass-input text-xs text-center font-bold">
+            <span class="text-xs text-[#f6f1e7]/40">%</span>
+          </div>
+        </div>
+
+        <div class="flex justify-end mt-6">
+          <button onclick="savePaymentSettings()" class="px-6 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-[#07130f] font-bold text-sm transition-all">
+            Simpan Pengaturan Pembayaran
+          </button>
+        </div>
+      </div>
+
+      <!-- ===================== SECTION: PACKAGES (Placeholder) ===================== -->
+      <div id="section-packages" class="section-content hidden max-w-7xl mx-auto">
+        <div class="glass-panel-dark rounded-3xl p-10 glow-effect text-center">
+          <div class="w-20 h-20 bg-amber-950/30 rounded-full flex items-center justify-center mx-auto mb-6 border border-amber-500/20">
+            <i data-lucide="gift" class="w-10 h-10 text-amber-400"></i>
+          </div>
+          <h3 class="text-2xl font-extrabold text-white mb-3">Paket & Add-on</h3>
+          <p class="text-[#f6f1e7]/60 text-sm max-w-md mx-auto mb-6 leading-relaxed">Modul manajemen paket wisata, add-on layanan, dan aktivitas outdoor akan hadir di versi berikutnya. Fitur ini membutuhkan integrasi backend.</p>
+          <span class="inline-block text-xs bg-amber-950/60 text-amber-400 border border-amber-500/20 px-4 py-1.5 rounded-full font-bold">Coming Soon — Backend Required</span>
+        </div>
+      </div>
+
+      <!-- ===================== SECTION: GALLERY (Placeholder) ===================== -->
+      <div id="section-gallery" class="section-content hidden max-w-7xl mx-auto">
+        <div class="glass-panel-dark rounded-3xl p-10 glow-effect text-center">
+          <div class="w-20 h-20 bg-blue-950/30 rounded-full flex items-center justify-center mx-auto mb-6 border border-blue-500/20">
+            <i data-lucide="image" class="w-10 h-10 text-blue-400"></i>
+          </div>
+          <h3 class="text-2xl font-extrabold text-white mb-3">Galeri & Media</h3>
+          <p class="text-[#f6f1e7]/60 text-sm max-w-md mx-auto mb-6 leading-relaxed">Manajemen galeri foto, video, dan aset media properti. Untuk mengelola konten galeri saat ini, gunakan Content Editor.</p>
+          <a href="index.html" class="inline-flex items-center gap-2 text-xs bg-brand-700/40 text-brand-200 border border-brand-500/20 px-4 py-2 rounded-full font-bold hover:bg-brand-700/60 transition-all">
+            <i data-lucide="edit" class="w-3 h-3"></i> Buka Content Editor
+          </a>
+        </div>
+      </div>
+
+      <!-- ===================== SECTION: SETTINGS ===================== -->
+      <div id="section-settings" class="section-content hidden max-w-7xl mx-auto">
+        <h3 class="text-xl font-bold text-white mb-6">Pengaturan Sistem</h3>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+          <!-- A. Brand Settings -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect">
+            <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4 text-brand-200"></i> Brand</h4>
+            <div class="space-y-3">
+              <div>
+                <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Nama Resort</label>
+                <input id="set-resort-name" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="Anaira Glamping Ciwidey">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Tagline</label>
+                <input id="set-tagline" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="Where Nature Meets Luxury">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Logo Path</label>
+                <input type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs opacity-50" value="../assets/brand/logo-anaira-white-transparent.png" readonly>
+              </div>
+            </div>
+          </div>
+
+          <!-- B. Contact Settings -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect">
+            <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4 text-brand-200"></i> Kontak</h4>
+            <div class="space-y-3">
+              <div>
+                <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Alamat</label>
+                <input id="set-address" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="Jl. Raya Ciwidey - Patenggang, Ciwidey, Bandung">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Google Maps URL</label>
+                <input id="set-maps" type="url" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="">
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">WhatsApp</label>
+                  <input id="set-whatsapp" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="6281234567890">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Email</label>
+                  <input id="set-email" type="email" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="info@anaira.com">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- C. Operational Settings -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect">
+            <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4 text-brand-200"></i> Operasional</h4>
+            <div class="space-y-3">
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Check-In Time</label>
+                  <input id="set-checkin-time" type="time" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="14:00">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Check-Out Time</label>
+                  <input id="set-checkout-time" type="time" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="12:00">
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Max Advance Days</label>
+                  <input id="set-max-advance" type="number" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="90">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Min Night Stay</label>
+                  <input id="set-min-nights" type="number" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="1">
+                </div>
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Kebijakan Pembatalan</label>
+                <input id="set-cancel-policy" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="Gratis pembatalan hingga 3 hari sebelum check-in">
+              </div>
+            </div>
+          </div>
+
+          <!-- D. Financial Settings -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect">
+            <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="calculator" class="w-4 h-4 text-brand-200"></i> Keuangan</h4>
+            <div class="space-y-3">
+              <div class="grid grid-cols-3 gap-3">
+                <div>
+                  <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Currency</label>
+                  <input type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs opacity-50" value="IDR" readonly>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Pajak %</label>
+                  <input id="set-tax" type="number" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="0">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Service %</label>
+                  <input id="set-service-fee" type="number" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="0">
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Deposit %</label>
+                  <input id="set-deposit-pct" type="number" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="50">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Refund Policy</label>
+                  <input id="set-refund-policy" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="Refund 50% jika batal H-3">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- E. Admin / User Settings -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect">
+            <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="user-cog" class="w-4 h-4 text-brand-200"></i> Admin</h4>
+            <div class="space-y-3">
+              <div>
+                <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Admin Username</label>
+                <input type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs opacity-50" value="admin" readonly>
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Session Timeout (menit)</label>
+                <input id="set-session-timeout" type="number" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="60">
+              </div>
+              <p class="text-[9px] text-amber-400/80 bg-amber-950/20 border border-amber-500/10 p-2 rounded-lg">
+                ⚠ Autentikasi saat ini menggunakan sessionStorage. Untuk production, gunakan backend auth yang aman.
+              </p>
+            </div>
+          </div>
+
+          <!-- F. Data Management -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect">
+            <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="database" class="w-4 h-4 text-brand-200"></i> Manajemen Data</h4>
+            <div class="space-y-3">
+              <button onclick="backupAllData()" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-700/40 text-brand-200 border border-brand-500/20 hover:bg-brand-700/60 transition-all text-xs font-bold">
+                <i data-lucide="download" class="w-4 h-4"></i> Backup Semua Data (JSON)
+              </button>
+              <div>
+                <label class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-950/40 text-blue-300 border border-blue-500/20 hover:bg-blue-950/60 transition-all text-xs font-bold cursor-pointer">
+                  <i data-lucide="upload" class="w-4 h-4"></i> Restore Data (JSON)
+                  <input type="file" id="restore-file-input" accept=".json" onchange="restoreAllData(event)" class="hidden">
+                </label>
+              </div>
+              <button onclick="exportBookingsCSV()" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-950/40 text-emerald-300 border border-emerald-500/20 hover:bg-emerald-950/60 transition-all text-xs font-bold">
+                <i data-lucide="file-spreadsheet" class="w-4 h-4"></i> Export Bookings CSV
+              </button>
+              <button onclick="clearDemoData()" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-950/40 text-red-400 border border-red-500/20 hover:bg-red-950/60 transition-all text-xs font-bold">
+                <i data-lucide="trash-2" class="w-4 h-4"></i> Hapus Demo Data
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end mt-6">
+          <button onclick="saveSettings()" class="px-6 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-[#07130f] font-bold text-sm transition-all">
+            Simpan Pengaturan
+          </button>
+        </div>
+      </div>
+
     </main>
   </div>
 
-  <!-- Modal: TAMU BARU (Create) -->
+  <!-- ===================== MODAL: TAMU BARU (Create) ===================== -->
   <div id="modal-add" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">
-    <div class="glass-modal w-full max-w-xl rounded-3xl p-6 md:p-8 transform transition-transform duration-300 shadow-2xl relative">
+    <div class="glass-modal w-full max-w-2xl rounded-3xl p-6 md:p-8 transform transition-transform duration-300 shadow-2xl relative max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-[#1b7f5a]/20 pb-4 mb-6">
         <h3 class="text-xl font-extrabold text-white flex items-center gap-2">
           <i data-lucide="plus-circle" class="w-5 h-5 text-brand-500"></i>
-          Tambah Tamu &amp; Reservasi Baru
+          Tambah Tamu & Reservasi Baru
         </h3>
         <button onclick="closeAddModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-all">
           <i data-lucide="x" class="w-6 h-6"></i>
@@ -428,20 +994,28 @@
 
       <form id="add-form" onsubmit="handleAddBooking(event)" class="space-y-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <!-- Guest Name -->
           <div>
             <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Nama Lengkap Tamu</label>
             <input required id="add-guest" type="text" placeholder="Contoh: Andi Wijaya" class="w-full px-4 py-3 rounded-xl glass-input text-sm">
           </div>
-          <!-- Guest Email -->
           <div>
             <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Alamat Email</label>
             <input required id="add-email" type="email" placeholder="Contoh: andi@gmail.com" class="w-full px-4 py-3 rounded-xl glass-input text-sm">
           </div>
         </div>
 
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">No. Telepon / WhatsApp</label>
+            <input id="add-phone" type="tel" placeholder="0812xxxxxxxx" class="w-full px-4 py-3 rounded-xl glass-input text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Jumlah Tamu</label>
+            <input id="add-guestcount" type="number" min="1" value="2" class="w-full px-4 py-3 rounded-xl glass-input text-sm">
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <!-- Room Style Dropdown -->
           <div>
             <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Kategori Unit</label>
             <select id="add-room" onchange="autoSuggestAmount('add')" class="w-full px-4 py-3 rounded-xl glass-input text-sm appearance-none cursor-pointer">
@@ -450,12 +1024,10 @@
               <option value="Villa">Villa</option>
             </select>
           </div>
-          <!-- Check-in Date -->
           <div>
             <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Tanggal Check-In</label>
             <input required id="add-checkin" type="date" onchange="autoSuggestAmount('add')" class="w-full px-4 py-3 rounded-xl glass-input text-sm">
           </div>
-          <!-- Check-out Date -->
           <div>
             <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Tanggal Check-Out</label>
             <input required id="add-checkout" type="date" onchange="autoSuggestAmount('add')" class="w-full px-4 py-3 rounded-xl glass-input text-sm">
@@ -463,30 +1035,47 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <!-- Payment Method -->
           <div>
             <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Metode Pembayaran</label>
             <select id="add-method" class="w-full px-4 py-3 rounded-xl glass-input text-sm appearance-none cursor-pointer">
               <option value="Transfer Bank (BCA)">Transfer Bank (BCA)</option>
               <option value="Transfer Bank (Mandiri)">Transfer Bank (Mandiri)</option>
               <option value="E-Wallet (Gopay)">E-Wallet (Gopay)</option>
+              <option value="QRIS">QRIS</option>
               <option value="Credit Card">Credit Card</option>
               <option value="Tunai / Cash">Tunai / Cash</option>
             </select>
           </div>
-          <!-- Total Price Amount -->
           <div>
             <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Total Biaya (Rp)</label>
             <input required id="add-amount" type="number" placeholder="Contoh: 1200000" class="w-full px-4 py-3 rounded-xl glass-input text-sm font-semibold">
           </div>
-          <!-- Status Dropdown -->
           <div>
             <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Status Awal</label>
             <select id="add-status" class="w-full px-4 py-3 rounded-xl glass-input text-sm appearance-none cursor-pointer">
-              <option value="Paid">Paid</option>
               <option value="Pending">Pending</option>
+              <option value="Paid">Paid</option>
+              <option value="Checked-in">Checked-in</option>
+              <option value="Checked-out">Checked-out</option>
+              <option value="Cancelled">Cancelled</option>
               <option value="Refunded">Refunded</option>
             </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Sumber Booking</label>
+            <select id="add-source" class="w-full px-4 py-3 rounded-xl glass-input text-sm appearance-none cursor-pointer">
+              <option value="Online">Online</option>
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="Walk-in">Walk-in</option>
+              <option value="Agent">Agent</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Catatan</label>
+            <input id="add-notes" type="text" placeholder="Catatan tambahan (opsional)" class="w-full px-4 py-3 rounded-xl glass-input text-sm">
           </div>
         </div>
 
@@ -508,14 +1097,14 @@
     </div>
   </div>
 
-  <!-- Modal: EDIT TAMU & STATUS (Update) -->
+  <!-- ===================== MODAL: EDIT BOOKING ===================== -->
   <div id="modal-edit" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">
-    <div class="glass-modal w-full max-w-xl rounded-3xl p-6 md:p-8 transform transition-transform duration-300 shadow-2xl relative">
+    <div class="glass-modal w-full max-w-2xl rounded-3xl p-6 md:p-8 transform transition-transform duration-300 shadow-2xl relative max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-[#1b7f5a]/20 pb-4 mb-6">
         <div>
           <h3 class="text-xl font-extrabold text-white flex items-center gap-2">
             <i data-lucide="edit-3" class="w-5 h-5 text-brand-500"></i>
-            Edit &amp; Update Booking
+            Edit & Update Booking
           </h3>
           <p id="edit-booking-id" class="text-[10px] text-brand-200 font-mono mt-1 uppercase tracking-widest font-bold">ANR-2026-XXXXX</p>
         </div>
@@ -525,24 +1114,31 @@
       </div>
 
       <form id="edit-form" onsubmit="handleEditBooking(event)" class="space-y-4">
-        <!-- Hidden index tracker -->
         <input type="hidden" id="edit-id-tracker">
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <!-- Guest Name -->
           <div>
             <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Nama Lengkap Tamu</label>
             <input required id="edit-guest" type="text" class="w-full px-4 py-3 rounded-xl glass-input text-sm">
           </div>
-          <!-- Guest Email -->
           <div>
             <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Alamat Email</label>
             <input required id="edit-email" type="email" class="w-full px-4 py-3 rounded-xl glass-input text-sm">
           </div>
         </div>
 
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">No. Telepon / WhatsApp</label>
+            <input id="edit-phone" type="tel" class="w-full px-4 py-3 rounded-xl glass-input text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Jumlah Tamu</label>
+            <input id="edit-guestcount" type="number" min="1" class="w-full px-4 py-3 rounded-xl glass-input text-sm">
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <!-- Room Style Dropdown -->
           <div>
             <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Kategori Unit</label>
             <select id="edit-room" onchange="autoSuggestAmount('edit')" class="w-full px-4 py-3 rounded-xl glass-input text-sm appearance-none cursor-pointer">
@@ -551,12 +1147,10 @@
               <option value="Villa">Villa</option>
             </select>
           </div>
-          <!-- Check-in Date -->
           <div>
             <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Tanggal Check-In</label>
             <input required id="edit-checkin" type="date" onchange="autoSuggestAmount('edit')" class="w-full px-4 py-3 rounded-xl glass-input text-sm">
           </div>
-          <!-- Check-out Date -->
           <div>
             <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Tanggal Check-Out</label>
             <input required id="edit-checkout" type="date" onchange="autoSuggestAmount('edit')" class="w-full px-4 py-3 rounded-xl glass-input text-sm">
@@ -564,30 +1158,47 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <!-- Payment Method -->
           <div>
             <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Metode Pembayaran</label>
             <select id="edit-method" class="w-full px-4 py-3 rounded-xl glass-input text-sm appearance-none cursor-pointer">
               <option value="Transfer Bank (BCA)">Transfer Bank (BCA)</option>
               <option value="Transfer Bank (Mandiri)">Transfer Bank (Mandiri)</option>
               <option value="E-Wallet (Gopay)">E-Wallet (Gopay)</option>
+              <option value="QRIS">QRIS</option>
               <option value="Credit Card">Credit Card</option>
               <option value="Tunai / Cash">Tunai / Cash</option>
             </select>
           </div>
-          <!-- Total Price Amount -->
           <div>
             <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Total Biaya (Rp)</label>
             <input required id="edit-amount" type="number" class="w-full px-4 py-3 rounded-xl glass-input text-sm font-semibold">
           </div>
-          <!-- Status Dropdown -->
           <div>
-            <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Status Pembayaran</label>
+            <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Status</label>
             <select id="edit-status" class="w-full px-4 py-3 rounded-xl glass-input text-sm appearance-none cursor-pointer">
-              <option value="Paid">Paid</option>
               <option value="Pending">Pending</option>
+              <option value="Paid">Paid</option>
+              <option value="Checked-in">Checked-in</option>
+              <option value="Checked-out">Checked-out</option>
+              <option value="Cancelled">Cancelled</option>
               <option value="Refunded">Refunded</option>
             </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Sumber Booking</label>
+            <select id="edit-source" class="w-full px-4 py-3 rounded-xl glass-input text-sm appearance-none cursor-pointer">
+              <option value="Online">Online</option>
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="Walk-in">Walk-in</option>
+              <option value="Agent">Agent</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-[#f6f1e7]/70 uppercase tracking-wider mb-2">Catatan</label>
+            <input id="edit-notes" type="text" class="w-full px-4 py-3 rounded-xl glass-input text-sm">
           </div>
         </div>
 
@@ -604,7 +1215,7 @@
     </div>
   </div>
 
-  <!-- Modal: ANIMATED CONFIRM DELETE (Delete) -->
+  <!-- ===================== MODAL: DELETE BOOKING ===================== -->
   <div id="modal-delete" class="fixed inset-0 z-45 hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm transition-opacity duration-300">
     <div class="glass-modal w-full max-w-md rounded-3xl p-6 md:p-8 transform transition-transform duration-300 shadow-2xl relative border-red-500/30">
       <div class="text-center">
@@ -615,11 +1226,7 @@
         <p class="text-[#f6f1e7]/70 text-sm mb-6 leading-relaxed">
           Apakah Anda yakin ingin menghapus data booking untuk <strong id="delete-guest-name" class="text-red-300"></strong> dengan ID <strong id="delete-booking-id-text" class="text-brand-200"></strong>?<br>Tindakan ini permanen dan menghapus catatan di LocalStorage.
         </p>
-
-        <!-- Hidden ID tracker -->
         <input type="hidden" id="delete-id-tracker">
-
-        <!-- Actions -->
         <div class="flex items-center justify-center gap-3">
           <button type="button" onclick="closeDeleteModal()" class="w-1/2 px-5 py-2.5 rounded-xl border border-[#f6f1e7]/20 text-[#f6f1e7]/80 hover:text-white hover:bg-white/5 transition-all text-sm font-semibold">
             Batal / Simpan
@@ -632,9 +1239,150 @@
     </div>
   </div>
 
-  <!-- JavaScript Logic -->
+  <!-- ===================== MODAL: VIEW BOOKING DETAIL ===================== -->
+  <div id="modal-view" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">
+    <div class="glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-[#1b7f5a]/20 pb-4 mb-6">
+        <h3 class="text-xl font-extrabold text-white flex items-center gap-2">
+          <i data-lucide="eye" class="w-5 h-5 text-brand-500"></i> Detail Booking
+        </h3>
+        <button onclick="closeViewModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-all">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+      <div id="view-detail-content" class="space-y-3 text-sm">
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL: ROOM CRUD ===================== -->
+  <div id="modal-room" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-[#1b7f5a]/20 pb-4 mb-6">
+        <h3 id="room-modal-title" class="text-xl font-extrabold text-white">Tambah Kamar</h3>
+        <button onclick="closeRoomModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-all">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+      <form id="room-form" onsubmit="handleSaveRoom(event)" class="space-y-4">
+        <input type="hidden" id="room-edit-id">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Nama Kamar</label>
+            <input required id="room-name" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs" placeholder="e.g. Balcony">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Jumlah Unit</label>
+            <input required id="room-qty" type="number" min="1" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="1">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Kapasitas (orang)</label>
+            <input required id="room-capacity" type="number" min="1" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="4">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Status</label>
+            <select id="room-active" class="w-full px-3 py-2 rounded-lg glass-input text-xs appearance-none">
+              <option value="true">Aktif</option>
+              <option value="false">Non-Aktif</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Harga Weekday (Rp)</label>
+            <input required id="room-weekday" type="number" class="w-full px-3 py-2 rounded-lg glass-input text-xs">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Harga Weekend (Rp)</label>
+            <input required id="room-weekend" type="number" class="w-full px-3 py-2 rounded-lg glass-input text-xs">
+          </div>
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Fasilitas (koma)</label>
+          <input id="room-facilities" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs" placeholder="AC, TV, WiFi">
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Deskripsi</label>
+          <input id="room-desc" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs" placeholder="Deskripsi singkat">
+        </div>
+        <div class="flex justify-end gap-3 pt-4 border-t border-[#1b7f5a]/20">
+          <button type="button" onclick="closeRoomModal()" class="px-5 py-2.5 rounded-xl border border-[#f6f1e7]/20 text-[#f6f1e7]/80 hover:text-white hover:bg-white/5 transition-all text-sm font-bold">Batal</button>
+          <button type="submit" class="px-6 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-[#07130f] text-sm font-bold transition-all">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL: BLOCK DATES ===================== -->
+  <div id="modal-block-date" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="glass-modal w-full max-w-md rounded-3xl p-6 md:p-8 shadow-2xl relative">
+      <div class="flex items-center justify-between border-b border-[#1b7f5a]/20 pb-4 mb-6">
+        <h3 class="text-xl font-extrabold text-white flex items-center gap-2">
+          <i data-lucide="ban" class="w-5 h-5 text-red-400"></i> Block Tanggal
+        </h3>
+        <button onclick="closeBlockDateModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-all">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+      <form onsubmit="handleBlockDate(event)" class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Dari Tanggal</label>
+            <input required id="block-start" type="date" class="w-full px-3 py-2 rounded-lg glass-input text-xs">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Sampai Tanggal</label>
+            <input required id="block-end" type="date" class="w-full px-3 py-2 rounded-lg glass-input text-xs">
+          </div>
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Tipe Kamar (kosong = semua)</label>
+          <select id="block-room" class="w-full px-3 py-2 rounded-lg glass-input text-xs appearance-none">
+            <option value="">Semua Kamar</option>
+            <option value="Balcony">Balcony</option>
+            <option value="Porch">Porch</option>
+            <option value="Villa">Villa</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Alasan</label>
+          <input id="block-reason" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs" placeholder="Maintenance, Private Event, dll">
+        </div>
+        <div class="flex justify-end gap-3 pt-4 border-t border-[#1b7f5a]/20">
+          <button type="button" onclick="closeBlockDateModal()" class="px-5 py-2.5 rounded-xl border border-[#f6f1e7]/20 text-[#f6f1e7]/80 text-sm font-bold">Batal</button>
+          <button type="submit" class="px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-bold transition-all">Block</button>
+        </div>
+      </form>
+      <!-- Blocked dates list -->
+      <div class="mt-6 border-t border-[#1b7f5a]/20 pt-4">
+        <h4 class="text-xs font-bold text-[#f6f1e7]/50 uppercase mb-3">Tanggal Diblokir</h4>
+        <div id="blocked-dates-list" class="space-y-2 max-h-40 overflow-y-auto text-xs">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL: GUEST DETAIL ===================== -->
+  <div id="modal-guest" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-[#1b7f5a]/20 pb-4 mb-6">
+        <h3 class="text-xl font-extrabold text-white flex items-center gap-2">
+          <i data-lucide="user" class="w-5 h-5 text-brand-500"></i> Detail Tamu
+        </h3>
+        <button onclick="closeGuestModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-all">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+      <div id="guest-detail-content" class="space-y-3 text-sm"></div>
+    </div>
+  </div>
+
+
+  <!-- ===================== JAVASCRIPT LOGIC ===================== -->
   <script>
-    // Strict Route Guard logic
+    // ==================== ROUTE GUARD ====================
     const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
     if (!isAdmin) {
       document.getElementById('unauthorized-overlay').classList.remove('hidden');
@@ -645,263 +1393,372 @@
       }, 2000);
     } else {
       document.getElementById('pms-wrapper').classList.remove('hidden');
-      // Initialize Dashboard once DOM is ready
       document.addEventListener('DOMContentLoaded', () => {
         initDashboard();
       });
     }
 
-    // Default seed data for new LocalStorage setups
+    // ==================== CONSTANTS & DEFAULTS ====================
+    const ALL_STATUSES = ['Pending','Paid','Checked-in','Checked-out','Cancelled','Refunded'];
+    const STATUS_COLORS = {
+      'Paid': 'bg-emerald-950/50 text-emerald-400 border border-emerald-500/20',
+      'Pending': 'bg-amber-950/50 text-amber-400 border border-amber-500/20 animate-pulse',
+      'Checked-in': 'bg-blue-950/50 text-blue-400 border border-blue-500/20',
+      'Checked-out': 'bg-slate-800/50 text-slate-300 border border-slate-500/20',
+      'Cancelled': 'bg-red-950/50 text-red-400 border border-red-500/20',
+      'Refunded': 'bg-purple-950/50 text-purple-400 border border-purple-500/20',
+    };
+
     const defaultBookings = [
       {
-        id: 'ANR-2026-98124',
-        guest: 'Andi Wijaya',
-        email: 'andi.wijaya@gmail.com',
-        room: 'Balcony',
-        checkIn: '2026-05-28',
-        checkOut: '2026-05-30',
-        method: 'Transfer Bank (BCA)',
-        amount: 1400000,
-        status: 'Paid'
+        id: 'ANR-2026-98124', guest: 'Andi Wijaya', email: 'andi.wijaya@gmail.com', phone: '081234567890',
+        room: 'Balcony', checkIn: '2026-05-28', checkOut: '2026-05-30',
+        method: 'Transfer Bank (BCA)', amount: 1400000, status: 'Paid',
+        source: 'Online', guestCount: 2, notes: '', createdAt: '2026-05-20T10:00:00'
       },
       {
-        id: 'ANR-2026-10492',
-        guest: 'Siti Rahma',
-        email: 'siti.rahma@yahoo.com',
-        room: 'Porch',
-        checkIn: '2026-06-01',
-        checkOut: '2026-06-03',
-        method: 'E-Wallet (Gopay)',
-        amount: 760000,
-        status: 'Pending'
+        id: 'ANR-2026-10492', guest: 'Siti Rahma', email: 'siti.rahma@yahoo.com', phone: '081298765432',
+        room: 'Porch', checkIn: '2026-06-01', checkOut: '2026-06-03',
+        method: 'E-Wallet (Gopay)', amount: 760000, status: 'Pending',
+        source: 'WhatsApp', guestCount: 3, notes: '', createdAt: '2026-05-21T14:00:00'
       },
       {
-        id: 'ANR-2026-47392',
-        guest: 'Budi Santoso',
-        email: 'budi.santoso@outlook.com',
-        room: 'Villa',
-        checkIn: '2026-06-05',
-        checkOut: '2026-06-07',
-        method: 'Transfer Bank (Mandiri)',
-        amount: 5000000,
-        status: 'Paid'
+        id: 'ANR-2026-47392', guest: 'Budi Santoso', email: 'budi.santoso@outlook.com', phone: '081387654321',
+        room: 'Villa', checkIn: '2026-06-05', checkOut: '2026-06-07',
+        method: 'Transfer Bank (Mandiri)', amount: 5000000, status: 'Paid',
+        source: 'Agent', guestCount: 10, notes: 'Group family', createdAt: '2026-05-22T09:00:00'
       },
       {
-        id: 'ANR-2026-58204',
-        guest: 'Citra Dewi',
-        email: 'citra.dewi@gmail.com',
-        room: 'Balcony',
-        checkIn: '2026-05-24',
-        checkOut: '2026-05-25',
-        method: 'Credit Card',
-        amount: 500000,
-        status: 'Refunded'
+        id: 'ANR-2026-58204', guest: 'Citra Dewi', email: 'citra.dewi@gmail.com', phone: '081511223344',
+        room: 'Balcony', checkIn: '2026-05-24', checkOut: '2026-05-25',
+        method: 'Credit Card', amount: 500000, status: 'Refunded',
+        source: 'Online', guestCount: 2, notes: 'Cancelled due to weather', createdAt: '2026-05-19T16:00:00'
       }
     ];
 
-    // Helper to format currency
+    const defaultRooms = [
+      { id: 'room-1', name: 'Balcony', quantity: 6, capacity: 4, weekdayPrice: 500000, weekendPrice: 700000, facilities: 'AC, Android TV, Amenities, WiFi', description: 'Glamping tent with balcony view', active: true },
+      { id: 'room-2', name: 'Porch', quantity: 6, capacity: 4, weekdayPrice: 350000, weekendPrice: 420000, facilities: 'Kipas, Android TV, Amenities, WiFi', description: 'Cozy porch glamping tent', active: true },
+      { id: 'room-3', name: 'Villa', quantity: 1, capacity: 20, weekdayPrice: 2100000, weekendPrice: 3000000, facilities: 'AC, Android TV, Kitchen, Karaoke Set, WiFi', description: 'Private villa for groups', active: true },
+    ];
+
+    // ==================== HELPERS ====================
     function formatIDR(amount) {
-      return new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        maximumFractionDigits: 0
-      }).format(amount);
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount);
     }
 
-    // Helper to calculate days between dates
     function getNightsCount(checkin, checkout) {
       if (!checkin || !checkout) return 0;
-      const d1 = new Date(checkin);
-      const d2 = new Date(checkout);
-      const diffTime = d2.getTime() - d1.getTime();
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      return diffDays > 0 ? diffDays : 0;
+      const d1 = new Date(checkin), d2 = new Date(checkout);
+      const diff = Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24));
+      return diff > 0 ? diff : 0;
     }
 
-    // Base rates for suggestion engine
-    const suggestRates = {
-      'Balcony': 600000,
-      'Porch': 380000,
-      'Villa': 2500000
-    };
+    function dateStr(d) {
+      return d.toISOString().split('T')[0];
+    }
 
-    // Auto suggest booking price based on room & night count
+    function nowISO() {
+      return new Date().toISOString();
+    }
+
+    const suggestRates = { 'Balcony': 600000, 'Porch': 380000, 'Villa': 2500000 };
+
     function autoSuggestAmount(type) {
       const room = document.getElementById(`${type}-room`).value;
       const checkin = document.getElementById(`${type}-checkin`).value;
       const checkout = document.getElementById(`${type}-checkout`).value;
-      
       const nights = getNightsCount(checkin, checkout);
       if (nights > 0 && suggestRates[room]) {
-        const calculated = suggestRates[room] * nights;
-        document.getElementById(`${type}-amount`).value = calculated;
+        document.getElementById(`${type}-amount`).value = suggestRates[room] * nights;
       }
     }
 
-    // Unification mapper to support both guest and admin properties perfectly
+    // ==================== NORMALIZE BOOKINGS ====================
     function normalizeBookings(bookings) {
       if (!Array.isArray(bookings)) return [];
       return bookings.map(b => {
         if (!b || typeof b !== 'object') return b;
-        const normalized = { ...b };
-        
-        // id <-> bookingId
-        if (normalized.bookingId !== undefined && normalized.id === undefined) {
-          normalized.id = normalized.bookingId;
-        } else if (normalized.id !== undefined && normalized.bookingId === undefined) {
-          normalized.bookingId = normalized.id;
-        }
-
-        // guest <-> guestName
-        if (normalized.guestName !== undefined && normalized.guest === undefined) {
-          normalized.guest = normalized.guestName;
-        } else if (normalized.guest !== undefined && normalized.guestName === undefined) {
-          normalized.guestName = normalized.guest;
-        }
-
-        // email <-> guestEmail
-        if (normalized.guestEmail !== undefined && normalized.email === undefined) {
-          normalized.email = normalized.guestEmail;
-        } else if (normalized.email !== undefined && normalized.guestEmail === undefined) {
-          normalized.guestEmail = normalized.email;
-        }
-
-        // room <-> roomType
-        if (normalized.roomType !== undefined && normalized.room === undefined) {
-          normalized.room = normalized.roomType;
-        } else if (normalized.room !== undefined && normalized.roomType === undefined) {
-          normalized.roomType = normalized.room;
-        }
-
-        // method <-> paymentMethod
-        if (normalized.paymentMethod !== undefined && normalized.method === undefined) {
-          normalized.method = normalized.paymentMethod;
-        } else if (normalized.method !== undefined && normalized.paymentMethod === undefined) {
-          normalized.paymentMethod = normalized.method;
-        }
-
-        // checkIn <-> checkin
-        if (normalized.checkin !== undefined && normalized.checkIn === undefined) {
-          normalized.checkIn = normalized.checkin;
-        } else if (normalized.checkIn !== undefined && normalized.checkin === undefined) {
-          normalized.checkin = normalized.checkIn;
-        }
-
-        // checkOut <-> checkout
-        if (normalized.checkout !== undefined && normalized.checkOut === undefined) {
-          normalized.checkOut = normalized.checkout;
-        } else if (normalized.checkOut !== undefined && normalized.checkout === undefined) {
-          normalized.checkout = normalized.checkOut;
-        }
-
-        return normalized;
+        const n = { ...b };
+        if (n.bookingId !== undefined && n.id === undefined) n.id = n.bookingId;
+        else if (n.id !== undefined && n.bookingId === undefined) n.bookingId = n.id;
+        if (n.guestName !== undefined && n.guest === undefined) n.guest = n.guestName;
+        else if (n.guest !== undefined && n.guestName === undefined) n.guestName = n.guest;
+        if (n.guestEmail !== undefined && n.email === undefined) n.email = n.guestEmail;
+        else if (n.email !== undefined && n.guestEmail === undefined) n.guestEmail = n.email;
+        if (n.roomType !== undefined && n.room === undefined) n.room = n.roomType;
+        else if (n.room !== undefined && n.roomType === undefined) n.roomType = n.room;
+        if (n.paymentMethod !== undefined && n.method === undefined) n.method = n.paymentMethod;
+        else if (n.method !== undefined && n.paymentMethod === undefined) n.paymentMethod = n.method;
+        if (n.checkin !== undefined && n.checkIn === undefined) n.checkIn = n.checkin;
+        else if (n.checkIn !== undefined && n.checkin === undefined) n.checkin = n.checkIn;
+        if (n.checkout !== undefined && n.checkOut === undefined) n.checkOut = n.checkout;
+        else if (n.checkOut !== undefined && n.checkout === undefined) n.checkout = n.checkOut;
+        if (n.guestWhatsapp !== undefined && n.phone === undefined) n.phone = n.guestWhatsapp;
+        if (!n.source) n.source = 'Online';
+        if (!n.guestCount) n.guestCount = 2;
+        if (!n.notes) n.notes = '';
+        if (!n.createdAt) n.createdAt = nowISO();
+        return n;
       });
     }
 
-    // Get bookings database
+    // ==================== DATA ACCESS ====================
     function getBookings() {
       const data = localStorage.getItem('anaira_bookings');
       if (!data) {
-        const normalizedDefault = normalizeBookings(defaultBookings);
-        localStorage.setItem('anaira_bookings', JSON.stringify(normalizedDefault));
-        return normalizedDefault;
+        const nd = normalizeBookings(defaultBookings);
+        localStorage.setItem('anaira_bookings', JSON.stringify(nd));
+        return nd;
       }
-      try {
-        const parsed = JSON.parse(data);
-        return normalizeBookings(parsed);
-      } catch (e) {
-        console.error("Failed to parse bookings:", e);
-        return [];
-      }
+      try { return normalizeBookings(JSON.parse(data)); }
+      catch(e) { console.error("Failed to parse bookings:", e); return []; }
     }
 
-    // Save bookings database
     function saveBookings(bookings) {
       const normalized = normalizeBookings(bookings);
       localStorage.setItem('anaira_bookings', JSON.stringify(normalized));
-      initDashboard();
+      refreshCurrentSection();
     }
 
-    // Initialize/refresh PMS components
+    function getRooms() {
+      const data = localStorage.getItem('anaira_rooms');
+      if (!data) {
+        localStorage.setItem('anaira_rooms', JSON.stringify(defaultRooms));
+        return [...defaultRooms];
+      }
+      try { return JSON.parse(data); }
+      catch(e) { return [...defaultRooms]; }
+    }
+
+    function saveRooms(rooms) {
+      localStorage.setItem('anaira_rooms', JSON.stringify(rooms));
+    }
+
+    function getBlockedDates() {
+      try { return JSON.parse(localStorage.getItem('anaira_blocked_dates') || '[]'); }
+      catch(e) { return []; }
+    }
+
+    function saveBlockedDates(bd) {
+      localStorage.setItem('anaira_blocked_dates', JSON.stringify(bd));
+    }
+
+    function getPaymentLogs() {
+      try { return JSON.parse(localStorage.getItem('anaira_payment_logs') || '[]'); }
+      catch(e) { return []; }
+    }
+
+    function getPaymentSettings() {
+      try { return JSON.parse(localStorage.getItem('anaira_payment_settings') || '{}'); }
+      catch(e) { return {}; }
+    }
+
+    function getSettings() {
+      try { return JSON.parse(localStorage.getItem('anaira_settings') || '{}'); }
+      catch(e) { return {}; }
+    }
+
+    // ==================== SECTION SWITCHING ====================
+    let currentSection = 'dashboard';
+
+    function switchSection(id) {
+      currentSection = id;
+      document.querySelectorAll('.section-content').forEach(el => el.classList.add('hidden'));
+      const target = document.getElementById('section-' + id);
+      if (target) target.classList.remove('hidden');
+
+      // Update sidebar active state
+      document.querySelectorAll('.nav-item').forEach(el => {
+        el.classList.remove('nav-active');
+        el.classList.add('text-slate-300');
+      });
+      const navEl = document.getElementById('nav-' + id);
+      if (navEl) {
+        navEl.classList.add('nav-active');
+        navEl.classList.remove('text-slate-300');
+      }
+
+      // Refresh section data
+      refreshCurrentSection();
+      lucide.createIcons();
+    }
+
+    function refreshCurrentSection() {
+      const bookings = getBookings();
+      if (currentSection === 'dashboard') refreshDashboard(bookings);
+      if (currentSection === 'bookings') renderTable();
+      if (currentSection === 'rooms') renderRoomsTable();
+      if (currentSection === 'calendar') renderCalendar();
+      if (currentSection === 'guests') renderGuestsTable();
+      if (currentSection === 'payments') renderPayments();
+      if (currentSection === 'settings') loadSettings();
+    }
+
+    // ==================== INIT ====================
+    let clockInterval = null;
     function initDashboard() {
       const bookings = getBookings();
-      renderStats(bookings);
-      renderTable(bookings);
+      getRooms(); // ensure seeded
+      refreshDashboard(bookings);
       updateServerTime();
-      setInterval(updateServerTime, 1000);
+      if (!clockInterval) clockInterval = setInterval(updateServerTime, 1000);
+      lucide.createIcons();
     }
 
-    // Update digital server time widget
     function updateServerTime() {
       const clock = document.getElementById('server-time');
       if (clock) {
         const now = new Date();
-        const yyyy = now.getFullYear();
-        const mm = String(now.getMonth() + 1).padStart(2, '0');
-        const dd = String(now.getDate()).padStart(2, '0');
-        const hh = String(now.getHours()).padStart(2, '0');
-        const min = String(now.getMinutes()).padStart(2, '0');
-        const ss = String(now.getSeconds()).padStart(2, '0');
-        clock.textContent = `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+        clock.textContent = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
       }
     }
 
-    // Calculate and render all metrics
-    function renderStats(bookings) {
-      // 1. Total Revenue (only PAID bookings)
-      const revenue = bookings
-        .filter(b => b.status === 'Paid')
-        .reduce((sum, b) => sum + Number(b.amount || 0), 0);
+    // ==================== DASHBOARD ====================
+    function refreshDashboard(bookings) {
+      if (!bookings) bookings = getBookings();
+
+      // Revenue (Paid only)
+      const revenue = bookings.filter(b => b.status === 'Paid').reduce((s, b) => s + Number(b.amount || 0), 0);
       document.getElementById('stat-revenue').textContent = formatIDR(revenue);
 
-      // 2. Active Bookings (Paid + Pending)
-      const active = bookings.filter(b => b.status === 'Paid' || b.status === 'Pending').length;
+      // Pending Revenue
+      const pendingRev = bookings.filter(b => b.status === 'Pending').reduce((s, b) => s + Number(b.amount || 0), 0);
+      document.getElementById('stat-pending-revenue').textContent = formatIDR(pendingRev);
+
+      // Active bookings
+      const activeStatuses = ['Paid','Pending','Checked-in'];
+      const active = bookings.filter(b => activeStatuses.includes(b.status)).length;
       document.getElementById('stat-active').textContent = active;
 
-      // 3. Occupancies (Active bookings filter per Room style)
-      // Total inventory limits: Balcony = 6, Porch = 6, Villa = 1
-      const activeBookings = bookings.filter(b => b.status === 'Paid' || b.status === 'Pending');
+      // Total unique guests
+      const uniqueGuests = new Set(bookings.map(b => (b.email || '').toLowerCase()).filter(e => e));
+      document.getElementById('stat-total-guests').textContent = uniqueGuests.size;
 
+      // Occupancy
+      const rooms = getRooms();
+      const roomMap = {};
+      rooms.forEach(r => { roomMap[r.name] = r.quantity || 1; });
+
+      const activeBookings = bookings.filter(b => activeStatuses.includes(b.status));
       const balconyCount = activeBookings.filter(b => b.room === 'Balcony').length;
       const porchCount = activeBookings.filter(b => b.room === 'Porch').length;
       const villaCount = activeBookings.filter(b => b.room === 'Villa').length;
 
-      // Ensure we don't exceed 100% physically, but display active count / inventory
-      const balconyPct = Math.min(100, Math.round((balconyCount / 6) * 100));
-      const porchPct = Math.min(100, Math.round((porchCount / 6) * 100));
-      const villaPct = Math.min(100, Math.round((villaCount / 1) * 100));
+      const balconyMax = roomMap['Balcony'] || 6;
+      const porchMax = roomMap['Porch'] || 6;
+      const villaMax = roomMap['Villa'] || 1;
 
-      // Update text and progress bars
-      document.getElementById('stat-balcony').textContent = `${balconyCount} / 6`;
-      document.getElementById('balcony-pct').textContent = `${balconyPct}%`;
-      document.getElementById('balcony-progress').style.width = `${balconyPct}%`;
+      setOccupancy('balcony', balconyCount, balconyMax);
+      setOccupancy('porch', porchCount, porchMax);
+      setOccupancy('villa', villaCount, villaMax);
 
-      document.getElementById('stat-porch').textContent = `${porchCount} / 6`;
-      document.getElementById('porch-pct').textContent = `${porchPct}%`;
-      document.getElementById('porch-progress').style.width = `${porchPct}%`;
+      // Status badges
+      const statusCounts = {};
+      ALL_STATUSES.forEach(s => statusCounts[s] = 0);
+      bookings.forEach(b => { if (statusCounts[b.status] !== undefined) statusCounts[b.status]++; });
+      const badgesHtml = ALL_STATUSES.map(s => {
+        const cls = STATUS_COLORS[s] || 'bg-gray-800 text-gray-300 border border-gray-600/20';
+        return `<span class="px-3 py-1.5 rounded-full text-xs font-bold ${cls}">${s}: ${statusCounts[s]}</span>`;
+      }).join('');
+      document.getElementById('dash-status-badges').innerHTML = badgesHtml;
 
-      document.getElementById('stat-villa').textContent = `${villaCount} / 1`;
-      document.getElementById('villa-pct').textContent = `${villaPct}%`;
-      document.getElementById('villa-progress').style.width = `${villaPct}%`;
+      // Revenue by room type
+      const roomRevenue = {};
+      bookings.filter(b => b.status === 'Paid').forEach(b => {
+        roomRevenue[b.room] = (roomRevenue[b.room] || 0) + Number(b.amount || 0);
+      });
+      const maxRoomRev = Math.max(...Object.values(roomRevenue), 1);
+      let roomRevHtml = '';
+      ['Balcony','Porch','Villa'].forEach(rt => {
+        const val = roomRevenue[rt] || 0;
+        const pct = Math.round((val / maxRoomRev) * 100);
+        roomRevHtml += `
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="text-[#f6f1e7]/70 font-medium">${rt}</span>
+              <span class="text-brand-200 font-bold font-mono">${formatIDR(val)}</span>
+            </div>
+            <div class="w-full bg-[#050d0a] h-1.5 rounded-full overflow-hidden border border-brand-500/10">
+              <div class="bg-brand-500 h-full rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+            </div>
+          </div>`;
+      });
+      document.getElementById('dash-revenue-room').innerHTML = roomRevHtml;
+
+      // Avg booking value
+      const paidBookings = bookings.filter(b => b.status === 'Paid');
+      const avg = paidBookings.length > 0 ? paidBookings.reduce((s, b) => s + Number(b.amount || 0), 0) / paidBookings.length : 0;
+      document.getElementById('dash-avg-booking').textContent = formatIDR(Math.round(avg));
+
+      // Upcoming check-ins (7 days)
+      const today = new Date(); today.setHours(0,0,0,0);
+      const in7d = new Date(today); in7d.setDate(in7d.getDate() + 7);
+
+      const upcomingCI = bookings.filter(b => {
+        const ci = new Date(b.checkIn);
+        return ci >= today && ci <= in7d && ['Paid','Pending'].includes(b.status);
+      }).sort((a,b) => new Date(a.checkIn) - new Date(b.checkIn));
+
+      const ciContainer = document.getElementById('dash-checkins');
+      if (upcomingCI.length === 0) {
+        ciContainer.innerHTML = '<p class="text-[#f6f1e7]/40 text-xs">Tidak ada check-in dalam 7 hari ke depan.</p>';
+      } else {
+        ciContainer.innerHTML = upcomingCI.map(b => `
+          <div class="flex items-center justify-between glass-panel rounded-lg px-3 py-2">
+            <div>
+              <span class="text-xs font-bold text-white">${b.guest}</span>
+              <span class="text-[10px] text-[#f6f1e7]/50 ml-2">${b.room}</span>
+            </div>
+            <span class="text-[10px] font-mono text-brand-200">${b.checkIn}</span>
+          </div>
+        `).join('');
+      }
+
+      // Upcoming check-outs (7 days)
+      const upcomingCO = bookings.filter(b => {
+        const co = new Date(b.checkOut);
+        return co >= today && co <= in7d && ['Paid','Checked-in'].includes(b.status);
+      }).sort((a,b) => new Date(a.checkOut) - new Date(b.checkOut));
+
+      const coContainer = document.getElementById('dash-checkouts');
+      if (upcomingCO.length === 0) {
+        coContainer.innerHTML = '<p class="text-[#f6f1e7]/40 text-xs">Tidak ada check-out dalam 7 hari ke depan.</p>';
+      } else {
+        coContainer.innerHTML = upcomingCO.map(b => `
+          <div class="flex items-center justify-between glass-panel rounded-lg px-3 py-2">
+            <div>
+              <span class="text-xs font-bold text-white">${b.guest}</span>
+              <span class="text-[10px] text-[#f6f1e7]/50 ml-2">${b.room}</span>
+            </div>
+            <span class="text-[10px] font-mono text-red-300">${b.checkOut}</span>
+          </div>
+        `).join('');
+      }
+
+      lucide.createIcons();
     }
 
-    // Dynamic Filter & Render Table listing
+    function setOccupancy(prefix, count, max) {
+      const pct = Math.min(100, Math.round((count / max) * 100));
+      document.getElementById(`stat-${prefix}`).textContent = `${count} / ${max}`;
+      document.getElementById(`${prefix}-pct`).textContent = `${pct}%`;
+      document.getElementById(`${prefix}-progress`).style.width = `${pct}%`;
+    }
+
+    // ==================== BOOKINGS TABLE ====================
     function renderTable() {
       const bookings = getBookings();
-      const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
-      const statusFilter = document.getElementById('status-filter').value;
+      const searchQuery = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
+      const statusFilter = document.getElementById('status-filter')?.value || 'All';
+      const roomFilter = document.getElementById('room-filter')?.value || 'All';
 
-      // Filter bookings
       const filtered = bookings.filter(b => {
-        const matchesSearch = 
-          b.id.toLowerCase().includes(searchQuery) ||
-          b.guest.toLowerCase().includes(searchQuery) ||
-          b.email.toLowerCase().includes(searchQuery) ||
-          b.room.toLowerCase().includes(searchQuery);
-
+        const s = (b.id + ' ' + b.guest + ' ' + b.email + ' ' + b.room + ' ' + (b.phone||'')).toLowerCase();
+        const matchesSearch = s.includes(searchQuery);
         const matchesStatus = statusFilter === 'All' || b.status === statusFilter;
-
-        return matchesSearch && matchesStatus;
+        const matchesRoom = roomFilter === 'All' || b.room === roomFilter;
+        return matchesSearch && matchesStatus && matchesRoom;
       });
 
       const tbody = document.getElementById('bookings-table-body');
@@ -912,22 +1769,10 @@
         emptyState.classList.remove('hidden');
       } else {
         emptyState.classList.add('hidden');
-
         filtered.forEach(b => {
-          // Status styling badges
-          let badgeClass = '';
-          if (b.status === 'Paid') {
-            badgeClass = 'bg-emerald-950/50 text-emerald-400 border border-emerald-500/20';
-          } else if (b.status === 'Pending') {
-            badgeClass = 'bg-amber-950/50 text-amber-400 border border-amber-500/20 animate-pulse';
-          } else {
-            badgeClass = 'bg-red-950/50 text-red-400 border border-red-500/20';
-          }
-
-          // Nights calculation
+          const badgeClass = STATUS_COLORS[b.status] || 'bg-gray-800 text-gray-300 border border-gray-600/20';
           const nights = getNightsCount(b.checkIn, b.checkOut);
-
-          const rowHtml = `
+          tbody.innerHTML += `
             <tr class="hover:bg-white/5 transition-all">
               <td class="py-4 px-4">
                 <div class="font-bold text-[#f6f1e7] flex items-center gap-1.5">
@@ -935,8 +1780,9 @@
                 </div>
                 <div class="text-sm font-semibold text-slate-300 mt-1">${b.guest}</div>
               </td>
-              <td class="py-4 px-4 font-mono text-xs text-[#f6f1e7]/70">
-                ${b.email}
+              <td class="py-4 px-4">
+                <div class="font-mono text-xs text-[#f6f1e7]/70">${b.email}</div>
+                ${b.phone ? `<div class="text-[10px] text-[#f6f1e7]/50 mt-0.5">${b.phone}</div>` : ''}
               </td>
               <td class="py-4 px-4">
                 <div class="text-xs font-semibold text-brand-200 flex items-center gap-1.5">
@@ -955,103 +1801,98 @@
                 <span class="px-2.5 py-1 rounded-full text-xs font-bold ${badgeClass}">${b.status}</span>
               </td>
               <td class="py-4 px-4 text-center">
-                <div class="flex items-center justify-center gap-2">
-                  <button onclick="openEditModal('${b.id}')" class="p-2 bg-brand-700/20 hover:bg-brand-700/40 text-brand-200 rounded-xl transition-all border border-brand-500/20" title="Edit Tamu">
-                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                <div class="flex items-center justify-center gap-1.5">
+                  <button onclick="openViewModal('${b.id}')" class="p-1.5 bg-blue-950/20 hover:bg-blue-950/40 text-blue-400 rounded-lg transition-all border border-blue-500/20" title="Lihat Detail">
+                    <i data-lucide="eye" class="w-3.5 h-3.5"></i>
                   </button>
-                  <button onclick="openDeleteModal('${b.id}')" class="p-2 bg-red-950/20 hover:bg-red-950/40 text-red-400 rounded-xl transition-all border border-red-500/20" title="Hapus Booking">
-                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                  <button onclick="openEditModal('${b.id}')" class="p-1.5 bg-brand-700/20 hover:bg-brand-700/40 text-brand-200 rounded-lg transition-all border border-brand-500/20" title="Edit">
+                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                  </button>
+                  <button onclick="openDeleteModal('${b.id}')" class="p-1.5 bg-red-950/20 hover:bg-red-950/40 text-red-400 rounded-lg transition-all border border-red-500/20" title="Hapus">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                   </button>
                 </div>
               </td>
-            </tr>
-          `;
-          tbody.innerHTML += rowHtml;
+            </tr>`;
         });
       }
       lucide.createIcons();
     }
 
-    // Modal Control: ADD TAMU
+    // ==================== BOOKING MODALS ====================
     function openAddModal() {
       const modal = document.getElementById('modal-add');
       modal.classList.remove('hidden');
-      modal.classList.add('flex', 'animate-fade-in');
-      
-      // Auto pre-fill dates with today and tomorrow
+      modal.classList.add('flex');
       const today = new Date();
-      const tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-
-      document.getElementById('add-checkin').value = today.toISOString().split('T')[0];
-      document.getElementById('add-checkout').value = tomorrow.toISOString().split('T')[0];
+      const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
+      document.getElementById('add-checkin').value = dateStr(today);
+      document.getElementById('add-checkout').value = dateStr(tomorrow);
       autoSuggestAmount('add');
       lucide.createIcons();
     }
 
     function closeAddModal() {
       document.getElementById('modal-add').classList.add('hidden');
+      document.getElementById('modal-add').classList.remove('flex');
       document.getElementById('add-form').reset();
     }
 
     function handleAddBooking(e) {
       e.preventDefault();
-      
-      // Generate unique Booking ID
-      const randomPart = Math.floor(10000 + Math.random() * 90000);
-      const bookingId = `ANR-2026-${randomPart}`;
+      const bookingId = `ANR-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 90000)}`;
       const guestVal = document.getElementById('add-guest').value.trim();
       const emailVal = document.getElementById('add-email').value.trim();
+      const phoneVal = document.getElementById('add-phone').value.trim();
+      const gcVal = Number(document.getElementById('add-guestcount').value) || 2;
       const roomVal = document.getElementById('add-room').value;
       const checkInVal = document.getElementById('add-checkin').value;
       const checkOutVal = document.getElementById('add-checkout').value;
       const methodVal = document.getElementById('add-method').value;
       const amountVal = Number(document.getElementById('add-amount').value);
       const statusVal = document.getElementById('add-status').value;
+      const sourceVal = document.getElementById('add-source').value;
+      const notesVal = document.getElementById('add-notes').value.trim();
 
       const newBooking = {
-        id: bookingId,
-        bookingId: bookingId,
-        guest: guestVal,
-        guestName: guestVal,
-        email: emailVal,
-        guestEmail: emailVal,
-        room: roomVal,
-        roomType: roomVal,
-        checkIn: checkInVal,
-        checkin: checkInVal,
-        checkOut: checkOutVal,
-        checkout: checkOutVal,
-        method: methodVal,
-        paymentMethod: methodVal,
-        amount: amountVal,
-        status: statusVal
+        id: bookingId, bookingId: bookingId,
+        guest: guestVal, guestName: guestVal,
+        email: emailVal, guestEmail: emailVal,
+        phone: phoneVal,
+        room: roomVal, roomType: roomVal,
+        checkIn: checkInVal, checkin: checkInVal,
+        checkOut: checkOutVal, checkout: checkOutVal,
+        method: methodVal, paymentMethod: methodVal,
+        amount: amountVal, status: statusVal,
+        source: sourceVal, guestCount: gcVal,
+        notes: notesVal, createdAt: nowISO(), updatedAt: nowISO()
       };
 
       const bookings = getBookings();
-      bookings.unshift(newBooking); // Put at top of list
+      bookings.unshift(newBooking);
       saveBookings(bookings);
-      
       closeAddModal();
     }
 
-    // Modal Control: EDIT BOOKING
     function openEditModal(bookingId) {
       const bookings = getBookings();
-      const booking = bookings.find(b => b.id === bookingId || b.bookingId === bookingId);
-      if (!booking) return;
+      const b = bookings.find(b => b.id === bookingId || b.bookingId === bookingId);
+      if (!b) return;
 
-      document.getElementById('edit-booking-id').textContent = booking.id || booking.bookingId;
-      document.getElementById('edit-id-tracker').value = booking.id || booking.bookingId;
-
-      document.getElementById('edit-guest').value = booking.guest || booking.guestName || '';
-      document.getElementById('edit-email').value = booking.email || booking.guestEmail || '';
-      document.getElementById('edit-room').value = booking.room || booking.roomType || 'Balcony';
-      document.getElementById('edit-checkin').value = booking.checkIn || booking.checkin || '';
-      document.getElementById('edit-checkout').value = booking.checkOut || booking.checkout || '';
-      document.getElementById('edit-method').value = booking.method || booking.paymentMethod || 'Transfer Bank (BCA)';
-      document.getElementById('edit-amount').value = booking.amount || 0;
-      document.getElementById('edit-status').value = booking.status || 'Paid';
+      document.getElementById('edit-booking-id').textContent = b.id;
+      document.getElementById('edit-id-tracker').value = b.id;
+      document.getElementById('edit-guest').value = b.guest || '';
+      document.getElementById('edit-email').value = b.email || '';
+      document.getElementById('edit-phone').value = b.phone || '';
+      document.getElementById('edit-guestcount').value = b.guestCount || 2;
+      document.getElementById('edit-room').value = b.room || 'Balcony';
+      document.getElementById('edit-checkin').value = b.checkIn || '';
+      document.getElementById('edit-checkout').value = b.checkOut || '';
+      document.getElementById('edit-method').value = b.method || 'Transfer Bank (BCA)';
+      document.getElementById('edit-amount').value = b.amount || 0;
+      document.getElementById('edit-status').value = b.status || 'Pending';
+      document.getElementById('edit-source').value = b.source || 'Online';
+      document.getElementById('edit-notes').value = b.notes || '';
 
       const modal = document.getElementById('modal-edit');
       modal.classList.remove('hidden');
@@ -1061,6 +1902,7 @@
 
     function closeEditModal() {
       document.getElementById('modal-edit').classList.add('hidden');
+      document.getElementById('modal-edit').classList.remove('flex');
       document.getElementById('edit-form').reset();
     }
 
@@ -1069,48 +1911,39 @@
       const id = document.getElementById('edit-id-tracker').value;
       const bookings = getBookings();
       const index = bookings.findIndex(b => b.id === id || b.bookingId === id);
+      if (index === -1) return;
 
-      if (index !== -1) {
-        const guestVal = document.getElementById('edit-guest').value.trim();
-        const emailVal = document.getElementById('edit-email').value.trim();
-        const roomVal = document.getElementById('edit-room').value;
-        const checkInVal = document.getElementById('edit-checkin').value;
-        const checkOutVal = document.getElementById('edit-checkout').value;
-        const methodVal = document.getElementById('edit-method').value;
-        const amountVal = Number(document.getElementById('edit-amount').value);
-        const statusVal = document.getElementById('edit-status').value;
+      const g = document.getElementById('edit-guest').value.trim();
+      const em = document.getElementById('edit-email').value.trim();
+      const ph = document.getElementById('edit-phone').value.trim();
+      const gc = Number(document.getElementById('edit-guestcount').value) || 2;
+      const rm = document.getElementById('edit-room').value;
+      const ci = document.getElementById('edit-checkin').value;
+      const co = document.getElementById('edit-checkout').value;
+      const mt = document.getElementById('edit-method').value;
+      const am = Number(document.getElementById('edit-amount').value);
+      const st = document.getElementById('edit-status').value;
+      const sr = document.getElementById('edit-source').value;
+      const nt = document.getElementById('edit-notes').value.trim();
 
-        bookings[index].guest = guestVal;
-        bookings[index].guestName = guestVal;
-        bookings[index].email = emailVal;
-        bookings[index].guestEmail = emailVal;
-        bookings[index].room = roomVal;
-        bookings[index].roomType = roomVal;
-        bookings[index].checkIn = checkInVal;
-        bookings[index].checkin = checkInVal;
-        bookings[index].checkOut = checkOutVal;
-        bookings[index].checkout = checkOutVal;
-        bookings[index].method = methodVal;
-        bookings[index].paymentMethod = methodVal;
-        bookings[index].amount = amountVal;
-        bookings[index].status = statusVal;
+      Object.assign(bookings[index], {
+        guest: g, guestName: g, email: em, guestEmail: em, phone: ph, guestCount: gc,
+        room: rm, roomType: rm, checkIn: ci, checkin: ci, checkOut: co, checkout: co,
+        method: mt, paymentMethod: mt, amount: am, status: st, source: sr, notes: nt,
+        updatedAt: nowISO()
+      });
 
-        saveBookings(bookings);
-      }
-
+      saveBookings(bookings);
       closeEditModal();
     }
 
-    // Modal Control: DELETE BOOKING
     function openDeleteModal(bookingId) {
       const bookings = getBookings();
-      const booking = bookings.find(b => b.id === bookingId || b.bookingId === bookingId);
-      if (!booking) return;
-
-      document.getElementById('delete-guest-name').textContent = booking.guest || booking.guestName;
-      document.getElementById('delete-booking-id-text').textContent = booking.id || booking.bookingId;
-      document.getElementById('delete-id-tracker').value = booking.id || booking.bookingId;
-
+      const b = bookings.find(b => b.id === bookingId || b.bookingId === bookingId);
+      if (!b) return;
+      document.getElementById('delete-guest-name').textContent = b.guest;
+      document.getElementById('delete-booking-id-text').textContent = b.id;
+      document.getElementById('delete-id-tracker').value = b.id;
       const modal = document.getElementById('modal-delete');
       modal.classList.remove('hidden');
       modal.classList.add('flex');
@@ -1119,6 +1952,7 @@
 
     function closeDeleteModal() {
       document.getElementById('modal-delete').classList.add('hidden');
+      document.getElementById('modal-delete').classList.remove('flex');
     }
 
     function handleDeleteBooking() {
@@ -1126,11 +1960,597 @@
       let bookings = getBookings();
       bookings = bookings.filter(b => b.id !== id && b.bookingId !== id);
       saveBookings(bookings);
-
       closeDeleteModal();
     }
 
-    // Logout operation
+    // View Detail Modal
+    function openViewModal(bookingId) {
+      const bookings = getBookings();
+      const b = bookings.find(b => b.id === bookingId || b.bookingId === bookingId);
+      if (!b) return;
+      const nights = getNightsCount(b.checkIn, b.checkOut);
+      const badgeClass = STATUS_COLORS[b.status] || '';
+      const content = document.getElementById('view-detail-content');
+      content.innerHTML = `
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[10px] bg-brand-900/80 px-2 py-1 rounded border border-brand-500/20 font-mono tracking-wider font-bold">${b.id}</span>
+          <span class="px-2.5 py-1 rounded-full text-xs font-bold ${badgeClass}">${b.status}</span>
+        </div>
+        <div class="glass-panel-dark rounded-xl p-4 space-y-2">
+          <div class="flex justify-between"><span class="text-[#f6f1e7]/50">Tamu</span><span class="font-bold">${b.guest}</span></div>
+          <div class="flex justify-between"><span class="text-[#f6f1e7]/50">Email</span><span class="font-mono text-xs">${b.email}</span></div>
+          <div class="flex justify-between"><span class="text-[#f6f1e7]/50">Phone</span><span class="font-mono text-xs">${b.phone || '-'}</span></div>
+          <div class="flex justify-between"><span class="text-[#f6f1e7]/50">Jumlah Tamu</span><span>${b.guestCount || '-'}</span></div>
+        </div>
+        <div class="glass-panel-dark rounded-xl p-4 space-y-2">
+          <div class="flex justify-between"><span class="text-[#f6f1e7]/50">Kamar</span><span class="font-bold text-brand-200">${b.room}</span></div>
+          <div class="flex justify-between"><span class="text-[#f6f1e7]/50">Check-In</span><span class="font-mono text-xs">${b.checkIn}</span></div>
+          <div class="flex justify-between"><span class="text-[#f6f1e7]/50">Check-Out</span><span class="font-mono text-xs">${b.checkOut}</span></div>
+          <div class="flex justify-between"><span class="text-[#f6f1e7]/50">Malam</span><span class="font-bold">${nights}</span></div>
+        </div>
+        <div class="glass-panel-dark rounded-xl p-4 space-y-2">
+          <div class="flex justify-between"><span class="text-[#f6f1e7]/50">Total</span><span class="font-bold font-mono text-white">${formatIDR(b.amount)}</span></div>
+          <div class="flex justify-between"><span class="text-[#f6f1e7]/50">Metode</span><span class="text-xs">${b.method}</span></div>
+          <div class="flex justify-between"><span class="text-[#f6f1e7]/50">Sumber</span><span class="text-xs">${b.source || '-'}</span></div>
+          <div class="flex justify-between"><span class="text-[#f6f1e7]/50">Catatan</span><span class="text-xs">${b.notes || '-'}</span></div>
+          <div class="flex justify-between"><span class="text-[#f6f1e7]/50">Dibuat</span><span class="font-mono text-[10px]">${b.createdAt || '-'}</span></div>
+        </div>
+      `;
+      const modal = document.getElementById('modal-view');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      lucide.createIcons();
+    }
+
+    function closeViewModal() {
+      document.getElementById('modal-view').classList.add('hidden');
+      document.getElementById('modal-view').classList.remove('flex');
+    }
+
+    // CSV Export
+    function exportBookingsCSV() {
+      const bookings = getBookings();
+      if (bookings.length === 0) return alert('Tidak ada data booking untuk di-export.');
+      const headers = ['ID','Guest','Email','Phone','Room','CheckIn','CheckOut','Nights','Method','Amount','Status','Source','GuestCount','Notes','CreatedAt'];
+      const rows = bookings.map(b => [
+        b.id, b.guest, b.email, b.phone||'', b.room, b.checkIn, b.checkOut,
+        getNightsCount(b.checkIn, b.checkOut), b.method, b.amount, b.status,
+        b.source||'', b.guestCount||'', `"${(b.notes||'').replace(/"/g,'""')}"`, b.createdAt||''
+      ]);
+      const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `anaira_bookings_${dateStr(new Date())}.csv`; a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // ==================== ROOMS MANAGEMENT ====================
+    function renderRoomsTable() {
+      const rooms = getRooms();
+      const tbody = document.getElementById('rooms-table-body');
+      tbody.innerHTML = '';
+      rooms.forEach(r => {
+        const statusBadge = r.active
+          ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950/50 text-emerald-400 border border-emerald-500/20">Aktif</span>'
+          : '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-950/50 text-red-400 border border-red-500/20">Non-Aktif</span>';
+        tbody.innerHTML += `
+          <tr class="hover:bg-white/5 transition-all">
+            <td class="py-4 px-4 font-bold text-white">${r.name}</td>
+            <td class="py-4 px-4 font-mono">${r.quantity}</td>
+            <td class="py-4 px-4">${r.capacity} orang</td>
+            <td class="py-4 px-4 font-mono text-xs">${formatIDR(r.weekdayPrice)}</td>
+            <td class="py-4 px-4 font-mono text-xs">${formatIDR(r.weekendPrice)}</td>
+            <td class="py-4 px-4 text-xs text-[#f6f1e7]/70 max-w-[200px] truncate">${r.facilities || '-'}</td>
+            <td class="py-4 px-4 text-center">${statusBadge}</td>
+            <td class="py-4 px-4 text-center">
+              <div class="flex items-center justify-center gap-1.5">
+                <button onclick="openRoomModal('${r.id}')" class="p-1.5 bg-brand-700/20 hover:bg-brand-700/40 text-brand-200 rounded-lg transition-all border border-brand-500/20" title="Edit">
+                  <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                </button>
+                <button onclick="toggleRoomActive('${r.id}')" class="p-1.5 bg-amber-950/20 hover:bg-amber-950/40 text-amber-400 rounded-lg transition-all border border-amber-500/20" title="Toggle Status">
+                  <i data-lucide="power" class="w-3.5 h-3.5"></i>
+                </button>
+                <button onclick="deleteRoom('${r.id}')" class="p-1.5 bg-red-950/20 hover:bg-red-950/40 text-red-400 rounded-lg transition-all border border-red-500/20" title="Hapus">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </td>
+          </tr>`;
+      });
+      lucide.createIcons();
+    }
+
+    function openRoomModal(roomId) {
+      const modal = document.getElementById('modal-room');
+      document.getElementById('room-form').reset();
+      document.getElementById('room-edit-id').value = '';
+
+      if (roomId) {
+        const rooms = getRooms();
+        const r = rooms.find(x => x.id === roomId);
+        if (r) {
+          document.getElementById('room-modal-title').textContent = 'Edit Kamar';
+          document.getElementById('room-edit-id').value = r.id;
+          document.getElementById('room-name').value = r.name;
+          document.getElementById('room-qty').value = r.quantity;
+          document.getElementById('room-capacity').value = r.capacity;
+          document.getElementById('room-weekday').value = r.weekdayPrice;
+          document.getElementById('room-weekend').value = r.weekendPrice;
+          document.getElementById('room-facilities').value = r.facilities || '';
+          document.getElementById('room-desc').value = r.description || '';
+          document.getElementById('room-active').value = String(r.active !== false);
+        }
+      } else {
+        document.getElementById('room-modal-title').textContent = 'Tambah Kamar';
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      lucide.createIcons();
+    }
+
+    function closeRoomModal() {
+      document.getElementById('modal-room').classList.add('hidden');
+      document.getElementById('modal-room').classList.remove('flex');
+    }
+
+    function handleSaveRoom(e) {
+      e.preventDefault();
+      const rooms = getRooms();
+      const editId = document.getElementById('room-edit-id').value;
+      const roomData = {
+        name: document.getElementById('room-name').value.trim(),
+        quantity: Number(document.getElementById('room-qty').value),
+        capacity: Number(document.getElementById('room-capacity').value),
+        weekdayPrice: Number(document.getElementById('room-weekday').value),
+        weekendPrice: Number(document.getElementById('room-weekend').value),
+        facilities: document.getElementById('room-facilities').value.trim(),
+        description: document.getElementById('room-desc').value.trim(),
+        active: document.getElementById('room-active').value === 'true',
+      };
+
+      if (editId) {
+        const idx = rooms.findIndex(r => r.id === editId);
+        if (idx !== -1) Object.assign(rooms[idx], roomData);
+      } else {
+        roomData.id = 'room-' + Date.now();
+        rooms.push(roomData);
+      }
+
+      saveRooms(rooms);
+      closeRoomModal();
+      renderRoomsTable();
+    }
+
+    function toggleRoomActive(roomId) {
+      const rooms = getRooms();
+      const r = rooms.find(x => x.id === roomId);
+      if (r) { r.active = !r.active; saveRooms(rooms); renderRoomsTable(); }
+    }
+
+    function deleteRoom(roomId) {
+      if (!confirm('Hapus tipe kamar ini?')) return;
+      let rooms = getRooms();
+      rooms = rooms.filter(r => r.id !== roomId);
+      saveRooms(rooms);
+      renderRoomsTable();
+    }
+
+    // ==================== CALENDAR ====================
+    let calYear, calMonth;
+    (function initCalDate() {
+      const now = new Date();
+      calYear = now.getFullYear();
+      calMonth = now.getMonth();
+    })();
+
+    const monthNames = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+    function changeCalMonth(delta) {
+      calMonth += delta;
+      if (calMonth < 0) { calMonth = 11; calYear--; }
+      if (calMonth > 11) { calMonth = 0; calYear++; }
+      renderCalendar();
+    }
+
+    function renderCalendar() {
+      document.getElementById('cal-month-label').textContent = `${monthNames[calMonth]} ${calYear}`;
+      const rooms = getRooms().filter(r => r.active !== false);
+      const bookings = getBookings().filter(b => ['Paid','Pending','Checked-in'].includes(b.status));
+      const blockedDates = getBlockedDates();
+      const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+      // Build header
+      let html = '<table class="w-full border-collapse text-[10px]"><thead><tr>';
+      html += '<th class="py-2 px-2 text-left text-[#f6f1e7]/50 font-bold text-xs sticky left-0 bg-[#0a2e20]/80 z-10 min-w-[80px]">Tipe</th>';
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dt = new Date(calYear, calMonth, d);
+        const dayName = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'][dt.getDay()];
+        const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
+        html += `<th class="py-2 px-1 text-center min-w-[38px] ${isWeekend ? 'text-amber-400/70' : 'text-[#f6f1e7]/40'}">
+          <div>${d}</div><div class="text-[8px]">${dayName}</div>
+        </th>`;
+      }
+      html += '</tr></thead><tbody>';
+
+      rooms.forEach(r => {
+        html += `<tr><td class="py-2 px-2 font-bold text-white text-xs sticky left-0 bg-[#0a2e20]/80 z-10 border-r border-[#1b7f5a]/10">${r.name} <span class="text-[#f6f1e7]/30 font-normal">(${r.quantity})</span></td>`;
+        for (let d = 1; d <= daysInMonth; d++) {
+          const ds = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+
+          // Check blocked
+          const isBlocked = blockedDates.some(bd => {
+            if (bd.room && bd.room !== r.name && bd.room !== '') return false;
+            return ds >= bd.start && ds <= bd.end;
+          });
+
+          if (isBlocked) {
+            html += `<td class="py-1 px-0.5 text-center"><div class="cal-blocked rounded px-1 py-1 border text-gray-400">✕</div></td>`;
+            continue;
+          }
+
+          // Count bookings overlapping this date for this room type
+          const bookedCount = bookings.filter(b => {
+            return b.room === r.name && ds >= b.checkIn && ds < b.checkOut;
+          }).length;
+
+          const avail = r.quantity - bookedCount;
+          let cellClass = 'cal-available';
+          let textColor = 'text-emerald-400';
+          if (avail <= 0) { cellClass = 'cal-full'; textColor = 'text-red-400'; }
+          else if (bookedCount > 0) { cellClass = 'cal-partial'; textColor = 'text-amber-400'; }
+
+          html += `<td class="py-1 px-0.5 text-center"><div class="${cellClass} rounded px-1 py-1 border ${textColor} font-bold">${Math.max(0,avail)}</div></td>`;
+        }
+        html += '</tr>';
+      });
+
+      html += '</tbody></table>';
+      document.getElementById('calendar-grid').innerHTML = html;
+    }
+
+    function openBlockDateModal() {
+      document.getElementById('modal-block-date').classList.remove('hidden');
+      document.getElementById('modal-block-date').classList.add('flex');
+      renderBlockedDatesList();
+      lucide.createIcons();
+    }
+
+    function closeBlockDateModal() {
+      document.getElementById('modal-block-date').classList.add('hidden');
+      document.getElementById('modal-block-date').classList.remove('flex');
+    }
+
+    function handleBlockDate(e) {
+      e.preventDefault();
+      const bd = getBlockedDates();
+      bd.push({
+        id: 'bd-' + Date.now(),
+        start: document.getElementById('block-start').value,
+        end: document.getElementById('block-end').value,
+        room: document.getElementById('block-room').value,
+        reason: document.getElementById('block-reason').value.trim()
+      });
+      saveBlockedDates(bd);
+      renderBlockedDatesList();
+      renderCalendar();
+    }
+
+    function removeBlockedDate(bdId) {
+      let bd = getBlockedDates();
+      bd = bd.filter(b => b.id !== bdId);
+      saveBlockedDates(bd);
+      renderBlockedDatesList();
+      renderCalendar();
+    }
+
+    function renderBlockedDatesList() {
+      const bd = getBlockedDates();
+      const container = document.getElementById('blocked-dates-list');
+      if (bd.length === 0) {
+        container.innerHTML = '<p class="text-[#f6f1e7]/40">Tidak ada tanggal diblokir.</p>';
+        return;
+      }
+      container.innerHTML = bd.map(b => `
+        <div class="flex items-center justify-between glass-panel rounded-lg px-3 py-2">
+          <div>
+            <span class="font-mono">${b.start} → ${b.end}</span>
+            <span class="text-[#f6f1e7]/40 ml-2">${b.room || 'Semua'}</span>
+            ${b.reason ? `<span class="text-[#f6f1e7]/30 ml-1">- ${b.reason}</span>` : ''}
+          </div>
+          <button onclick="removeBlockedDate('${b.id}')" class="text-red-400 hover:text-red-300 text-xs">✕</button>
+        </div>
+      `).join('');
+    }
+
+    // ==================== GUESTS ====================
+    function getGuestRecords() {
+      const bookings = getBookings();
+      const guestMap = {};
+      bookings.forEach(b => {
+        const key = (b.email || '').toLowerCase();
+        if (!key) return;
+        if (!guestMap[key]) {
+          guestMap[key] = {
+            guestId: 'G-' + Math.abs(hashCode(key)),
+            fullName: b.guest || b.guestName || '',
+            email: b.email || b.guestEmail || '',
+            phone: b.phone || '',
+            totalBookings: 0,
+            lastStayDate: '',
+            bookingIds: []
+          };
+        }
+        guestMap[key].totalBookings++;
+        guestMap[key].bookingIds.push(b.id);
+        if (!guestMap[key].phone && b.phone) guestMap[key].phone = b.phone;
+        const co = b.checkOut || b.checkout || '';
+        if (co > guestMap[key].lastStayDate) guestMap[key].lastStayDate = co;
+      });
+      return Object.values(guestMap);
+    }
+
+    function hashCode(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(i);
+        hash |= 0;
+      }
+      return hash;
+    }
+
+    function renderGuestsTable() {
+      const guests = getGuestRecords();
+      const search = (document.getElementById('guest-search')?.value || '').toLowerCase().trim();
+      const filtered = guests.filter(g => {
+        return (g.fullName + ' ' + g.email + ' ' + g.phone).toLowerCase().includes(search);
+      });
+
+      const tbody = document.getElementById('guests-table-body');
+      const emptyEl = document.getElementById('guests-empty');
+      tbody.innerHTML = '';
+
+      if (filtered.length === 0) {
+        emptyEl.classList.remove('hidden');
+      } else {
+        emptyEl.classList.add('hidden');
+        filtered.forEach(g => {
+          tbody.innerHTML += `
+            <tr class="hover:bg-white/5 transition-all">
+              <td class="py-3 px-4 font-bold text-white">${g.fullName}</td>
+              <td class="py-3 px-4 font-mono text-xs text-[#f6f1e7]/70">${g.email}</td>
+              <td class="py-3 px-4 text-xs">${g.phone || '-'}</td>
+              <td class="py-3 px-4 text-center font-bold font-mono">${g.totalBookings}</td>
+              <td class="py-3 px-4 font-mono text-xs text-[#f6f1e7]/60">${g.lastStayDate || '-'}</td>
+              <td class="py-3 px-4 text-center">
+                <button onclick="openGuestDetail('${g.email}')" class="p-1.5 bg-brand-700/20 hover:bg-brand-700/40 text-brand-200 rounded-lg transition-all border border-brand-500/20" title="Detail">
+                  <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                </button>
+              </td>
+            </tr>`;
+        });
+      }
+      lucide.createIcons();
+    }
+
+    function openGuestDetail(email) {
+      const guests = getGuestRecords();
+      const g = guests.find(x => x.email === email);
+      if (!g) return;
+      const bookings = getBookings().filter(b => (b.email || '').toLowerCase() === email.toLowerCase());
+
+      const content = document.getElementById('guest-detail-content');
+      content.innerHTML = `
+        <div class="glass-panel-dark rounded-xl p-4 space-y-2">
+          <div class="flex justify-between"><span class="text-[#f6f1e7]/50">Nama</span><span class="font-bold">${g.fullName}</span></div>
+          <div class="flex justify-between"><span class="text-[#f6f1e7]/50">Email</span><span class="font-mono text-xs">${g.email}</span></div>
+          <div class="flex justify-between"><span class="text-[#f6f1e7]/50">Phone</span><span class="font-mono text-xs">${g.phone || '-'}</span></div>
+          <div class="flex justify-between"><span class="text-[#f6f1e7]/50">Total Booking</span><span class="font-bold">${g.totalBookings}</span></div>
+        </div>
+        <h4 class="text-xs font-bold text-[#f6f1e7]/50 uppercase mt-4 mb-2">Riwayat Booking</h4>
+        <div class="space-y-2 max-h-60 overflow-y-auto">
+          ${bookings.map(b => `
+            <div class="glass-panel rounded-lg px-3 py-2 flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-mono font-bold text-brand-200">${b.id}</span>
+                <span class="text-[10px] text-[#f6f1e7]/50 ml-2">${b.room} · ${b.checkIn} → ${b.checkOut}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="font-mono text-xs font-bold">${formatIDR(b.amount)}</span>
+                <span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${STATUS_COLORS[b.status] || ''}">${b.status}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      const modal = document.getElementById('modal-guest');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      lucide.createIcons();
+    }
+
+    function closeGuestModal() {
+      document.getElementById('modal-guest').classList.add('hidden');
+      document.getElementById('modal-guest').classList.remove('flex');
+    }
+
+    // ==================== PAYMENTS ====================
+    function renderPayments() {
+      const logs = getPaymentLogs();
+      const tbody = document.getElementById('payment-logs-body');
+      const emptyEl = document.getElementById('payment-logs-empty');
+      tbody.innerHTML = '';
+
+      // Auto-generate payment logs from bookings if empty
+      if (logs.length === 0) {
+        const bookings = getBookings().filter(b => ['Paid','Refunded'].includes(b.status));
+        const generated = bookings.map(b => ({
+          paymentId: 'PAY-' + Math.floor(10000 + Math.random() * 90000),
+          bookingId: b.id,
+          provider: 'Manual',
+          method: b.method,
+          amount: b.amount,
+          status: b.status === 'Paid' ? 'Success' : 'Refunded',
+          reference: '-',
+          createdAt: b.createdAt || nowISO(),
+          notes: ''
+        }));
+        if (generated.length > 0) {
+          localStorage.setItem('anaira_payment_logs', JSON.stringify(generated));
+          renderPayments();
+          return;
+        }
+      }
+
+      if (logs.length === 0) {
+        emptyEl.classList.remove('hidden');
+      } else {
+        emptyEl.classList.add('hidden');
+        logs.forEach(p => {
+          const statusCls = p.status === 'Success' ? 'text-emerald-400' : p.status === 'Refunded' ? 'text-purple-400' : 'text-amber-400';
+          tbody.innerHTML += `
+            <tr class="hover:bg-white/5 transition-all">
+              <td class="py-3 px-4 font-mono text-[10px]">${p.paymentId}</td>
+              <td class="py-3 px-4 font-mono text-[10px] text-brand-200">${p.bookingId}</td>
+              <td class="py-3 px-4 text-xs">${p.method}</td>
+              <td class="py-3 px-4 text-right font-mono text-xs font-bold">${formatIDR(p.amount)}</td>
+              <td class="py-3 px-4 text-center text-xs font-bold ${statusCls}">${p.status}</td>
+              <td class="py-3 px-4 text-[10px] font-mono text-[#f6f1e7]/50">${p.createdAt ? p.createdAt.split('T')[0] : '-'}</td>
+              <td class="py-3 px-4 text-xs text-[#f6f1e7]/50">${p.notes || '-'}</td>
+            </tr>`;
+        });
+      }
+
+      // Load payment settings
+      const ps = getPaymentSettings();
+      if (ps.qrisToggle !== undefined) document.getElementById('pay-qris-toggle').checked = ps.qrisToggle;
+      if (ps.qrisInstruction) document.getElementById('pay-qris-instruction').value = ps.qrisInstruction;
+      if (ps.bankToggle !== undefined) document.getElementById('pay-bank-toggle').checked = ps.bankToggle;
+      if (ps.bankName) document.getElementById('pay-bank-name').value = ps.bankName;
+      if (ps.bankAccount) document.getElementById('pay-bank-account').value = ps.bankAccount;
+      if (ps.midtransToggle !== undefined) document.getElementById('pay-midtrans-toggle').checked = ps.midtransToggle;
+      if (ps.midtransEnv) document.getElementById('pay-midtrans-env').value = ps.midtransEnv;
+      if (ps.midtransClient) document.getElementById('pay-midtrans-client').value = ps.midtransClient;
+      if (ps.xenditToggle !== undefined) document.getElementById('pay-xendit-toggle').checked = ps.xenditToggle;
+      if (ps.xenditEnv) document.getElementById('pay-xendit-env').value = ps.xenditEnv;
+      if (ps.depositToggle !== undefined) document.getElementById('pay-deposit-toggle').checked = ps.depositToggle;
+      if (ps.depositPct !== undefined) document.getElementById('pay-deposit-pct').value = ps.depositPct;
+
+      lucide.createIcons();
+    }
+
+    function savePaymentSettings() {
+      const ps = {
+        qrisToggle: document.getElementById('pay-qris-toggle').checked,
+        qrisInstruction: document.getElementById('pay-qris-instruction').value,
+        bankToggle: document.getElementById('pay-bank-toggle').checked,
+        bankName: document.getElementById('pay-bank-name').value,
+        bankAccount: document.getElementById('pay-bank-account').value,
+        midtransToggle: document.getElementById('pay-midtrans-toggle').checked,
+        midtransEnv: document.getElementById('pay-midtrans-env').value,
+        midtransClient: document.getElementById('pay-midtrans-client').value,
+        xenditToggle: document.getElementById('pay-xendit-toggle').checked,
+        xenditEnv: document.getElementById('pay-xendit-env').value,
+        depositToggle: document.getElementById('pay-deposit-toggle').checked,
+        depositPct: Number(document.getElementById('pay-deposit-pct').value)
+      };
+      localStorage.setItem('anaira_payment_settings', JSON.stringify(ps));
+      alert('Pengaturan pembayaran berhasil disimpan!');
+    }
+
+    // ==================== SETTINGS ====================
+    function loadSettings() {
+      const s = getSettings();
+      if (s.resortName) document.getElementById('set-resort-name').value = s.resortName;
+      if (s.tagline) document.getElementById('set-tagline').value = s.tagline;
+      if (s.address) document.getElementById('set-address').value = s.address;
+      if (s.mapsUrl) document.getElementById('set-maps').value = s.mapsUrl;
+      if (s.whatsapp) document.getElementById('set-whatsapp').value = s.whatsapp;
+      if (s.email) document.getElementById('set-email').value = s.email;
+      if (s.checkinTime) document.getElementById('set-checkin-time').value = s.checkinTime;
+      if (s.checkoutTime) document.getElementById('set-checkout-time').value = s.checkoutTime;
+      if (s.maxAdvance) document.getElementById('set-max-advance').value = s.maxAdvance;
+      if (s.minNights) document.getElementById('set-min-nights').value = s.minNights;
+      if (s.cancelPolicy) document.getElementById('set-cancel-policy').value = s.cancelPolicy;
+      if (s.tax !== undefined) document.getElementById('set-tax').value = s.tax;
+      if (s.serviceFee !== undefined) document.getElementById('set-service-fee').value = s.serviceFee;
+      if (s.depositPct !== undefined) document.getElementById('set-deposit-pct').value = s.depositPct;
+      if (s.refundPolicy) document.getElementById('set-refund-policy').value = s.refundPolicy;
+      if (s.sessionTimeout) document.getElementById('set-session-timeout').value = s.sessionTimeout;
+    }
+
+    function saveSettings() {
+      const s = {
+        resortName: document.getElementById('set-resort-name').value,
+        tagline: document.getElementById('set-tagline').value,
+        address: document.getElementById('set-address').value,
+        mapsUrl: document.getElementById('set-maps').value,
+        whatsapp: document.getElementById('set-whatsapp').value,
+        email: document.getElementById('set-email').value,
+        checkinTime: document.getElementById('set-checkin-time').value,
+        checkoutTime: document.getElementById('set-checkout-time').value,
+        maxAdvance: Number(document.getElementById('set-max-advance').value),
+        minNights: Number(document.getElementById('set-min-nights').value),
+        cancelPolicy: document.getElementById('set-cancel-policy').value,
+        tax: Number(document.getElementById('set-tax').value),
+        serviceFee: Number(document.getElementById('set-service-fee').value),
+        depositPct: Number(document.getElementById('set-deposit-pct').value),
+        refundPolicy: document.getElementById('set-refund-policy').value,
+        sessionTimeout: Number(document.getElementById('set-session-timeout').value)
+      };
+      localStorage.setItem('anaira_settings', JSON.stringify(s));
+      alert('Pengaturan berhasil disimpan!');
+    }
+
+    // ==================== DATA MANAGEMENT ====================
+    function backupAllData() {
+      const backup = {};
+      const keys = ['anaira_bookings','anaira_rooms','anaira_blocked_dates','anaira_payment_logs','anaira_payment_settings','anaira_settings','anaira_guests'];
+      keys.forEach(k => {
+        const val = localStorage.getItem(k);
+        if (val) backup[k] = JSON.parse(val);
+      });
+      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `anaira_backup_${dateStr(new Date())}.json`; a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function restoreAllData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      if (!confirm('Ini akan menimpa semua data yang ada. Lanjutkan?')) {
+        event.target.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          Object.keys(data).forEach(k => {
+            localStorage.setItem(k, JSON.stringify(data[k]));
+          });
+          alert('Data berhasil di-restore! Halaman akan dimuat ulang.');
+          window.location.reload();
+        } catch(err) {
+          alert('Gagal membaca file backup: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function clearDemoData() {
+      if (!confirm('PERINGATAN: Ini akan menghapus SEMUA data PMS dari LocalStorage. Apakah Anda yakin?')) return;
+      if (!confirm('Konfirmasi kedua: Semua data booking, kamar, dan pengaturan akan dihapus secara permanen.')) return;
+      const keys = ['anaira_bookings','anaira_rooms','anaira_blocked_dates','anaira_payment_logs','anaira_payment_settings','anaira_settings','anaira_guests'];
+      keys.forEach(k => localStorage.removeItem(k));
+      alert('Demo data berhasil dihapus. Halaman akan dimuat ulang.');
+      window.location.reload();
+    }
+
+    // ==================== LOGOUT ====================
     function handleLogout() {
       sessionStorage.removeItem('isAdmin');
       window.location.href = '../login.html';

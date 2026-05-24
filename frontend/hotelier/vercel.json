@@ -7,7 +7,13 @@
     { "source": "/rooms", "destination": "/rooms.html" },
     { "source": "/gallery", "destination": "/gallery.html" },
     { "source": "/packages", "destination": "/packages.html" },
-    { "source": "/contact", "destination": "/contact.html" }
+    { "source": "/contact", "destination": "/contact.html" },
+    { "source": "/booking", "destination": "/booking.html" },
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/admin", "destination": "/admin/index.html" },
+    { "source": "/admin/", "destination": "/admin/index.html" },
+    { "source": "/admin/pms", "destination": "/admin/pms.html" },
+    { "source": "/admin/pms/", "destination": "/admin/pms.html" }
   ],
   "headers": [
     {
