@@ -476,6 +476,171 @@ function restoreAllData(jsonString) {
 })();
 
 /* ─────────────────────────────────────────────────────────────────────────────
+ * 7.5 MULTI-LANGUAGE ENGINE
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+function setAnairaLanguage(lang) {
+  localStorage.setItem('anaira_lang', lang);
+  applyAnairaLanguage();
+}
+
+function applyAnairaLanguage() {
+  const lang = localStorage.getItem('anaira_lang') || 'id';
+  
+  // Highlight active language button
+  const btnId = document.getElementById('lang-id');
+  const btnEn = document.getElementById('lang-en');
+  if (btnId && btnEn) {
+    if (lang === 'en') {
+      btnId.style.opacity = '0.4';
+      btnId.style.fontWeight = '400';
+      btnEn.style.opacity = '1';
+      btnEn.style.fontWeight = '700';
+    } else {
+      btnId.style.opacity = '1';
+      btnId.style.fontWeight = '700';
+      btnEn.style.opacity = '0.4';
+      btnEn.style.fontWeight = '400';
+    }
+  }
+
+  // 1. Translate Navigation Menu Links
+  const navLinks = document.querySelectorAll('.menu a, nav a');
+  navLinks.forEach(a => {
+    const href = a.getAttribute('href') || '';
+    if (href.includes('index.html') && !a.querySelector('img')) {
+      a.innerText = lang === 'en' ? 'Home' : 'Beranda';
+    } else if (href.includes('rooms.html')) {
+      a.innerText = lang === 'en' ? 'Rooms' : 'Kamar';
+    } else if (href.includes('gallery.html')) {
+      a.innerText = lang === 'en' ? 'Gallery' : 'Galeri';
+    } else if (href.includes('packages.html')) {
+      a.innerText = lang === 'en' ? 'Packages' : 'Paket';
+    } else if (href.includes('contact.html')) {
+      a.innerText = lang === 'en' ? 'Contact' : 'Kontak';
+    } else if (href.includes('booking.html') && a.classList.contains('btn')) {
+      a.innerText = lang === 'en' ? 'Book via WhatsApp' : 'Book via WhatsApp';
+    } else if (href.includes('booking.html')) {
+      a.innerText = lang === 'en' ? 'Book Online 📅' : 'Pesan Online 📅';
+    } else if (href.includes('login.html')) {
+      a.innerText = lang === 'en' ? 'Manage Booking 🔐' : 'Manage Booking 🔐';
+    }
+  });
+
+  // 2. Translate Homepage Hero Section Text
+  const heroTitle = document.querySelector('.hero h1');
+  const heroTagline = document.querySelector('.hero p strong');
+  const heroDesc = document.querySelector('.hero p:nth-of-type(2)');
+  if (heroTitle && heroTagline && heroDesc) {
+    if (lang === 'en') {
+      heroTagline.innerText = 'Stay, Relax & Recharge Near Curug Nangka';
+      heroDesc.innerText = 'Balcony, Porch, and Villa with nature atmosphere, swimming pool, cafe, bonfire, and parking space.';
+    } else {
+      heroTagline.innerText = 'Stay, Relax & Recharge Near Curug Nangka';
+      heroDesc.innerText = 'Balcony, Porch, dan Villa dengan suasana alam, kolam, cafe, api unggun, dan area parkir.';
+    }
+  }
+
+  // 3. Translate Section Headers
+  const headers = document.querySelectorAll('h2');
+  headers.forEach(h2 => {
+    if (h2.innerText.includes('Fasilitas')) {
+      h2.innerText = lang === 'en' ? 'Facilities' : 'Fasilitas';
+    } else if (h2.innerText.includes('Video Anaira')) {
+      h2.innerText = lang === 'en' ? 'Anaira Video' : 'Video Anaira';
+    } else if (h2.innerText.includes('Video Tour')) {
+      h2.innerText = lang === 'en' ? 'Video Tour' : 'Video Tour';
+    }
+  });
+
+  // 4. Translate Room Page Titles & Buttons
+  const roomsTitle = document.querySelector('section h1');
+  const roomsSub = document.querySelector('section p.muted');
+  if (roomsTitle && roomsTitle.innerText.includes('Rooms')) {
+    roomsTitle.innerText = lang === 'en' ? 'Rooms & Rates' : 'Kamar & Tarif';
+    if (roomsSub) roomsSub.innerText = lang === 'en' ? 'Choose the unit that best suits your travel needs.' : 'Pilih unit sesuai kebutuhan perjalanan Anda.';
+  }
+
+  // 5. Translate Page Cards/Buttons
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(card => {
+    const h3 = card.querySelector('h3');
+    const pMuted = card.querySelector('p.muted');
+    if (h3) {
+      const text = h3.innerText.trim();
+      if (text === 'Kolam' || text === 'Pool') h3.innerText = lang === 'en' ? 'Pool' : 'Kolam';
+      else if (text === 'Api Unggun' || text === 'Bonfire') h3.innerText = lang === 'en' ? 'Bonfire' : 'Api Unggun';
+    }
+    if (pMuted && (pMuted.innerText.includes('Bagian dari pengalaman') || pMuted.innerText.includes('Part of the lodging'))) {
+      pMuted.innerText = lang === 'en' ? 'Part of the lodging experience at Anaira Glamping & Resort.' : 'Bagian dari pengalaman menginap di Anaira Glamping & Resort.';
+    }
+
+    const cardLinks = card.querySelectorAll('a');
+    cardLinks.forEach(a => {
+      if (a.getAttribute('href') === 'booking.html') {
+        a.innerText = lang === 'en' ? 'Book Online 📅' : 'Pesan Online 📅';
+      }
+    });
+  });
+
+  // 6. Translate Contact & Gallery Titles
+  if (roomsTitle && roomsTitle.innerText.includes('Contact')) {
+    roomsTitle.innerText = lang === 'en' ? 'Contact & Reservation' : 'Kontak & Reservasi';
+  }
+  if (roomsTitle && roomsTitle.innerText.includes('Gallery')) {
+    roomsTitle.innerText = lang === 'en' ? 'Photo Gallery' : 'Galeri Foto';
+    if (roomsSub) roomsSub.innerText = lang === 'en' ? 'The natural atmosphere of Anaira Glamping & Resort.' : 'Suasana alami Anaira Glamping & Resort.';
+  }
+  if (roomsTitle && roomsTitle.innerText.includes('Packages')) {
+    roomsTitle.innerText = lang === 'en' ? 'Packages' : 'Paket Tambahan';
+    if (roomsSub) roomsSub.innerText = lang === 'en' ? 'Add the best experiences to your stay.' : 'Tambahkan pengalaman terbaik untuk menginap Anda.';
+  }
+
+  // 7. Footer Policies
+  const footerText = document.querySelectorAll('footer p');
+  footerText.forEach(p => {
+    if (p.innerText.includes('Check-in 13.00') || p.innerText.includes('Check-in 1:00')) {
+      p.innerText = lang === 'en' 
+        ? 'Check-in 1:00 PM - Check-out 12:00 PM - Early check-in and late checkout can be adjusted. - Cancel DP forfeited, rescheduling allowed.'
+        : 'Check-in 13.00 - Check-out 12.00 - Early check-in dan late checkout bisa disesuaikan. - Cancel DP hangus, bisa reschedule.';
+    } else if (p.innerText.includes('Fasilitas:') || p.innerText.includes('Facilities:')) {
+      p.innerText = lang === 'en'
+        ? 'Facilities: Pool, Cafe, Bonfire, Parking.'
+        : 'Fasilitas: Kolam, Cafe, Api Unggun, Parkir.';
+    }
+  });
+
+  // 8. Manage Booking Page specific translations
+  const loginHeader = document.querySelector('#loginCard h2');
+  const loginSub = document.querySelector('#loginCard p');
+  const idLabel = document.querySelector('label[for="identifier"]');
+  const pwdLabel = document.querySelector('label[for="password"]');
+  const btnSubmit = document.querySelector('#loginForm button[type="submit"]');
+  
+  if (loginHeader && loginHeader.innerText.includes('Manage Booking')) {
+    if (lang === 'en') {
+      if (loginSub) loginSub.innerText = 'Enter your Booking ID to load tickets & order details';
+      if (idLabel) idLabel.innerText = 'Guest Booking ID (e.g. ANR-2026-92813)';
+      if (pwdLabel) pwdLabel.innerText = 'Admin Password';
+      if (btnSubmit) btnSubmit.innerHTML = 'Enter <i data-lucide="arrow-right" class="w-4 h-4"></i>';
+    } else {
+      if (loginSub) loginSub.innerText = 'Masukkan Booking ID Anda untuk memuat tiket & rincian pesanan';
+      if (idLabel) idLabel.innerText = 'Booking ID Tamu (e.g. ANR-2026-92813)';
+      if (pwdLabel) pwdLabel.innerText = 'Kata Sandi Admin';
+      if (btnSubmit) btnSubmit.innerHTML = 'Masuk <i data-lucide="arrow-right" class="w-4 h-4"></i>';
+    }
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  }
+}
+
+// Auto-run on DOM load
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    applyAnairaLanguage();
+  });
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
  * 8. EXPORTS (for environments that support modules)
  * ───────────────────────────────────────────────────────────────────────────── */
 

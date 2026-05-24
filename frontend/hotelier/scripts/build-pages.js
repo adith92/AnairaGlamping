@@ -239,8 +239,13 @@ function nav(content) {
       <a href="packages.html">Packages</a>
       <a href="contact.html">Contact</a>
       <a href="booking.html" style="color: #a7eed0; font-weight: 600; border: 1.5px dashed rgba(27,127,90,0.5); background: rgba(27,127,90,0.15); border-radius: 12px; margin: 0 4px;">Book Online 📅</a>
-      <a href="login.html" style="font-size: 0.8rem; opacity: 0.5; margin: 0 4px;" class="hover:opacity-100">Portal Admin 🔐</a>
+      <a href="login.html" style="font-size: 0.8rem; opacity: 0.5; margin: 0 4px;" class="hover:opacity-100">Manage Booking 🔐</a>
       <a class="btn" href="${wa(content)}">WhatsApp</a>
+      <div style="display: flex; gap: 4px; align-items: center; margin-left: 8px; border-left: 1px solid rgba(27,127,90,0.3); padding-left: 8px;">
+        <button onclick="setAnairaLanguage('id')" id="lang-id" style="background: none; border: none; color: #a7eed0; font-size: 0.8rem; font-weight: 700; cursor: pointer; opacity: 1; padding: 2px 4px; font-family: inherit; transition: opacity 0.2s;">ID</button>
+        <span style="opacity: 0.3; font-size: 0.8rem;">|</span>
+        <button onclick="setAnairaLanguage('en')" id="lang-en" style="background: none; border: none; color: #a7eed0; font-size: 0.8rem; font-weight: 400; cursor: pointer; opacity: 0.4; padding: 2px 4px; font-family: inherit; transition: opacity 0.2s;">EN</button>
+      </div>
     </div>
   </nav>
 </header>`;

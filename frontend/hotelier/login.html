@@ -13,6 +13,8 @@
 
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Anaira Unified Data & Language Library -->
+  <script src="scripts/anaira-data-lib.js"></script>
 
   <!-- Google Fonts Outfit & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -196,8 +198,8 @@
             onerror="this.src='https://placehold.co/180x60/1b7f5a/ffffff?text=Anaira+Resort'"
           >
         </div>
-        <h2 class="font-outfit text-2xl font-bold text-white tracking-wide">Portal Tamu &amp; Pengelola</h2>
-        <p class="text-xs text-white/50 mt-1">Masukkan Booking ID untuk melacak pesanan (Kosongkan Sandi), atau Username Admin</p>
+        <h2 class="font-outfit text-2xl font-bold text-white tracking-wide">Manage Booking</h2>
+        <p class="text-xs text-white/50 mt-1">Masukkan Booking ID Anda untuk memuat tiket &amp; rincian pesanan</p>
       </div>
 
       <!-- Error Warning Banner -->
@@ -224,7 +226,7 @@
             for="identifier" 
             class="absolute left-4 top-4 text-white/40 text-sm pointer-events-none origin-[0]"
           >
-            Booking ID Tamu (e.g. ANR-2026-92813) atau Username Admin
+            Booking ID Tamu (e.g. ANR-2026-92813)
           </label>
           <!-- Validation Status Indicators -->
           <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
@@ -233,32 +235,33 @@
           </div>
         </div>
 
-        <!-- Password -->
-        <div class="relative floating-label-group">
-          <input 
-            type="password" 
-            id="password" 
-            placeholder=" " 
-            class="w-full px-4 py-4 pt-6 pb-2 text-white bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all duration-200 text-sm placeholder-transparent pr-12"
-            required
-          />
-          <label 
-            for="password" 
-            class="absolute left-4 top-4 text-white/40 text-sm pointer-events-none origin-[0]"
-          >
-            Kata Sandi
-          </label>
-          <!-- Password Toggle & Validation Status Indicators -->
-          <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-            <i id="password-check" data-lucide="check-circle" class="w-4 h-4 text-emerald-500 hidden pointer-events-none"></i>
-            <button 
-              type="button" 
-              id="togglePassword" 
-              class="text-white/40 hover:text-white/70 transition-colors focus:outline-none"
-              title="Tampilkan Sandi"
+        <!-- Password Container (Initially Hidden, shown dynamically if user types 'admin') -->
+        <div id="passwordContainer" class="hidden transition-all duration-300 transform scale-95 opacity-0">
+          <div class="relative floating-label-group">
+            <input 
+              type="password" 
+              id="password" 
+              placeholder=" " 
+              class="w-full px-4 py-4 pt-6 pb-2 text-white bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all duration-200 text-sm placeholder-transparent pr-12"
+            />
+            <label 
+              for="password" 
+              class="absolute left-4 top-4 text-white/40 text-sm pointer-events-none origin-[0]"
             >
-              <i data-lucide="eye" class="w-5 h-5"></i>
-            </button>
+              Kata Sandi Admin
+            </label>
+            <!-- Password Toggle & Validation Status Indicators -->
+            <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+              <i id="password-check" data-lucide="check-circle" class="w-4 h-4 text-emerald-500 hidden pointer-events-none"></i>
+              <button 
+                type="button" 
+                id="togglePassword" 
+                class="text-white/40 hover:text-white/70 transition-colors focus:outline-none"
+                title="Tampilkan Sandi"
+              >
+                <i data-lucide="eye" class="w-5 h-5"></i>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -407,8 +410,28 @@
       lucide.createIcons(); // refresh icons
     });
 
+    function checkIdentifierForAdmin() {
+      const value = identifierInput.value.trim().toLowerCase();
+      const pwdContainer = document.getElementById('passwordContainer');
+      
+      if (value === 'admin') {
+        pwdContainer.classList.remove('hidden');
+        setTimeout(() => {
+          pwdContainer.classList.remove('scale-95', 'opacity-0');
+          pwdContainer.classList.add('scale-100', 'opacity-100');
+        }, 10);
+      } else {
+        pwdContainer.classList.add('scale-95', 'opacity-0');
+        pwdContainer.classList.remove('scale-100', 'opacity-100');
+        setTimeout(() => {
+          pwdContainer.classList.add('hidden');
+        }, 300);
+      }
+    }
+
     // Listeners
     identifierInput.addEventListener('input', validateIdentifier);
+    identifierInput.addEventListener('input', checkIdentifierForAdmin);
     passwordInput.addEventListener('input', validatePassword);
 
     // Preset Buttons
@@ -416,6 +439,7 @@
       identifierInput.value = 'admin';
       passwordInput.value = '221221';
       validateIdentifier();
+      checkIdentifierForAdmin();
       validatePassword();
     });
 
@@ -424,6 +448,7 @@
       identifierInput.value = 'ANR-2026-92813';
       passwordInput.value = '';
       validateIdentifier();
+      checkIdentifierForAdmin();
       validatePassword();
     });
 
