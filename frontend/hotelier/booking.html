@@ -1,0 +1,2217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anaira Glamping &amp; Resort | Booking &amp; Payment Wizard</title>
+  <meta name="description" content="Pesan unit Balcony, Porch, atau Villa Anaira Glamping secara langsung dan aman.">
+  <link rel="icon" href="assets/brand/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#1b7f5a',
+              light: '#2da174',
+              dark: '#125c40',
+              hover: '#166e4d',
+              accent: '#f6f1e7'
+            },
+            ink: '#1f2421',
+            darkbg: '#1d2a25',
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Segoe UI', 'sans-serif'],
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --bg: #f6f1e7;
+      --brand: #1b7f5a;
+    }
+    body {
+      background-color: var(--bg);
+      color: #1f2421;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+    .glass-card-dark {
+      background: rgba(29, 42, 37, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    /* QRIS Scanner Laser effect */
+    .laser-line {
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #22c55e, transparent);
+      box-shadow: 0 0 8px #22c55e;
+      position: absolute;
+      width: 100%;
+      left: 0;
+      animation: scan 2s infinite ease-in-out;
+    }
+    @keyframes scan {
+      0% { top: 5%; }
+      50% { top: 95%; }
+      100% { top: 5%; }
+    }
+    /* Simple custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.05);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1b7f5a;
+      border-radius: 4px;
+    }
+    /* Hide numeric input arrows */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased text-ink min-h-screen flex flex-col">
+
+  <!-- Header Navigation (Consistent with Anaira Theme) -->
+  <header class="w-full bg-white/95 border-b border-brand/10 sticky top-0 z-30 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 hover:opacity-90 transition-opacity">
+        <img class="h-10 sm:h-12 w-auto" src="assets/brand/logo-anaira-black-transparent.png" alt="Anaira Glamping &amp; Resort" onerror="this.src='https://raw.githubusercontent.com/adith92/AnairaGlamping/main/frontend/hotelier/assets/brand/logo-anaira-black-transparent.png';">
+      </a>
+      
+      <!-- Desktop Navigation Menu -->
+      <nav class="hidden md:flex items-center gap-6">
+        <a href="index.html" class="text-ink hover:text-brand font-medium transition-colors">Home</a>
+        <a href="rooms.html" class="text-ink hover:text-brand font-medium transition-colors">Rooms</a>
+        <a href="gallery.html" class="text-ink hover:text-brand font-medium transition-colors">Gallery</a>
+        <a href="packages.html" class="text-ink hover:text-brand font-medium transition-colors">Packages</a>
+        <a href="contact.html" class="text-ink hover:text-brand font-medium transition-colors">Contact</a>
+        <a href="booking.html" class="bg-brand text-white px-5 py-2.5 rounded-xl font-semibold shadow-md hover:bg-brand-hover hover:shadow-lg transition-all duration-200 inline-flex items-center gap-2">
+          <i data-lucide="calendar-days" class="w-4 h-4"></i> Booking Online
+        </a>
+      </nav>
+
+      <!-- Mobile Book Button -->
+      <a href="booking.html" class="md:hidden bg-brand text-white px-4 py-2 rounded-lg font-semibold shadow-sm hover:bg-brand-hover text-sm flex items-center gap-1.5">
+        <i data-lucide="calendar-days" class="w-4 h-4"></i> Book
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Background / Header Page Banner -->
+  <section class="relative bg-darkbg text-white overflow-hidden py-12 px-4 sm:px-6 lg:px-8 text-center">
+    <!-- Abstract Background Deco Overlay -->
+    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#1b7f5a_1px,transparent_1px)] [background-size:16px_16px]"></div>
+    <div class="relative z-10 max-w-4xl mx-auto">
+      <span class="text-brand-light font-bold tracking-widest text-xs uppercase px-3 py-1 bg-brand/30 rounded-full border border-brand/50 inline-block mb-3">Reservasi Langsung &amp; Terjamin</span>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-serif font-semibold tracking-wide">Interactive Booking &amp; Payment Wizard</h1>
+      <p class="mt-3 text-sm sm:text-base text-gray-300 max-w-2xl mx-auto">
+        Rencanakan pelarian alam premium Anda di dekat Curug Nangka hanya dalam 4 langkah mudah. Proses aman, pembayaran instan, dan konfirmasi langsung.
+      </p>
+    </div>
+  </section>
+
+  <!-- Main Grid Layout for Wizard & Summary -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    
+    <!-- Success Page Receipt (Hidden initially, shown after transaction) -->
+    <div id="successPage" class="hidden max-w-3xl mx-auto transition-all duration-500 transform translate-y-4">
+      <div class="glass-card rounded-3xl shadow-2xl p-6 sm:p-10 border border-brand/20 relative overflow-hidden">
+        <!-- Leaf decoration top right -->
+        <div class="absolute -top-12 -right-12 w-32 h-32 bg-brand/10 rounded-full blur-2xl"></div>
+        
+        <div class="text-center mb-8">
+          <div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-emerald-50 text-emerald-600 shadow-md">
+            <i data-lucide="check-circle-2" class="w-10 h-10 animate-bounce"></i>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-serif font-bold text-darkbg">Booking Berhasil Dikonfirmasi!</h2>
+          <p class="text-gray-600 mt-2 text-sm sm:text-base">Terima kasih atas kepercayaan Anda. Tiket &amp; Invoice digital Anda telah diterbitkan.</p>
+        </div>
+
+        <!-- Receipt Box -->
+        <div class="bg-white rounded-2xl border border-brand/10 p-5 sm:p-6 shadow-inner space-y-4 text-sm">
+          <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+            <div>
+              <p class="text-gray-400 text-xs uppercase tracking-wider font-semibold">Booking ID</p>
+              <h3 id="receiptId" class="text-brand font-bold text-lg">ANR-2026-XXXXX</h3>
+            </div>
+            <div class="text-right">
+              <p class="text-gray-400 text-xs uppercase tracking-wider font-semibold">Status Pembayaran</p>
+              <span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full text-xs border border-emerald-200">
+                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping"></span> Paid / Lunas
+              </span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+            <div>
+              <p class="text-gray-400 text-xs">Nama Lengkap Tamu</p>
+              <p id="receiptName" class="font-semibold text-gray-800">-</p>
+            </div>
+            <div>
+              <p class="text-gray-400 text-xs">Nomor WhatsApp</p>
+              <p id="receiptWhatsapp" class="font-semibold text-gray-800">-</p>
+            </div>
+            <div>
+              <p class="text-gray-400 text-xs">Unit Room Suite</p>
+              <p id="receiptRoom" class="font-semibold text-brand font-serif text-base">-</p>
+            </div>
+            <div>
+              <p class="text-gray-400 text-xs">Metode Pembayaran</p>
+              <p id="receiptPayment" class="font-semibold text-gray-800">-</p>
+            </div>
+            <div>
+              <p class="text-gray-400 text-xs">Tanggal Check-In &amp; Check-Out</p>
+              <p id="receiptDates" class="font-semibold text-gray-800">-</p>
+            </div>
+            <div>
+              <p class="text-gray-400 text-xs">Slot Kedatangan &amp; Durasi</p>
+              <p id="receiptArrival" class="font-semibold text-gray-800">-</p>
+            </div>
+          </div>
+
+          <div class="border-t border-dashed border-gray-200 pt-4 flex justify-between items-center text-base font-bold">
+            <span class="text-gray-700">Total Pembayaran (Nett)</span>
+            <span id="receiptAmount" class="text-brand text-xl font-serif">Rp -</span>
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+          <button onclick="downloadActiveInvoice()" class="bg-brand text-white font-semibold px-6 py-3 rounded-xl shadow-md hover:bg-brand-hover hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2">
+            <i data-lucide="download" class="w-5 h-5"></i> Cetak / Download Invoice PDF
+          </button>
+          <button onclick="resetWizard()" class="bg-white text-brand border border-brand/30 font-semibold px-6 py-3 rounded-xl hover:bg-brand/5 transition-all duration-200 flex items-center justify-center gap-2">
+            <i data-lucide="plus-circle" class="w-5 h-5"></i> Buat Booking Baru
+          </button>
+          <button onclick="scrollToHistory()" class="bg-gray-100 text-gray-700 font-semibold px-6 py-3 rounded-xl hover:bg-gray-200 transition-all duration-200 flex items-center justify-center gap-2">
+            <i data-lucide="table" class="w-5 h-5"></i> Riwayat Booking
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Wizard & Live Summary (Hidden on Success page) -->
+    <div id="bookingGrid" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Left Column: Booking Wizard (8 Cols) -->
+      <div class="lg:col-span-8 space-y-6">
+        
+        <!-- Step Progress Tracker Badge (Glassmorphic) -->
+        <div class="glass-card rounded-2xl p-4 sm:p-6 shadow-md border border-white/60">
+          <div class="relative flex items-center justify-between w-full">
+            <!-- Connecting Progress Line Backing -->
+            <div class="absolute left-0 top-1/2 w-full h-1 bg-gray-200 -translate-y-1/2 rounded z-0"></div>
+            <!-- Dynamic Filled Progress Line -->
+            <div id="progressLine" class="absolute left-0 top-1/2 w-0 h-1 bg-brand -translate-y-1/2 rounded z-0 transition-all duration-300"></div>
+
+            <!-- Step 1 -->
+            <div class="relative z-10 flex flex-col items-center group cursor-pointer" onclick="goToStep(1)">
+              <div id="stepBadge-1" class="w-10 h-10 rounded-full bg-brand text-white flex items-center justify-center font-bold shadow-md ring-4 ring-brand/10 transition-all duration-300 text-sm">1</div>
+              <span id="stepLabel-1" class="hidden sm:inline text-xs font-semibold mt-2 text-brand transition-colors">1. Pilih Unit</span>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="relative z-10 flex flex-col items-center group cursor-pointer" onclick="goToStep(2)">
+              <div id="stepBadge-2" class="w-10 h-10 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-bold shadow-sm transition-all duration-300 text-sm">2</div>
+              <span id="stepLabel-2" class="hidden sm:inline text-xs font-semibold mt-2 text-gray-500 transition-colors">2. Tanggal</span>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="relative z-10 flex flex-col items-center group cursor-pointer" onclick="goToStep(3)">
+              <div id="stepBadge-3" class="w-10 h-10 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-bold shadow-sm transition-all duration-300 text-sm">3</div>
+              <span id="stepLabel-3" class="hidden sm:inline text-xs font-semibold mt-2 text-gray-500 transition-colors">3. Detail Tamu</span>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="relative z-10 flex flex-col items-center group cursor-pointer" onclick="goToStep(4)">
+              <div id="stepBadge-4" class="w-10 h-10 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-bold shadow-sm transition-all duration-300 text-sm">4</div>
+              <span id="stepLabel-4" class="hidden sm:inline text-xs font-semibold mt-2 text-gray-500 transition-colors">4. Pembayaran</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wizard Step Containers (Glassmorphic) -->
+        <div class="glass-card rounded-3xl shadow-xl p-6 sm:p-8 border border-white/60 min-h-[460px] flex flex-col justify-between">
+          
+          <div>
+            <!-- STEP 1: Pilih Unit -->
+            <div id="wizardStep-1" class="space-y-6 transition-all duration-300">
+              <div class="border-b border-brand/10 pb-4">
+                <h2 class="text-2xl font-serif font-bold text-darkbg flex items-center gap-2">
+                  <i data-lucide="home" class="text-brand"></i> Langkah 1: Pilih Unit Glamping
+                </h2>
+                <p class="text-gray-500 text-sm mt-1">Kami menyediakan tiga tipe akomodasi eksklusif yang menyatu dengan keasrian alam Bogor.</p>
+              </div>
+
+              <!-- Room Grid -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Balcony Room -->
+                <div onclick="selectRoom('Balcony', 500000)" id="roomCard-Balcony" class="group border border-gray-200 bg-white rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md hover:border-brand/40 transition-all duration-200 relative flex flex-col justify-between">
+                  <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm p-1.5 rounded-full border border-gray-100 z-10 shadow-sm opacity-0 group-hover:opacity-100 select-check transition-all duration-200">
+                    <i data-lucide="check" class="w-4 h-4 text-brand"></i>
+                  </div>
+                  <div>
+                    <div class="h-44 overflow-hidden relative">
+                      <img src="assets/images/rooms/balcony/balcony-exterior-garden.webp" alt="Balcony" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://raw.githubusercontent.com/adith92/AnairaGlamping/main/frontend/hotelier/assets/images/rooms/balcony/balcony-exterior-garden.webp';">
+                      <span class="absolute bottom-3 left-3 bg-brand text-white font-bold text-xs uppercase px-2.5 py-1 rounded-lg tracking-wider">Terlaris</span>
+                    </div>
+                    <div class="p-4 space-y-2">
+                      <h3 class="font-serif font-bold text-lg text-darkbg">Balcony Suite</h3>
+                      <div class="flex items-center gap-1 text-gray-500 text-xs">
+                        <i data-lucide="users" class="w-3.5 h-3.5"></i> Max 4 Orang
+                        <span class="mx-1">•</span>
+                        <i data-lucide="door-closed" class="w-3.5 h-3.5"></i> 6 Kamar
+                      </div>
+                      <p class="text-gray-500 text-xs leading-relaxed line-clamp-2">Unit glamping nyaman dengan pemandangan langsung ke kebun asri Anaira.</p>
+                      <div class="flex flex-wrap gap-1.5 pt-1">
+                        <span class="bg-brand/5 text-brand text-[10px] font-semibold px-2 py-0.5 rounded border border-brand/10">AC</span>
+                        <span class="bg-brand/5 text-brand text-[10px] font-semibold px-2 py-0.5 rounded border border-brand/10">Android TV</span>
+                        <span class="bg-brand/5 text-brand text-[10px] font-semibold px-2 py-0.5 rounded border border-brand/10">Amenities</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="p-4 border-t border-gray-100 bg-gray-50 flex items-center justify-between">
+                    <div>
+                      <p class="text-gray-400 text-[10px] uppercase font-bold tracking-wider">Harga/Malam</p>
+                      <p class="font-serif font-bold text-brand text-base">Rp 500.000</p>
+                    </div>
+                    <span class="text-xs font-semibold text-brand group-hover:underline flex items-center gap-0.5 select-label">
+                      Pilih <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Porch Room -->
+                <div onclick="selectRoom('Porch', 350000)" id="roomCard-Porch" class="group border border-gray-200 bg-white rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md hover:border-brand/40 transition-all duration-200 relative flex flex-col justify-between">
+                  <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm p-1.5 rounded-full border border-gray-100 z-10 shadow-sm opacity-0 group-hover:opacity-100 select-check transition-all duration-200">
+                    <i data-lucide="check" class="w-4 h-4 text-brand"></i>
+                  </div>
+                  <div>
+                    <div class="h-44 overflow-hidden relative">
+                      <img src="assets/images/rooms/porch/porch-cabin-garden.webp" alt="Porch" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://raw.githubusercontent.com/adith92/AnairaGlamping/main/frontend/hotelier/assets/images/rooms/porch/porch-cabin-garden.webp';">
+                      <span class="absolute bottom-3 left-3 bg-indigo-850 bg-amber-600 text-white font-bold text-xs uppercase px-2.5 py-1 rounded-lg tracking-wider">Hemat</span>
+                    </div>
+                    <div class="p-4 space-y-2">
+                      <h3 class="font-serif font-bold text-lg text-darkbg">Porch Cabin</h3>
+                      <div class="flex items-center gap-1 text-gray-500 text-xs">
+                        <i data-lucide="users" class="w-3.5 h-3.5"></i> Max 4 Orang
+                        <span class="mx-1">•</span>
+                        <i data-lucide="door-closed" class="w-3.5 h-3.5"></i> 6 Kamar
+                      </div>
+                      <p class="text-gray-500 text-xs leading-relaxed line-clamp-2">Cabin glamping dengan teras outdoor luas untuk bersantai.</p>
+                      <div class="flex flex-wrap gap-1.5 pt-1">
+                        <span class="bg-brand/5 text-brand text-[10px] font-semibold px-2 py-0.5 rounded border border-brand/10">Kipas Angin</span>
+                        <span class="bg-brand/5 text-brand text-[10px] font-semibold px-2 py-0.5 rounded border border-brand/10">Android TV</span>
+                        <span class="bg-brand/5 text-brand text-[10px] font-semibold px-2 py-0.5 rounded border border-brand/10">Amenities</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="p-4 border-t border-gray-100 bg-gray-50 flex items-center justify-between">
+                    <div>
+                      <p class="text-gray-400 text-[10px] uppercase font-bold tracking-wider">Harga/Malam</p>
+                      <p class="font-serif font-bold text-brand text-base">Rp 350.000</p>
+                    </div>
+                    <span class="text-xs font-semibold text-brand group-hover:underline flex items-center gap-0.5 select-label">
+                      Pilih <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Villa Room -->
+                <div onclick="selectRoom('Villa', 2100000)" id="roomCard-Villa" class="group border border-gray-200 bg-white rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md hover:border-brand/40 transition-all duration-200 relative flex flex-col justify-between">
+                  <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm p-1.5 rounded-full border border-gray-100 z-10 shadow-sm opacity-0 group-hover:opacity-100 select-check transition-all duration-200">
+                    <i data-lucide="check" class="w-4 h-4 text-brand"></i>
+                  </div>
+                  <div>
+                    <div class="h-44 overflow-hidden relative">
+                      <img src="assets/images/rooms/villa/villa-view-pool-area.webp" alt="Villa" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://raw.githubusercontent.com/adith92/AnairaGlamping/main/frontend/hotelier/assets/images/rooms/villa/villa-view-pool-area.webp';">
+                      <span class="absolute bottom-3 left-3 bg-amber-600 text-white font-bold text-xs uppercase px-2.5 py-1 rounded-lg tracking-wider">Luxury</span>
+                    </div>
+                    <div class="p-4 space-y-2">
+                      <h3 class="font-serif font-bold text-lg text-darkbg">Presidential Villa</h3>
+                      <div class="flex items-center gap-1 text-gray-500 text-xs">
+                        <i data-lucide="users" class="w-3.5 h-3.5"></i> Max 20 Orang
+                        <span class="mx-1">•</span>
+                        <i data-lucide="home" class="w-3.5 h-3.5"></i> 1 Rumah
+                      </div>
+                      <p class="text-gray-500 text-xs leading-relaxed line-clamp-2">Kapasitas besar, dapur lengkap, dan set karaoke eksklusif untuk acara keluarga.</p>
+                      <div class="flex flex-wrap gap-1.5 pt-1">
+                        <span class="bg-brand/5 text-brand text-[10px] font-semibold px-2 py-0.5 rounded border border-brand/10">AC</span>
+                        <span class="bg-brand/5 text-brand text-[10px] font-semibold px-2 py-0.5 rounded border border-brand/10">Kitchen</span>
+                        <span class="bg-brand/5 text-brand text-[10px] font-semibold px-2 py-0.5 rounded border border-brand/10">Karaoke Set</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="p-4 border-t border-gray-100 bg-gray-50 flex items-center justify-between">
+                    <div>
+                      <p class="text-gray-400 text-[10px] uppercase font-bold tracking-wider">Harga/Malam</p>
+                      <p class="font-serif font-bold text-brand text-base">Rp 2.100.000</p>
+                    </div>
+                    <span class="text-xs font-semibold text-brand group-hover:underline flex items-center gap-0.5 select-label">
+                      Pilih <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 2: Kalender & Tanggal Stay Scheduler -->
+            <div id="wizardStep-2" class="hidden space-y-6 transition-all duration-300">
+              <div class="border-b border-brand/10 pb-4">
+                <h2 class="text-2xl font-serif font-bold text-darkbg flex items-center gap-2">
+                  <i data-lucide="calendar" class="text-brand"></i> Langkah 2: Pilih Tanggal Menginap
+                </h2>
+                <p class="text-gray-500 text-sm mt-1">Gunakan kalender interaktif untuk memilih tanggal Check-in dan Check-out Anda. Klik pertama untuk Check-in, klik kedua untuk Check-out.</p>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                <!-- Calendar Widget (7 Cols) -->
+                <div class="md:col-span-7 bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
+                  <!-- Calendar Header -->
+                  <div class="flex items-center justify-between mb-4 pb-2 border-b border-gray-100">
+                    <button type="button" onclick="changeMonth(-1)" class="p-1.5 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors">
+                      <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                    </button>
+                    <h3 id="calendarMonthYear" class="font-bold text-darkbg text-sm sm:text-base">Mei 2026</h3>
+                    <button type="button" onclick="changeMonth(1)" class="p-1.5 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors">
+                      <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    </button>
+                  </div>
+                  <!-- Days of Week Grid -->
+                  <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-gray-400 mb-2">
+                    <div>Min</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sab</div>
+                  </div>
+                  <!-- Days Grid -->
+                  <div id="calendarDaysGrid" class="grid grid-cols-7 gap-1 text-center text-sm font-semibold">
+                    <!-- Loaded dynamically via JS -->
+                  </div>
+                </div>
+
+                <!-- Stay Details & Arrival slots (5 Cols) -->
+                <div class="md:col-span-5 space-y-5">
+                  <div class="bg-brand/5 border border-brand/20 rounded-2xl p-4 space-y-3">
+                    <h4 class="font-bold text-brand text-xs uppercase tracking-wider flex items-center gap-1.5">
+                      <i data-lucide="info" class="w-4 h-4"></i> Rincian Jadwal Menginap
+                    </h4>
+                    
+                    <div class="space-y-2 text-sm text-gray-700">
+                      <div class="flex justify-between items-center bg-white px-3 py-2 rounded-lg border border-gray-100 shadow-sm">
+                        <span>Check-In:</span>
+                        <strong id="displayCheckIn" class="text-darkbg">-</strong>
+                      </div>
+                      <div class="flex justify-between items-center bg-white px-3 py-2 rounded-lg border border-gray-100 shadow-sm">
+                        <span>Check-Out:</span>
+                        <strong id="displayCheckOut" class="text-darkbg">-</strong>
+                      </div>
+                      <div class="flex justify-between items-center bg-white px-3 py-2 rounded-lg border border-gray-100 shadow-sm">
+                        <span>Durasi Tinggal:</span>
+                        <strong id="displayNights" class="text-brand font-bold">-</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Arrival Slot Scheduler -->
+                  <div class="space-y-3">
+                    <label class="block font-bold text-darkbg text-sm">Estimasi Jam Kedatangan (Check-In)</label>
+                    <div class="grid grid-cols-1 gap-2.5">
+                      <button onclick="selectArrivalSlot('Morning (08:00 - 12:00)')" id="arrivalSlot-morning" class="w-full flex items-center justify-between border border-gray-200 hover:border-brand/40 bg-white rounded-xl p-3 text-left transition-all duration-150">
+                        <span class="flex items-center gap-2 text-sm">
+                          <i data-lucide="sun" class="w-4.5 h-4.5 text-amber-500"></i>
+                          <span>Pagi (08:00 - 12:00)</span>
+                        </span>
+                        <span class="text-xs text-gray-400 font-semibold italic">Opsional / Early</span>
+                      </button>
+
+                      <button onclick="selectArrivalSlot('Afternoon (12:00 - 18:00)')" id="arrivalSlot-afternoon" class="w-full flex items-center justify-between border border-gray-200 hover:border-brand/40 bg-white rounded-xl p-3 text-left transition-all duration-150">
+                        <span class="flex items-center gap-2 text-sm">
+                          <i data-lucide="sun-medium" class="w-4.5 h-4.5 text-brand"></i>
+                          <span>Siang (12:00 - 18:00)</span>
+                        </span>
+                        <span class="text-xs text-brand font-semibold italic">Standar</span>
+                      </button>
+
+                      <button onclick="selectArrivalSlot('Evening (18:00 - 22:00)')" id="arrivalSlot-evening" class="w-full flex items-center justify-between border border-gray-200 hover:border-brand/40 bg-white rounded-xl p-3 text-left transition-all duration-150">
+                        <span class="flex items-center gap-2 text-sm">
+                          <i data-lucide="moon" class="w-4.5 h-4.5 text-indigo-500"></i>
+                          <span>Sore/Malam (18:00 - 22:00)</span>
+                        </span>
+                        <span class="text-xs text-gray-400 font-semibold italic">Late</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 3: Detail Tamu -->
+            <div id="wizardStep-3" class="hidden space-y-6 transition-all duration-300">
+              <div class="border-b border-brand/10 pb-4">
+                <h2 class="text-2xl font-serif font-bold text-darkbg flex items-center gap-2">
+                  <i data-lucide="user-check" class="text-brand"></i> Langkah 3: Formulir Detail Tamu
+                </h2>
+                <p class="text-gray-500 text-sm mt-1">Harap isi detail kontak Anda secara akurat untuk mempermudah koordinasi check-in dan pengiriman tiket digital.</p>
+              </div>
+
+              <!-- Input Forms -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                <!-- Name -->
+                <div class="space-y-1.5 relative">
+                  <label for="inputName" class="block font-bold text-darkbg text-sm">Nama Lengkap Sesuai KTP</label>
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                      <i data-lucide="user" class="w-4.5 h-4.5"></i>
+                    </div>
+                    <input type="text" id="inputName" oninput="updateGuestDetail()" placeholder="Contoh: Rian Hidayat" class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand bg-white text-sm transition-all duration-150">
+                  </div>
+                </div>
+
+                <!-- Email -->
+                <div class="space-y-1.5 relative">
+                  <label for="inputEmail" class="block font-bold text-darkbg text-sm">Alamat Email Aktif</label>
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                      <i data-lucide="mail" class="w-4.5 h-4.5"></i>
+                    </div>
+                    <input type="email" id="inputEmail" oninput="updateGuestDetail()" placeholder="Contoh: rian.hidayat@email.com" class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand bg-white text-sm transition-all duration-150">
+                  </div>
+                </div>
+
+                <!-- WhatsApp Validation Block -->
+                <div class="space-y-1.5 md:col-span-2">
+                  <label for="inputWhatsapp" class="block font-bold text-darkbg text-sm">Nomor WhatsApp (Aktif &amp; Terhubung)</label>
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                      <i data-lucide="phone" class="w-4.5 h-4.5"></i>
+                    </div>
+                    <input type="tel" id="inputWhatsapp" oninput="validateWhatsappLive()" placeholder="Contoh: 08123456789 atau +628123456789" class="w-full pl-10 pr-10 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand bg-white text-sm transition-all duration-150">
+                    
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none hidden" id="waCheckIcon">
+                      <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 fill-emerald-100"></i>
+                    </div>
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none hidden" id="waXIcon">
+                      <i data-lucide="alert-circle" class="w-5 h-5 text-rose-500 fill-rose-100"></i>
+                    </div>
+                  </div>
+                  <!-- Help dynamic text feedback -->
+                  <div id="waFeedback" class="text-xs font-semibold mt-1 transition-all duration-150">
+                    Gunakan nomor format Indonesia (+62 atau 08 diikuti 8 s/d 11 digit angka).
+                  </div>
+                </div>
+
+                <!-- Special Notes -->
+                <div class="space-y-1.5 md:col-span-2">
+                  <label for="inputNotes" class="block font-bold text-darkbg text-sm">Permintaan Khusus / Catatan (Opsional)</label>
+                  <div class="relative">
+                    <div class="absolute top-3.5 left-3.5 flex items-center pointer-events-none text-gray-400">
+                      <i data-lucide="message-square" class="w-4.5 h-4.5"></i>
+                    </div>
+                    <textarea id="inputNotes" oninput="updateGuestDetail()" rows="3" placeholder="Contoh: Minta unit non-smoking dekat kolam renang, extra bed, api unggun romantis..." class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand bg-white text-sm transition-all duration-150"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 4: Pilih Pembayaran -->
+            <div id="wizardStep-4" class="hidden space-y-6 transition-all duration-300">
+              <div class="border-b border-brand/10 pb-4">
+                <h2 class="text-2xl font-serif font-bold text-darkbg flex items-center gap-2">
+                  <i data-lucide="credit-card" class="text-brand"></i> Langkah 4: Pilih Gerbang Pembayaran
+                </h2>
+                <p class="text-gray-500 text-sm mt-1">Silakan pilih gerbang pembayaran Anda. Semua pilihan diproses dengan enkripsi keamanan bank tingkat tinggi secara realtime.</p>
+              </div>
+
+              <!-- Payment Gateways Grid -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+                <!-- Midtrans snap option -->
+                <div onclick="selectPaymentMethod('Midtrans Snap')" id="payCard-Midtrans" class="group border border-gray-200 bg-white rounded-2xl p-5 cursor-pointer shadow-sm hover:shadow-md hover:border-brand/40 transition-all duration-200 relative flex flex-col justify-between">
+                  <div class="absolute top-3 right-3 bg-brand text-white p-1 rounded-full border border-white opacity-0 group-hover:opacity-100 select-check transition-all duration-200 shadow-sm">
+                    <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                  </div>
+                  
+                  <div class="space-y-4">
+                    <div class="h-10 flex items-center">
+                      <img src="https://static.qloapps.com/images/payment-gateways.png" alt="Midtrans Snap Logo" class="h-8 w-auto object-contain brightness-95" onerror="this.src='https://payment.midtrans.com/images/logo.png';">
+                    </div>
+                    <div>
+                      <h3 class="font-bold text-darkbg text-base flex items-center gap-1.5">
+                        Midtrans Snap <span class="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">Instan</span>
+                      </h3>
+                      <p class="text-gray-500 text-xs mt-1 leading-relaxed">Bayar via Virtual Account (BCA, Mandiri, BNI, BRI), Kartu Kredit, atau E-wallet nasional.</p>
+                    </div>
+                  </div>
+
+                  <div class="mt-4 pt-3 border-t border-gray-100 text-xs font-semibold text-brand text-right group-hover:underline">
+                    Gunakan Midtrans <i data-lucide="chevron-right" class="w-3 h-3 inline-block"></i>
+                  </div>
+                </div>
+
+                <!-- Xendit invoice option -->
+                <div onclick="selectPaymentMethod('Xendit Invoice')" id="payCard-Xendit" class="group border border-gray-200 bg-white rounded-2xl p-5 cursor-pointer shadow-sm hover:shadow-md hover:border-brand/40 transition-all duration-200 relative flex flex-col justify-between">
+                  <div class="absolute top-3 right-3 bg-brand text-white p-1 rounded-full border border-white opacity-0 group-hover:opacity-100 select-check transition-all duration-200 shadow-sm">
+                    <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                  </div>
+
+                  <div class="space-y-4">
+                    <div class="h-10 flex items-center">
+                      <span class="text-2xl font-black text-indigo-700 italic flex items-center gap-1">xendit <span class="text-xs bg-indigo-100 text-indigo-800 px-1.5 py-0.5 rounded font-mono">INV</span></span>
+                    </div>
+                    <div>
+                      <h3 class="font-bold text-darkbg text-base flex items-center gap-1.5">
+                        Xendit Invoice <span class="bg-blue-100 text-blue-800 text-[9px] font-bold px-2 py-0.5 rounded-full border border-blue-200">Otomatis</span>
+                      </h3>
+                      <p class="text-gray-500 text-xs mt-1 leading-relaxed">Direct push payment OVO, ShopeePay, LinkAja, DANA, serta gerbang pembayaran Alfamart/Indomaret.</p>
+                    </div>
+                  </div>
+
+                  <div class="mt-4 pt-3 border-t border-gray-100 text-xs font-semibold text-brand text-right group-hover:underline">
+                    Gunakan Xendit <i data-lucide="chevron-right" class="w-3 h-3 inline-block"></i>
+                  </div>
+                </div>
+
+                <!-- INDOPAY QRIS option -->
+                <div onclick="selectPaymentMethod('INDOPAY QRIS')" id="payCard-QRIS" class="group border border-gray-200 bg-white rounded-2xl p-5 cursor-pointer shadow-sm hover:shadow-md hover:border-brand/40 transition-all duration-200 relative flex flex-col justify-between">
+                  <div class="absolute top-3 right-3 bg-brand text-white p-1 rounded-full border border-white opacity-0 group-hover:opacity-100 select-check transition-all duration-200 shadow-sm">
+                    <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                  </div>
+
+                  <div class="space-y-4">
+                    <div class="h-10 flex items-center gap-2">
+                      <span class="font-black text-rose-600 tracking-wider text-xl flex items-center gap-1">INDOPAY <span class="text-[9px] bg-rose-100 text-rose-800 px-1.5 py-0.5 rounded font-sans uppercase">QRIS</span></span>
+                    </div>
+                    <div>
+                      <h3 class="font-bold text-darkbg text-base flex items-center gap-1.5">
+                        INDOPAY QRIS <span class="bg-amber-100 text-amber-800 text-[9px] font-bold px-2 py-0.5 rounded-full border border-amber-200">GPN &amp; QRIS</span>
+                      </h3>
+                      <p class="text-gray-500 text-xs mt-1 leading-relaxed">Scan kode QR dinamis QRIS instan menggunakan e-wallet favorit Anda (GoPay, OVO, ShopeePay, DANA) &amp; m-Banking.</p>
+                    </div>
+                  </div>
+
+                  <div class="mt-4 pt-3 border-t border-gray-100 text-xs font-semibold text-brand text-right group-hover:underline">
+                    Gunakan INDOPAY QRIS <i data-lucide="chevron-right" class="w-3 h-3 inline-block"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Wizard Flow Action Navigation Buttons -->
+          <div class="mt-8 pt-6 border-t border-brand/10 flex justify-between items-center">
+            <button id="btnPrev" onclick="prevStep()" class="hidden px-5 py-3 border border-brand/20 rounded-xl font-bold text-brand hover:bg-brand/5 active:scale-95 transition-all duration-150 inline-flex items-center gap-1.5">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali
+            </button>
+            <div class="flex-grow"></div>
+            <button id="btnNext" onclick="nextStep()" class="px-7 py-3.5 bg-brand hover:bg-brand-hover active:scale-95 text-white font-bold rounded-xl shadow-md transition-all duration-150 inline-flex items-center gap-2">
+              <span id="nextBtnText">Lanjut ke Tanggal</span> <i data-lucide="arrow-right" class="w-4.5 h-4.5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Interactive Booking Summary (4 Cols) -->
+      <aside class="lg:col-span-4 sticky top-24 space-y-6">
+        <div class="glass-card rounded-3xl shadow-xl p-5 sm:p-6 border border-white/60 relative overflow-hidden flex flex-col justify-between">
+          <!-- Ambient lighting blur on summary -->
+          <div class="absolute -top-12 -left-12 w-28 h-28 bg-brand/5 rounded-full blur-xl"></div>
+          
+          <div class="relative z-10 space-y-5">
+            <h3 class="text-lg font-serif font-bold text-darkbg border-b border-brand/10 pb-3 flex items-center gap-2">
+              <i data-lucide="receipt-text" class="text-brand"></i> Rincian Reservasi
+            </h3>
+
+            <!-- Room selection summary -->
+            <div id="summaryRoomEmpty" class="text-gray-400 text-xs py-4 text-center border border-dashed border-gray-200 rounded-2xl">
+              <i data-lucide="home" class="w-7 h-7 mx-auto mb-2 opacity-50"></i>
+              Belum ada tipe unit yang dipilih.
+            </div>
+            
+            <div id="summaryRoomDetail" class="hidden flex gap-3.5 bg-white p-3 rounded-2xl border border-gray-150 shadow-sm transition-all duration-300">
+              <img id="summaryRoomImg" src="assets/images/rooms/balcony/balcony-exterior-garden.webp" alt="Room preview" class="w-16 h-16 rounded-xl object-cover border border-gray-150" onerror="this.src='https://raw.githubusercontent.com/adith92/AnairaGlamping/main/frontend/hotelier/assets/images/rooms/balcony/balcony-exterior-garden.webp';">
+              <div class="flex-grow space-y-1">
+                <h4 id="summaryRoomTitle" class="font-serif font-bold text-darkbg text-sm sm:text-base">-</h4>
+                <p id="summaryRoomPrice" class="text-brand text-xs font-semibold">-</p>
+                <span class="inline-flex items-center text-[10px] bg-brand/10 text-brand font-semibold px-2 py-0.5 rounded">Tipe Terpilih</span>
+              </div>
+            </div>
+
+            <!-- Date Stay Summary -->
+            <div class="space-y-2 text-xs">
+              <h4 class="font-bold text-darkbg uppercase tracking-wider text-[10px]">Detail Menginap</h4>
+              <div class="grid grid-cols-2 gap-2 text-gray-700 bg-white p-3 rounded-2xl border border-gray-150 shadow-sm">
+                <div>
+                  <span class="text-gray-400 block text-[9px] uppercase">Check-In</span>
+                  <span id="summaryCheckIn" class="font-semibold">-</span>
+                </div>
+                <div class="border-l border-gray-100 pl-3">
+                  <span class="text-gray-400 block text-[9px] uppercase">Check-Out</span>
+                  <span id="summaryCheckOut" class="font-semibold">-</span>
+                </div>
+                <div class="col-span-2 border-t border-gray-100 pt-2 mt-1 flex justify-between">
+                  <span class="text-gray-400">Durasi Stay:</span>
+                  <strong id="summaryNights" class="text-brand font-bold">-</strong>
+                </div>
+                <div class="col-span-2 flex justify-between">
+                  <span class="text-gray-400">Jam Arrival:</span>
+                  <strong id="summaryArrival" class="text-gray-700">-</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Guest details summary -->
+            <div class="space-y-2 text-xs">
+              <h4 class="font-bold text-darkbg uppercase tracking-wider text-[10px]">Kontak &amp; Tamu</h4>
+              <div class="text-gray-700 bg-white p-3 rounded-2xl border border-gray-150 shadow-sm space-y-1.5">
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Nama:</span>
+                  <strong id="summaryName" class="truncate max-w-[150px] font-semibold text-gray-800">-</strong>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-400">WhatsApp:</span>
+                  <strong id="summaryWhatsapp" class="font-semibold text-gray-800">-</strong>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Email:</span>
+                  <strong id="summaryEmail" class="truncate max-w-[150px] font-semibold text-gray-800">-</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Payment details summary -->
+            <div class="space-y-2 text-xs">
+              <h4 class="font-bold text-darkbg uppercase tracking-wider text-[10px]">Metode Pembayaran</h4>
+              <div class="text-gray-700 bg-white p-3 rounded-2xl border border-gray-150 shadow-sm flex items-center justify-between">
+                <span class="text-gray-400">Gateway:</span>
+                <strong id="summaryPayment" class="font-semibold text-darkbg">-</strong>
+              </div>
+            </div>
+
+            <!-- Bill break down -->
+            <div class="border-t border-brand/10 pt-4 space-y-2 text-xs">
+              <div class="flex justify-between text-gray-600">
+                <span id="labelBillBase">Sewa Kamar (0 Malam)</span>
+                <span id="summaryBillBase">Rp 0</span>
+              </div>
+              <div class="flex justify-between text-gray-600">
+                <span>Pajak &amp; Jasa Layanan (10% Nett)</span>
+                <span id="summaryBillTax">Rp 0</span>
+              </div>
+              <div class="flex justify-between text-gray-600">
+                <span>Service Charge &amp; Kebersihan</span>
+                <span class="text-emerald-600 font-bold">Complimentary</span>
+              </div>
+              <div class="border-t border-dashed border-gray-200 pt-3 flex justify-between items-center text-sm font-bold text-darkbg">
+                <span>Total Biaya</span>
+                <span id="summaryBillTotal" class="text-brand text-lg font-serif">Rp 0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ADMIN PANEL: Beautiful Interactive Bookings History & Sync Realtime List -->
+    <section class="mt-16 border-t border-brand/10 pt-12">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-serif font-bold text-darkbg flex items-center gap-2">
+            <i data-lucide="database" class="text-brand"></i> Panel Pengelola Reservasi
+          </h2>
+          <p class="text-gray-500 text-sm mt-0.5">Sinkronisasi local-storage realtime. Lacak, kelola, cetak invoice, dan hubungi tamu lewat WhatsApp.</p>
+        </div>
+        
+        <!-- Search and Filter tools -->
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+              <i data-lucide="search" class="w-4 h-4"></i>
+            </div>
+            <input type="text" id="adminSearch" oninput="renderHistoryTable()" placeholder="Cari nama / booking ID..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand/20 bg-white text-xs sm:text-sm w-44 sm:w-60">
+          </div>
+
+          <select id="adminFilter" onchange="renderHistoryTable()" class="py-2 px-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand/20 bg-white text-xs sm:text-sm">
+            <option value="All">Semua Unit</option>
+            <option value="Balcony">Balcony</option>
+            <option value="Porch">Porch</option>
+            <option value="Villa">Villa</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Bookings Table Block -->
+      <div class="bg-white border border-brand/10 rounded-2xl shadow-md overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200 text-left text-xs sm:text-sm">
+            <thead class="bg-brand/5 text-brand font-semibold uppercase tracking-wider text-[10px] sm:text-xs">
+              <tr>
+                <th scope="col" class="px-4 sm:px-6 py-4">Booking ID</th>
+                <th scope="col" class="px-4 sm:px-6 py-4">Tamu &amp; WhatsApp</th>
+                <th scope="col" class="px-4 sm:px-6 py-4">Unit Suite</th>
+                <th scope="col" class="px-4 sm:px-6 py-4">Check-in &amp; Check-out</th>
+                <th scope="col" class="px-4 sm:px-6 py-4">Total Biaya</th>
+                <th scope="col" class="px-4 sm:px-6 py-4">Metode Bayar</th>
+                <th scope="col" class="px-4 sm:px-6 py-4">Status</th>
+                <th scope="col" class="px-4 sm:px-6 py-4 text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="adminHistoryTableBody" class="divide-y divide-gray-150 text-gray-700">
+              <!-- Loaded Dynamically via localStorage -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Empty state placeholder for database -->
+        <div id="adminHistoryEmpty" class="hidden text-center py-10 text-gray-400 space-y-2">
+          <i data-lucide="folder-open" class="w-12 h-12 mx-auto opacity-50"></i>
+          <p class="text-sm font-semibold">Tidak ada data booking terdaftar</p>
+          <p class="text-xs">Silakan lakukan booking baru untuk mengisi riwayat transaksi.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MOCK OVERLAY POPUPS (PAYMENT GATEWAYS INTERACTIVE MODALS) -->
+  
+  <!-- 1. MIDTRANS SNAP MODAL -->
+  <div id="modalMidtrans" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-4">
+    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+    
+    <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden border border-gray-200 transition-all transform scale-100 flex flex-col justify-between min-h-[580px]">
+      <!-- Header -->
+      <div class="bg-gray-50 border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <img src="https://payment.midtrans.com/images/logo.png" alt="Midtrans Snap Logo" class="h-6 w-auto" onerror="this.src='https://static.qloapps.com/images/payment-gateways.png';">
+          <span class="text-gray-300 font-light">|</span>
+          <span class="text-gray-700 font-semibold text-sm">Secure Sandbox Payment</span>
+        </div>
+        <button onclick="closePaymentModal('Midtrans')" class="p-1 rounded-full hover:bg-gray-200 text-gray-400 hover:text-gray-600 transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Midtrans Body Content -->
+      <div class="p-6 space-y-5 flex-grow text-xs sm:text-sm text-gray-700">
+        <!-- Timer & Amount Banner -->
+        <div class="bg-brand/5 border border-brand/10 rounded-2xl p-4 flex justify-between items-center">
+          <div>
+            <p class="text-gray-400 text-[10px] uppercase font-bold tracking-wider">Total Pembayaran</p>
+            <p id="midtransModalAmount" class="text-brand font-serif font-bold text-lg sm:text-xl">Rp -</p>
+          </div>
+          <div class="text-right">
+            <p class="text-gray-400 text-[10px] uppercase font-bold tracking-wider">Batas Waktu Bayar</p>
+            <span class="inline-flex items-center gap-1 bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-lg text-xs border border-amber-200 font-mono" id="midtransTimer">
+              10:00
+            </span>
+          </div>
+        </div>
+
+        <!-- Virtual Account details tabs -->
+        <div class="space-y-4">
+          <label class="block font-bold text-darkbg text-xs uppercase tracking-wider">Pilih Metode Transfer Bank (Virtual Account)</label>
+          <div class="border border-gray-200 rounded-2xl overflow-hidden divide-y divide-gray-150">
+            <!-- BCA VA Tab selection -->
+            <div class="p-4 bg-gray-50 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="bg-blue-600 text-white font-extrabold px-2 py-0.5 rounded text-[11px] tracking-wider font-sans">BCA</span>
+                <div>
+                  <h4 class="font-bold text-darkbg">BCA Virtual Account</h4>
+                  <p class="text-[10px] text-gray-400">Verifikasi instan otomatis 24 jam</p>
+                </div>
+              </div>
+              <input type="radio" checked class="accent-brand w-4.5 h-4.5">
+            </div>
+          </div>
+
+          <!-- VA Details Box -->
+          <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4 space-y-3">
+            <div>
+              <p class="text-gray-400 text-[10px] uppercase font-semibold">Nomor Virtual Account</p>
+              <div class="flex items-center justify-between mt-1">
+                <strong class="text-darkbg font-mono text-base tracking-wider" id="midtransVaNum">8910 2873 9182 3901</strong>
+                <button onclick="copyToClipboard('8910287391823901')" class="bg-white text-gray-600 border border-gray-200 hover:border-brand/40 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm flex items-center gap-1.5 active:scale-95 transition-transform duration-100">
+                  <i data-lucide="copy" class="w-3.5 h-3.5"></i> Salin
+                </button>
+              </div>
+            </div>
+            
+            <div class="border-t border-gray-200 pt-2 text-[11px] space-y-1.5">
+              <p class="font-semibold text-gray-600">Cara Pembayaran:</p>
+              <ol class="list-decimal pl-4 space-y-1 text-gray-500">
+                <li>Buka aplikasi m-BCA atau masuk ke ATM BCA</li>
+                <li>Pilih <strong class="text-gray-700">Transfer > Virtual Account</strong></li>
+                <li>Masukkan nomor VA di atas lalu klik OK/Lanjut</li>
+                <li>Periksa detail tagihan, masukkan PIN Anda dan konfirmasi</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Midtrans Action Footer -->
+      <div class="bg-gray-50 border-t border-gray-100 p-6 space-y-3 text-center">
+        <!-- Live Loading Loader Spinner (Hidden initially) -->
+        <div id="midtransLoader" class="hidden flex flex-col items-center justify-center py-2 space-y-2">
+          <div class="w-8 h-8 border-4 border-brand border-t-transparent rounded-full animate-spin"></div>
+          <span class="text-xs font-semibold text-brand">Sedang memverifikasi transaksi Virtual Account BCA...</span>
+        </div>
+        
+        <div id="midtransActionButtons" class="flex flex-col sm:flex-row gap-3">
+          <button onclick="simulatePaymentSuccess('Midtrans Snap')" class="w-full flex-grow py-3 bg-[#1b7f5a] hover:bg-brand-hover text-white font-bold rounded-xl shadow-md transition-all duration-150 inline-flex items-center justify-center gap-2">
+            <i data-lucide="check-square" class="w-5 h-5"></i> Simulasikan Bayar Sukses
+          </button>
+          <button onclick="closePaymentModal('Midtrans')" class="py-3 px-5 border border-gray-200 bg-white hover:bg-gray-100 text-gray-600 font-bold rounded-xl transition-all duration-150">
+            Batalkan
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. XENDIT INVOICE MODAL -->
+  <div id="modalXendit" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-4">
+    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+
+    <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden border border-indigo-200 transition-all transform scale-100 flex flex-col justify-between min-h-[580px]">
+      <!-- Purple Xendit Header -->
+      <div class="bg-indigo-900 text-white px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl font-black italic tracking-tight">xendit</span>
+          <span class="bg-indigo-800 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border border-indigo-700">Sandbox Invoice</span>
+        </div>
+        <button onclick="closePaymentModal('Xendit')" class="p-1 rounded-full hover:bg-indigo-800 text-indigo-200 hover:text-white transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Xendit Invoice Body -->
+      <div class="p-6 space-y-5 flex-grow text-xs sm:text-sm text-gray-700">
+        <!-- Invoice Header summary -->
+        <div class="flex justify-between items-start border-b border-gray-100 pb-4">
+          <div>
+            <h4 class="font-bold text-gray-800">Invoice #<span id="xenditInvoiceNum">INV-2026-891230</span></h4>
+            <p class="text-xs text-gray-400">Merchants: Anaira Glamping &amp; Resort</p>
+          </div>
+          <div class="text-right">
+            <span class="block text-xs text-gray-400 font-semibold">Tenggat Waktu</span>
+            <span id="xenditTimer" class="font-mono text-indigo-700 font-bold">10:00</span>
+          </div>
+        </div>
+
+        <!-- Bill Details Banner -->
+        <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-4 flex justify-between items-center">
+          <div>
+            <p class="text-indigo-900/60 text-[10px] uppercase font-bold tracking-wider">Total Tagihan</p>
+            <p id="xenditModalAmount" class="text-indigo-900 font-serif font-bold text-lg sm:text-xl">Rp -</p>
+          </div>
+          <div class="text-right">
+            <span class="inline-flex items-center gap-1 bg-indigo-100 text-indigo-800 font-bold px-2 py-0.5 rounded text-[10px] border border-indigo-200">
+              <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-ping"></span> Active
+            </span>
+          </div>
+        </div>
+
+        <!-- OVO Push Notification details -->
+        <div class="space-y-4">
+          <label class="block font-bold text-indigo-950 text-xs uppercase tracking-wider">Pilih Opsi E-Wallet (Push Notification)</label>
+          
+          <div class="bg-white border border-gray-200 rounded-2xl p-4 space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-gray-100">
+              <div class="flex items-center gap-3">
+                <span class="bg-[#4c2a86] text-white font-extrabold px-2.5 py-0.5 rounded text-xs tracking-wide">OVO</span>
+                <span class="font-bold text-darkbg">OVO Push Payment</span>
+              </div>
+              <input type="radio" checked class="accent-indigo-900 w-4.5 h-4.5">
+            </div>
+
+            <!-- OVO Push inputs -->
+            <div class="space-y-3">
+              <p class="text-xs text-gray-500">Masukkan nomor handphone terdaftar OVO Anda. Kami akan mengirimkan notifikasi konfirmasi langsung ke ponsel Anda.</p>
+              <div class="flex gap-2">
+                <input type="tel" id="xenditOvoPhone" placeholder="Contoh: 081234567890" class="flex-grow px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button onclick="triggerOvoNotification()" class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold px-4 py-2 rounded-lg text-xs shadow-sm hover:shadow active:scale-95 transition-transform duration-100">
+                  Kirim Notif
+                </button>
+              </div>
+              
+              <!-- Loader for OVO Push Notification -->
+              <div id="ovoPushLoader" class="hidden text-xs font-semibold text-indigo-700 bg-indigo-50 border border-indigo-150 rounded-xl p-3 flex items-center gap-2">
+                <div class="w-4.5 h-4.5 border-2 border-indigo-700 border-t-transparent rounded-full animate-spin"></div>
+                <span id="ovoPushText">Mengirimkan push notification pembayaran ke handphone...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Xendit Action Footer -->
+      <div class="bg-gray-50 border-t border-gray-100 p-6 space-y-3 text-center">
+        <!-- Live Loading Loader Spinner (Hidden initially) -->
+        <div id="xenditLoader" class="hidden flex flex-col items-center justify-center py-2 space-y-2">
+          <div class="w-8 h-8 border-4 border-indigo-700 border-t-transparent rounded-full animate-spin"></div>
+          <span class="text-xs font-semibold text-indigo-700">Sedang memeriksa status pembayaran invoice...</span>
+        </div>
+
+        <div id="xenditActionButtons" class="flex flex-col sm:flex-row gap-3">
+          <button onclick="simulatePaymentSuccess('Xendit Invoice')" class="w-full flex-grow py-3 bg-indigo-700 hover:bg-indigo-800 text-white font-bold rounded-xl shadow-md transition-all duration-150 inline-flex items-center justify-center gap-2">
+            <i data-lucide="check-square" class="w-5 h-5"></i> Simulasikan Bayar Sukses
+          </button>
+          <button onclick="closePaymentModal('Xendit')" class="py-3 px-5 border border-gray-200 bg-white hover:bg-gray-100 text-gray-600 font-bold rounded-xl transition-all duration-150">
+            Batalkan
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. INDOPAY QRIS MODAL -->
+  <div id="modalQRIS" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-4">
+    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+
+    <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border border-rose-200 transition-all transform scale-100 flex flex-col justify-between min-h-[580px]">
+      <!-- INDOPAY GPN QRIS Header -->
+      <div class="bg-gradient-to-r from-rose-600 to-rose-700 text-white px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-xl font-black tracking-wider">INDOPAY QRIS</span>
+          <span class="text-white/40 font-light">|</span>
+          <span class="bg-white/20 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border border-white/10">Dynamic QR</span>
+        </div>
+        <button onclick="closePaymentModal('QRIS')" class="p-1 rounded-full hover:bg-rose-500 text-rose-100 hover:text-white transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- QRIS Content Body -->
+      <div class="p-6 space-y-4 flex-grow text-center text-xs sm:text-sm text-gray-700 flex flex-col justify-center">
+        <!-- Heading text -->
+        <div>
+          <h3 class="font-serif font-bold text-darkbg text-lg">Pindai Kode QRIS</h3>
+          <p class="text-gray-400 text-xs mt-1">Dukung semua dompet digital (GoPay, OVO, ShopeePay, DANA) &amp; m-Banking nasional.</p>
+        </div>
+
+        <!-- Dynamic QRIS code container with GPN logo & laser sweep -->
+        <div class="relative w-56 h-56 mx-auto bg-white border-4 border-gray-100 rounded-2xl flex items-center justify-center shadow-lg p-3 overflow-hidden select-none">
+          <!-- GPN and QRIS dynamic standard voucher banner inside QR -->
+          <div class="absolute inset-x-0 top-0 bg-gray-50 border-b border-gray-100 py-1.5 flex items-center justify-around z-10 px-4">
+            <span class="text-[9px] font-black text-rose-600 tracking-wider">QRIS</span>
+            <span class="text-[8px] bg-red-600 text-white font-extrabold px-1 rounded font-sans tracking-tighter">GPN</span>
+          </div>
+
+          <!-- The actual standard QR code -->
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=ANR-BOOKING-PAYMENT-QRIS-MOCK" alt="MOCK QRIS" class="w-full h-full object-contain pt-5" id="qrisImg">
+          
+          <!-- Animated Laser Scanning Line! -->
+          <div class="laser-line z-20"></div>
+        </div>
+
+        <!-- QRIS Details banner -->
+        <div class="bg-rose-50 border border-rose-100 rounded-2xl p-3.5 max-w-sm mx-auto flex justify-between items-center text-left">
+          <div>
+            <p class="text-rose-900/60 text-[10px] uppercase font-bold tracking-wider">Total Pembayaran</p>
+            <p id="qrisModalAmount" class="text-rose-600 font-serif font-bold text-lg">Rp -</p>
+          </div>
+          <div class="text-right">
+            <span class="block text-gray-400 text-[10px] font-semibold">Berakhir Dalam</span>
+            <span id="qrisTimer" class="font-mono text-rose-600 font-bold">10:00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- QRIS Footer -->
+      <div class="bg-gray-50 border-t border-gray-100 p-6 space-y-3 text-center">
+        <!-- Live Loading Loader Spinner (Hidden initially) -->
+        <div id="qrisLoader" class="hidden flex flex-col items-center justify-center py-2 space-y-2">
+          <div class="w-8 h-8 border-4 border-rose-600 border-t-transparent rounded-full animate-spin"></div>
+          <span class="text-xs font-semibold text-rose-600">Menunggu verifikasi scan dompet digital Anda...</span>
+        </div>
+
+        <div id="qrisActionButtons" class="flex flex-col sm:flex-row gap-3">
+          <button onclick="simulatePaymentSuccess('INDOPAY QRIS')" class="w-full flex-grow py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl shadow-md transition-all duration-150 inline-flex items-center justify-center gap-2 animate-pulse">
+            <i data-lucide="qr-code" class="w-5 h-5"></i> Simulasikan Scan &amp; Bayar
+          </button>
+          <button onclick="closePaymentModal('QRIS')" class="py-3 px-5 border border-gray-200 bg-white hover:bg-gray-100 text-gray-600 font-bold rounded-xl transition-all duration-150">
+            Batalkan
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ambient background audio effect simulation toast notification -->
+  <div id="toastNotification" class="fixed bottom-5 right-5 z-50 glass-card text-darkbg border border-brand/20 px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 transform translate-x-72 opacity-0 transition-all duration-300">
+    <div id="toastIcon" class="w-8 h-8 rounded-full flex items-center justify-center">
+      <!-- Custom Icon -->
+    </div>
+    <div>
+      <h5 id="toastTitle" class="font-bold text-xs">Reservasi Update</h5>
+      <p id="toastMessage" class="text-xs text-gray-500">Pesan sukses ditransmisikan.</p>
+    </div>
+  </div>
+
+  <!-- Footer (Consistent with index.html) -->
+  <footer class="w-full bg-darkbg text-gray-300 py-10 mt-20 border-t border-brand/20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      <div class="flex items-center gap-3 border-b border-gray-800 pb-5">
+        <img class="h-10 w-auto" src="assets/brand/logo-anaira-white-transparent.png" alt="Anaira logo white" onerror="this.src='https://raw.githubusercontent.com/adith92/AnairaGlamping/main/frontend/hotelier/assets/brand/logo-anaira-white-transparent.png';">
+        <span class="font-serif font-semibold text-lg text-white tracking-wide">Anaira Glamping &amp; Resort</span>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+        <div>
+          <h4 class="font-bold text-white mb-2">Lokasi &amp; Kontak</h4>
+          <p>Jl. Raya Curug Nangka, Bogor, Jawa Barat</p>
+          <p class="mt-1">WhatsApp: +62 813-9969-3499</p>
+          <p>Email: info@anairaglamping.com</p>
+        </div>
+        <div>
+          <h4 class="font-bold text-white mb-2">Kebijakan Stay</h4>
+          <p>Check-in: 13.00 WIB | Check-out: 12.00 WIB</p>
+          <p class="mt-1">Early check-in dan late checkout disesuaikan dengan ketersediaan kamar. Pembatalan DP hangus, bisa reschedule.</p>
+        </div>
+        <div>
+          <h4 class="font-bold text-white mb-2">Fasilitas Akomodasi</h4>
+          <p>Kolam Renang Gunung, Outdoor Cafe, Api Unggun Romantis, Area Parkir Luas, High-speed Wi-Fi.</p>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-900 pt-6 text-center text-xs text-gray-500">
+        &copy; 2026 Anaira Glamping &amp; Resort. All Rights Reserved. Created by StaticBookingBuilder.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Print template container (Invisible on screen) -->
+  <div id="printContainer" class="hidden"></div>
+
+  <!-- INTERACTIVE WIZARD & DATA BINDING JAVASCRIPT -->
+  <script>
+    // --- Application State Constants & Variables ---
+    const ROOM_RATES = {
+      'Balcony': { name: 'Balcony Suite', rate: 500000, img: 'assets/images/rooms/balcony/balcony-exterior-garden.webp' },
+      'Porch': { name: 'Porch Cabin', rate: 350000, img: 'assets/images/rooms/porch/porch-cabin-garden.webp' },
+      'Villa': { name: 'Presidential Villa', rate: 2100000, img: 'assets/images/rooms/villa/villa-view-pool-area.webp' }
+    };
+
+    // Calendar states
+    let calendarDate = new Date(2026, 4, 24); // Start at May 2026 (based on additional metadata)
+    const todayLimit = new Date(2026, 4, 24); // Today's date to disable past selections
+
+    // Wizard wizard states
+    let currentStep = 1;
+    let selectedRoom = null;
+    let checkInDate = null; // Date Object
+    let checkOutDate = null; // Date Object
+    let arrivalSlot = null; // String
+    let guestName = '';
+    let guestEmail = '';
+    let guestWhatsapp = '';
+    let guestNotes = '';
+    let selectedPayment = null;
+    let createdBooking = null; // To hold newly created booking object on checkout success
+    let countdownTimer = null;
+
+    // --- Mount Initiation ---
+    window.addEventListener('DOMContentLoaded', () => {
+      // Initialize Lucide Icons
+      lucide.createIcons();
+      
+      // Load and Synchronize Booking Data from localStorage
+      initLocalStorageBookings();
+      
+      // Initial render updates
+      updateWizardUI();
+      renderCalendar();
+      renderHistoryTable();
+    });
+
+    // --- Data Synchronization (LocalStorage seeding & management) ---
+    function initLocalStorageBookings() {
+      const stored = localStorage.getItem('anaira_bookings');
+      if (!stored) {
+        // Pre-populate with 4 beautiful mock bookings matching actual room suites
+        const seedBookings = [
+          {
+            bookingId: "ANR-2026-48192",
+            guestName: "Aditya Pratama",
+            guestEmail: "aditya.pratama@gmail.com",
+            guestWhatsapp: "+6281234567890",
+            roomType: "Villa",
+            checkIn: "2026-05-10",
+            checkOut: "2026-05-12",
+            nights: 2,
+            amount: 4620000, // 2 nights x 2.1m = 4.2m + 10% tax = 4.62m
+            arrivalSlot: "Afternoon (12:00 - 18:00)",
+            paymentMethod: "INDOPAY QRIS",
+            bookingDate: "2026-05-08",
+            status: "Paid",
+            notes: "Minta disiapkan fasilitas barbecue keluarga"
+          },
+          {
+            bookingId: "ANR-2026-92813",
+            guestName: "Siti Rahmawati",
+            guestEmail: "siti.rahma@yahoo.com",
+            guestWhatsapp: "085712345678",
+            roomType: "Balcony",
+            checkIn: "2026-05-18",
+            checkOut: "2026-05-20",
+            nights: 2,
+            amount: 1100000, // 2 nights x 500k = 1m + 10% tax = 1.1m
+            arrivalSlot: "Morning (08:00 - 12:00)",
+            paymentMethod: "Midtrans Snap",
+            bookingDate: "2026-05-15",
+            status: "Paid",
+            notes: "Kamar yang menghadap ke kolam utama"
+          },
+          {
+            bookingId: "ANR-2026-10482",
+            guestName: "Budi Santoso",
+            guestEmail: "budi.santoso@outlook.com",
+            guestWhatsapp: "+6281987654321",
+            roomType: "Porch",
+            checkIn: "2026-05-22",
+            checkOut: "2026-05-25",
+            nights: 3,
+            amount: 1155000, // 3 nights x 350k = 1.05m + 10% tax = 1.155m
+            arrivalSlot: "Evening (18:00 - 22:00)",
+            paymentMethod: "Xendit Invoice",
+            bookingDate: "2026-05-20",
+            status: "Paid",
+            notes: "Minta disiapkan api unggun malam pertama"
+          },
+          {
+            bookingId: "ANR-2026-73629",
+            guestName: "Diana Wijaya",
+            guestEmail: "diana.w@gmail.com",
+            guestWhatsapp: "081122334455",
+            roomType: "Balcony",
+            checkIn: "2026-05-28",
+            checkOut: "2026-05-29",
+            nights: 1,
+            amount: 550000, // 1 night x 500k = 500k + 10% tax = 550k
+            arrivalSlot: "Afternoon (12:00 - 18:00)",
+            paymentMethod: "INDOPAY QRIS",
+            bookingDate: "2026-05-24",
+            status: "Paid",
+            notes: ""
+          }
+        ];
+        localStorage.setItem('anaira_bookings', JSON.stringify(seedBookings));
+      }
+    }
+
+    function getAllBookings() {
+      const stored = localStorage.getItem('anaira_bookings');
+      return stored ? JSON.parse(stored) : [];
+    }
+
+    function saveBooking(bookingObj) {
+      const bookings = getAllBookings();
+      bookings.unshift(bookingObj); // Add new booking to front
+      localStorage.setItem('anaira_bookings', JSON.stringify(bookings));
+      renderHistoryTable();
+    }
+
+    function deleteBooking(bookingId) {
+      if (confirm(`Apakah Anda yakin ingin menghapus data booking ${bookingId}?`)) {
+        let bookings = getAllBookings();
+        bookings = bookings.filter(b => b.bookingId !== bookingId);
+        localStorage.setItem('anaira_bookings', JSON.stringify(bookings));
+        renderHistoryTable();
+        showNotification("Sampah", "Booking berhasil dihapus dari database lokal.", "trash-2", "text-rose-600 bg-rose-50");
+      }
+    }
+
+    // --- STEP NAVIGATION WIZARD FLOW CONTROL ---
+    function updateWizardUI() {
+      // Toggle wizard step displays
+      for (let s = 1; s <= 4; s++) {
+        const panel = document.getElementById(`wizardStep-${s}`);
+        const badge = document.getElementById(`stepBadge-${s}`);
+        const label = document.getElementById(`stepLabel-${s}`);
+        
+        if (s === currentStep) {
+          panel.classList.remove('hidden');
+          badge.className = "w-10 h-10 rounded-full bg-brand text-white flex items-center justify-center font-bold shadow-md ring-4 ring-brand/10 transition-all duration-300 text-sm";
+          if (label) label.className = "hidden sm:inline text-xs font-bold mt-2 text-brand transition-colors";
+        } else {
+          panel.classList.add('hidden');
+          if (s < currentStep) {
+            // Completed steps
+            badge.className = "w-10 h-10 rounded-full bg-brand text-white flex items-center justify-center font-bold shadow-sm transition-all duration-300 text-sm";
+            badge.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i>`;
+            if (label) label.className = "hidden sm:inline text-xs font-semibold mt-2 text-brand transition-colors";
+          } else {
+            // Future steps
+            badge.className = "w-10 h-10 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-bold shadow-sm transition-all duration-300 text-sm";
+            badge.innerHTML = s;
+            if (label) label.className = "hidden sm:inline text-xs font-semibold mt-2 text-gray-500 transition-colors";
+          }
+        }
+      }
+
+      // Re-create icons since elements may have updated
+      lucide.createIcons();
+
+      // Update dynamic progress line width
+      const progressLine = document.getElementById('progressLine');
+      const percentage = ((currentStep - 1) / 3) * 100;
+      progressLine.style.width = `${percentage}%`;
+
+      // Back button visibility
+      const btnPrev = document.getElementById('btnPrev');
+      if (currentStep === 1) {
+        btnPrev.classList.add('hidden');
+      } else {
+        btnPrev.classList.remove('hidden');
+      }
+
+      // Next button texts & action states
+      const nextBtnText = document.getElementById('nextBtnText');
+      const btnNext = document.getElementById('btnNext');
+      if (currentStep === 4) {
+        nextBtnText.innerText = "Bayar Sekarang";
+        btnNext.className = "px-7 py-3.5 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-bold rounded-xl shadow-md transition-all duration-150 inline-flex items-center gap-2 animate-pulse";
+      } else {
+        btnNext.className = "px-7 py-3.5 bg-brand hover:bg-brand-hover active:scale-95 text-white font-bold rounded-xl shadow-md transition-all duration-150 inline-flex items-center gap-2";
+        if (currentStep === 1) {
+          nextBtnText.innerText = "Lanjut ke Tanggal";
+        } else if (currentStep === 2) {
+          nextBtnText.innerText = "Lanjut ke Detail Tamu";
+        } else if (currentStep === 3) {
+          nextBtnText.innerText = "Lanjut ke Pembayaran";
+        }
+      }
+    }
+
+    function nextStep() {
+      if (!validateStep(currentStep)) return;
+      
+      if (currentStep === 4) {
+        // Trigger simulated payment gateways
+        payNow();
+        return;
+      }
+
+      currentStep++;
+      updateWizardUI();
+      // Scroll to wizard top naturally
+      document.getElementById('bookingGrid').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        updateWizardUI();
+        document.getElementById('bookingGrid').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function goToStep(stepNum) {
+      // Validate up to that step
+      if (stepNum > currentStep) {
+        for (let s = currentStep; s < stepNum; s++) {
+          if (!validateStep(s)) return;
+        }
+      }
+      currentStep = stepNum;
+      updateWizardUI();
+    }
+
+    function validateStep(stepNum) {
+      if (stepNum === 1) {
+        if (!selectedRoom) {
+          showNotification("Peringatan", "Silakan pilih tipe unit Glamping terlebih dahulu.", "alert-triangle", "text-amber-600 bg-amber-50");
+          return false;
+        }
+      } else if (stepNum === 2) {
+        if (!checkInDate || !checkOutDate) {
+          showNotification("Peringatan", "Silakan pilih tanggal Check-In & Check-Out pada kalender.", "calendar-range", "text-amber-600 bg-amber-50");
+          return false;
+        }
+        if (!arrivalSlot) {
+          showNotification("Peringatan", "Silakan pilih estimasi slot jam kedatangan Anda.", "clock", "text-amber-600 bg-amber-50");
+          return false;
+        }
+      } else if (stepNum === 3) {
+        if (!guestName.trim()) {
+          showNotification("Peringatan", "Nama lengkap sesuai KTP wajib diisi.", "user", "text-rose-600 bg-rose-50");
+          return false;
+        }
+        if (!validateEmail(guestEmail)) {
+          showNotification("Peringatan", "Masukkan alamat email aktif yang valid.", "mail", "text-rose-600 bg-rose-50");
+          return false;
+        }
+        if (!validateWhatsapp(guestWhatsapp)) {
+          showNotification("Peringatan", "Masukkan nomor WhatsApp dengan format Indonesia yang valid.", "phone", "text-rose-600 bg-rose-50");
+          return false;
+        }
+      } else if (stepNum === 4) {
+        if (!selectedPayment) {
+          showNotification("Peringatan", "Silakan pilih gerbang pembayaran Anda.", "credit-card", "text-amber-600 bg-amber-50");
+          return false;
+        }
+      }
+      return true;
+    }
+
+    // --- STEP 1: ROOM SELECTION ---
+    function selectRoom(roomCode, rate) {
+      selectedRoom = roomCode;
+      
+      // Update Selection styles on grid cards
+      ['Balcony', 'Porch', 'Villa'].forEach(code => {
+        const card = document.getElementById(`roomCard-${code}`);
+        const checkIcon = card.querySelector('.select-check');
+        const selectLabel = card.querySelector('.select-label');
+        
+        if (code === roomCode) {
+          card.className = "group border-2 border-brand bg-white rounded-2xl overflow-hidden cursor-pointer shadow-md ring-4 ring-brand/10 transition-all duration-200 relative flex flex-col justify-between scale-[1.02]";
+          if (checkIcon) checkIcon.classList.remove('opacity-0');
+          if (selectLabel) selectLabel.innerHTML = `<i data-lucide="check-circle-2" class="w-4 h-4 text-brand inline"></i> Terpilih`;
+        } else {
+          card.className = "group border border-gray-200 bg-white rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md hover:border-brand/40 transition-all duration-200 relative flex flex-col justify-between";
+          if (checkIcon) checkIcon.classList.add('opacity-0');
+          if (selectLabel) selectLabel.innerHTML = `Pilih <i data-lucide="chevron-right" class="w-3 h-3"></i>`;
+        }
+      });
+
+      // Update Summary
+      document.getElementById('summaryRoomEmpty').classList.add('hidden');
+      const sDetail = document.getElementById('summaryRoomDetail');
+      sDetail.classList.remove('hidden');
+      
+      document.getElementById('summaryRoomTitle').innerText = ROOM_RATES[roomCode].name;
+      document.getElementById('summaryRoomPrice').innerText = `Rp ${formatRupiah(rate)} / malam`;
+      document.getElementById('summaryRoomImg').src = ROOM_RATES[roomCode].img;
+
+      // Re-trigger live calculations
+      calculateBilling();
+      lucide.createIcons();
+      
+      showNotification("Unit Dipilih", `${ROOM_RATES[roomCode].name} berhasil ditambahkan ke rencana tinggal Anda.`, "home", "text-brand bg-brand/5");
+    }
+
+    // --- STEP 2: STAY SCHEDULER CALENDAR GRID ---
+    function renderCalendar() {
+      const grid = document.getElementById('calendarDaysGrid');
+      const title = document.getElementById('calendarMonthYear');
+      grid.innerHTML = '';
+
+      const monthNames = [
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+      ];
+
+      const year = calendarDate.getFullYear();
+      const month = calendarDate.getMonth();
+
+      title.innerText = `${monthNames[month]} ${year}`;
+
+      const firstDayIndex = new Date(year, month, 1).getDay();
+      const totalDays = new Date(year, month + 1, 0).getDate();
+
+      // Create prefix empty days
+      for (let i = 0; i < firstDayIndex; i++) {
+        const placeholder = document.createElement('div');
+        placeholder.className = "py-2.5 text-gray-300 pointer-events-none";
+        grid.appendChild(placeholder);
+      }
+
+      // Render actual days
+      for (let day = 1; day <= totalDays; day++) {
+        const currentDate = new Date(year, month, day);
+        const dateStr = formatDateString(currentDate);
+        
+        const cell = document.createElement('button');
+        cell.type = "button";
+        cell.innerText = day;
+        cell.setAttribute('data-date', dateStr);
+        
+        // Base styling for days
+        let cellClass = "py-2.5 rounded-xl hover:bg-brand/10 transition-colors focus:outline-none relative flex items-center justify-center ";
+
+        // Determine if date is past
+        if (currentDate < todayLimit) {
+          cellClass += "text-gray-300 cursor-not-allowed opacity-30 pointer-events-none";
+        } else {
+          cellClass += "text-darkbg font-semibold ";
+          
+          // Selection Highlight Logic
+          if (checkInDate && dateStr === formatDateString(checkInDate)) {
+            cellClass += "bg-brand text-white hover:bg-brand shadow-sm rounded-l-xl rounded-r-none";
+          } else if (checkOutDate && dateStr === formatDateString(checkOutDate)) {
+            cellClass += "bg-brand text-white hover:bg-brand shadow-sm rounded-r-xl rounded-l-none";
+          } else if (checkInDate && checkOutDate && currentDate > checkInDate && currentDate < checkOutDate) {
+            cellClass += "bg-brand/15 text-brand hover:bg-brand/20 rounded-none";
+          }
+          
+          cell.onclick = () => selectDate(currentDate);
+        }
+
+        cell.className = cellClass;
+        grid.appendChild(cell);
+      }
+      
+      lucide.createIcons();
+    }
+
+    function changeMonth(direction) {
+      calendarDate.setMonth(calendarDate.getMonth() + direction);
+      renderCalendar();
+    }
+
+    function selectDate(dateObj) {
+      // Scenario 1: No check-in date set or both are already set
+      if (!checkInDate || (checkInDate && checkOutDate)) {
+        checkInDate = dateObj;
+        checkOutDate = null;
+        showNotification("Check-In Terpilih", `Check-in diatur pada tanggal ${formatIndoDate(dateObj)}.`, "calendar", "text-brand bg-brand/5");
+      } 
+      // Scenario 2: Check-in set, check-out empty
+      else if (checkInDate && !checkOutDate) {
+        if (dateObj <= checkInDate) {
+          // If clicked date is before check-in, treat it as new check-in date
+          checkInDate = dateObj;
+          showNotification("Check-In Diperbarui", `Check-in dipindahkan ke ${formatIndoDate(dateObj)}.`, "calendar", "text-brand bg-brand/5");
+        } else {
+          checkOutDate = dateObj;
+          showNotification("Check-Out Terpilih", `Check-out diatur pada ${formatIndoDate(dateObj)}.`, "calendar", "text-brand bg-brand/5");
+        }
+      }
+
+      updateStayDisplays();
+      renderCalendar();
+      calculateBilling();
+    }
+
+    function updateStayDisplays() {
+      const displayCheckIn = document.getElementById('displayCheckIn');
+      const displayCheckOut = document.getElementById('displayCheckOut');
+      const displayNights = document.getElementById('displayNights');
+      const summaryCheckIn = document.getElementById('summaryCheckIn');
+      const summaryCheckOut = document.getElementById('summaryCheckOut');
+      const summaryNights = document.getElementById('summaryNights');
+
+      if (checkInDate) {
+        displayCheckIn.innerText = formatIndoDate(checkInDate);
+        summaryCheckIn.innerText = formatIndoDateShort(checkInDate);
+      } else {
+        displayCheckIn.innerText = "-";
+        summaryCheckIn.innerText = "-";
+      }
+
+      if (checkOutDate) {
+        displayCheckOut.innerText = formatIndoDate(checkOutDate);
+        summaryCheckOut.innerText = formatIndoDateShort(checkOutDate);
+      } else {
+        displayCheckOut.innerText = "-";
+        summaryCheckOut.innerText = "-";
+      }
+
+      const nights = getNightsCount();
+      if (nights > 0) {
+        displayNights.innerText = `${nights} Malam`;
+        summaryNights.innerText = `${nights} Malam`;
+      } else {
+        displayNights.innerText = "-";
+        summaryNights.innerText = "-";
+      }
+    }
+
+    function getNightsCount() {
+      if (checkInDate && checkOutDate) {
+        const diffTime = Math.abs(checkOutDate - checkInDate);
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      }
+      return 0;
+    }
+
+    function selectArrivalSlot(slotName) {
+      arrivalSlot = slotName;
+
+      ['morning', 'afternoon', 'evening'].forEach(slot => {
+        const btn = document.getElementById(`arrivalSlot-${slot}`);
+        if (slotName.toLowerCase().includes(slot)) {
+          btn.className = "w-full flex items-center justify-between border-2 border-brand bg-brand/5 rounded-xl p-3 text-left transition-all duration-150 scale-[1.01] shadow-sm";
+        } else {
+          btn.className = "w-full flex items-center justify-between border border-gray-200 hover:border-brand/40 bg-white rounded-xl p-3 text-left transition-all duration-150";
+        }
+      });
+
+      document.getElementById('summaryArrival').innerText = slotName.split(' ')[0];
+      showNotification("Arrival Dipilih", `Slot kedatangan diatur pada ${slotName}.`, "clock", "text-brand bg-brand/5");
+    }
+
+    // --- STEP 3: CUSTOMER DETAIL FORM VALIDATION ---
+    function updateGuestDetail() {
+      guestName = document.getElementById('inputName').value;
+      guestEmail = document.getElementById('inputEmail').value;
+      guestNotes = document.getElementById('inputNotes').value;
+
+      document.getElementById('summaryName').innerText = guestName ? guestName : "-";
+      document.getElementById('summaryEmail').innerText = guestEmail ? guestEmail : "-";
+    }
+
+    // WhatsApp Live validation matching Indonesian formats
+    function validateWhatsappLive() {
+      const input = document.getElementById('inputWhatsapp');
+      const val = input.value.trim().replace(/\s+|-/g, ''); // strip spaces and hyphens
+      guestWhatsapp = val;
+      
+      const checkIcon = document.getElementById('waCheckIcon');
+      const xIcon = document.getElementById('waXIcon');
+      const feedback = document.getElementById('waFeedback');
+
+      document.getElementById('summaryWhatsapp').innerText = val ? val : "-";
+
+      if (val === '') {
+        input.className = "w-full pl-10 pr-10 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand bg-white text-sm transition-all duration-150";
+        checkIcon.classList.add('hidden');
+        xIcon.classList.add('hidden');
+        feedback.className = "text-xs font-semibold text-gray-500 mt-1";
+        feedback.innerText = "Gunakan nomor format Indonesia (+62 atau 08 diikuti 8 s/d 11 digit angka).";
+        return;
+      }
+
+      if (validateWhatsapp(val)) {
+        input.className = "w-full pl-10 pr-10 py-3 rounded-xl border-2 border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-300 bg-emerald-50/10 text-sm transition-all duration-150";
+        checkIcon.classList.remove('hidden');
+        xIcon.classList.add('hidden');
+        feedback.className = "text-xs font-semibold text-emerald-600 mt-1";
+        feedback.innerHTML = `<i data-lucide="check-circle" class="w-3.5 h-3.5 inline text-emerald-600 mr-0.5"></i> Nomor WhatsApp Valid!`;
+      } else {
+        input.className = "w-full pl-10 pr-10 py-3 rounded-xl border-2 border-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-300 bg-rose-50/10 text-sm transition-all duration-150";
+        checkIcon.classList.add('hidden');
+        xIcon.classList.remove('hidden');
+        feedback.className = "text-xs font-semibold text-rose-600 mt-1";
+        feedback.innerHTML = `<i data-lucide="alert-circle" class="w-3.5 h-3.5 inline text-rose-600 mr-0.5"></i> Format tidak valid. Contoh: 08123456789 atau +628123456789`;
+      }
+
+      lucide.createIcons();
+    }
+
+    function validateWhatsapp(num) {
+      // Indo WhatsApp Regex: starting +62, 62, or 0, followed by 8, then 8 to 11 digits
+      const regex = /^(?:\+62|62|0)8[1-9][0-9]{6,10}$/;
+      return regex.test(num);
+    }
+
+    function validateEmail(email) {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
+    }
+
+    // --- STEP 4: PAYMENT OPTIONS SELECTION ---
+    function selectPaymentMethod(methodName) {
+      selectedPayment = methodName;
+
+      const items = [
+        { code: 'Midtrans Snap', id: 'payCard-Midtrans' },
+        { code: 'Xendit Invoice', id: 'payCard-Xendit' },
+        { code: 'INDOPAY QRIS', id: 'payCard-QRIS' }
+      ];
+
+      items.forEach(item => {
+        const card = document.getElementById(item.id);
+        const check = card.querySelector('.select-check');
+        
+        if (item.code === methodName) {
+          card.className = "group border-2 border-brand bg-brand/5 rounded-2xl p-5 cursor-pointer shadow-md ring-4 ring-brand/10 transition-all duration-200 relative flex flex-col justify-between scale-[1.01]";
+          if (check) check.classList.remove('opacity-0');
+        } else {
+          card.className = "group border border-gray-200 bg-white rounded-2xl p-5 cursor-pointer shadow-sm hover:shadow-md hover:border-brand/40 transition-all duration-200 relative flex flex-col justify-between";
+          if (check) check.classList.add('opacity-0');
+        }
+      });
+
+      document.getElementById('summaryPayment').innerText = methodName;
+      showNotification("Metode Pembayaran", `${methodName} dipilih untuk menyelesaikan checkout.`, "credit-card", "text-brand bg-brand/5");
+    }
+
+    // --- LIVE BILLING CALCULATIONS ---
+    function calculateBilling() {
+      const nights = getNightsCount();
+      let roomRate = 0;
+      if (selectedRoom) {
+        roomRate = ROOM_RATES[selectedRoom].rate;
+      }
+
+      const basePrice = roomRate * nights;
+      const tax = basePrice * 0.10; // 10% tax
+      const totalAmount = basePrice + tax;
+
+      // Update right summary displays
+      document.getElementById('labelBillBase').innerText = `Sewa Kamar (${nights} Malam)`;
+      document.getElementById('summaryBillBase').innerText = `Rp ${formatRupiah(basePrice)}`;
+      document.getElementById('summaryBillTax').innerText = `Rp ${formatRupiah(tax)}`;
+      document.getElementById('summaryBillTotal').innerText = `Rp ${formatRupiah(totalAmount)}`;
+    }
+
+    // --- SIMULATED PAYMENT MODALS INTERFACE TRIGGER ---
+    function payNow() {
+      const totalAmount = calculateTotalPaidAmount();
+
+      if (selectedPayment === 'Midtrans Snap') {
+        document.getElementById('midtransModalAmount').innerText = `Rp ${formatRupiah(totalAmount)}`;
+        document.getElementById('modalMidtrans').classList.remove('hidden');
+        startCountdownTimer('midtransTimer', 600); // 10 minutes (600s)
+      } else if (selectedPayment === 'Xendit Invoice') {
+        document.getElementById('xenditModalAmount').innerText = `Rp ${formatRupiah(totalAmount)}`;
+        document.getElementById('xenditInvoiceNum').innerText = `INV-2026-${Math.floor(100000 + Math.random() * 900000)}`;
+        document.getElementById('modalXendit').classList.remove('hidden');
+        startCountdownTimer('xenditTimer', 600);
+      } else if (selectedPayment === 'INDOPAY QRIS') {
+        document.getElementById('qrisModalAmount').innerText = `Rp ${formatRupiah(totalAmount)}`;
+        document.getElementById('modalQRIS').classList.remove('hidden');
+        startCountdownTimer('qrisTimer', 600);
+      }
+    }
+
+    function calculateTotalPaidAmount() {
+      const nights = getNightsCount();
+      let roomRate = 0;
+      if (selectedRoom) {
+        roomRate = ROOM_RATES[selectedRoom].rate;
+      }
+      const basePrice = roomRate * nights;
+      const tax = basePrice * 0.10;
+      return basePrice + tax;
+    }
+
+    function closePaymentModal(type) {
+      document.getElementById(`modal${type}`).classList.add('hidden');
+      clearInterval(countdownTimer);
+    }
+
+    // Start mock countdown timers
+    function startCountdownTimer(elementId, durationSeconds) {
+      clearInterval(countdownTimer);
+      let timeRemaining = durationSeconds;
+      const elem = document.getElementById(elementId);
+
+      const render = () => {
+        const mins = Math.floor(timeRemaining / 60);
+        const secs = timeRemaining % 60;
+        elem.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      };
+
+      render();
+      countdownTimer = setInterval(() => {
+        timeRemaining--;
+        if (timeRemaining <= 0) {
+          clearInterval(countdownTimer);
+          elem.innerText = "EXPIRED";
+          elem.className = "bg-rose-100 text-rose-800 font-bold px-2 py-0.5 rounded";
+        } else {
+          render();
+        }
+      }, 1000);
+    }
+
+    // Trigger OVO push notification
+    function triggerOvoNotification() {
+      const phoneInput = document.getElementById('xenditOvoPhone');
+      if (!phoneInput.value.trim()) {
+        alert('Silakan masukkan nomor handphone OVO Anda.');
+        return;
+      }
+
+      const loader = document.getElementById('ovoPushLoader');
+      const text = document.getElementById('ovoPushText');
+
+      loader.classList.remove('hidden');
+      text.innerText = "Mengirimkan push notification pembayaran ke handphone...";
+      
+      setTimeout(() => {
+        text.innerHTML = `<span class="text-emerald-600 font-bold">✓ Notifikasi OVO Terkirim!</span> Silakan buka aplikasi OVO di handphone Anda dan selesaikan konfirmasi pembayaran.`;
+      }, 1200);
+    }
+
+    // --- TRANSACTION CHECK SUCCESS & RECEIPT SUCCESS PAGE ---
+    function simulatePaymentSuccess(gatewayName) {
+      let loaderId, actionId, type;
+      
+      if (gatewayName === 'Midtrans Snap') {
+        loaderId = 'midtransLoader';
+        actionId = 'midtransActionButtons';
+        type = 'Midtrans';
+      } else if (gatewayName === 'Xendit Invoice') {
+        loaderId = 'xenditLoader';
+        actionId = 'xenditActionButtons';
+        type = 'Xendit';
+      } else {
+        loaderId = 'qrisLoader';
+        actionId = 'qrisActionButtons';
+        type = 'QRIS';
+      }
+
+      // Hide actions, show loader spinner
+      document.getElementById(actionId).classList.add('hidden');
+      document.getElementById(loaderId).classList.remove('hidden');
+
+      setTimeout(() => {
+        // Complete checkout transaction
+        clearInterval(countdownTimer);
+        document.getElementById(`modal${type}`).classList.add('hidden');
+        
+        // Reset modal layout triggers
+        document.getElementById(actionId).classList.remove('hidden');
+        document.getElementById(loaderId).classList.add('hidden');
+        if (type === 'Xendit') {
+          document.getElementById('ovoPushLoader').classList.add('hidden');
+          document.getElementById('xenditOvoPhone').value = '';
+        }
+
+        // Generate Booking Object
+        const newBookingId = `ANR-2026-${Math.floor(10000 + Math.random() * 90000)}`;
+        const nights = getNightsCount();
+        const totalAmount = calculateTotalPaidAmount();
+        
+        createdBooking = {
+          bookingId: newBookingId,
+          guestName: guestName,
+          guestEmail: guestEmail,
+          guestWhatsapp: guestWhatsapp,
+          roomType: selectedRoom,
+          checkIn: formatDateString(checkInDate),
+          checkOut: formatDateString(checkOutDate),
+          nights: nights,
+          amount: totalAmount,
+          arrivalSlot: arrivalSlot,
+          paymentMethod: selectedPayment,
+          bookingDate: formatDateString(new Date()),
+          status: 'Paid',
+          notes: guestNotes
+        };
+
+        // Save to Database
+        saveBooking(createdBooking);
+
+        // Populate success receipt fields
+        document.getElementById('receiptId').innerText = createdBooking.bookingId;
+        document.getElementById('receiptName').innerText = createdBooking.guestName;
+        document.getElementById('receiptWhatsapp').innerText = createdBooking.guestWhatsapp;
+        document.getElementById('receiptRoom').innerText = ROOM_RATES[createdBooking.roomType].name;
+        document.getElementById('receiptPayment').innerText = createdBooking.paymentMethod;
+        document.getElementById('receiptDates').innerText = `${formatIndoDate(checkInDate)} - ${formatIndoDate(checkOutDate)}`;
+        document.getElementById('receiptArrival').innerText = `${createdBooking.arrivalSlot} • ${createdBooking.nights} Malam`;
+        document.getElementById('receiptAmount').innerText = `Rp ${formatRupiah(createdBooking.amount)}`;
+
+        // Transition Screen Displays
+        document.getElementById('bookingGrid').classList.add('hidden');
+        document.getElementById('successPage').classList.remove('hidden');
+        
+        // Push notification toast
+        showNotification("Transaksi Berhasil", `Booking ${createdBooking.bookingId} sukses terbayar menggunakan ${gatewayName}!`, "check", "text-emerald-600 bg-emerald-50");
+        
+        // Scroll to success view smoothly
+        document.getElementById('successPage').scrollIntoView({ behavior: 'smooth' });
+
+      }, 1500);
+    }
+
+    // --- RESET & WIZARD CONTROL ---
+    function resetWizard() {
+      // Reset variables
+      currentStep = 1;
+      selectedRoom = null;
+      checkInDate = null;
+      checkOutDate = null;
+      arrivalSlot = null;
+      guestName = '';
+      guestEmail = '';
+      guestWhatsapp = '';
+      guestNotes = '';
+      selectedPayment = null;
+      createdBooking = null;
+
+      // Reset DOM Inputs
+      document.getElementById('inputName').value = '';
+      document.getElementById('inputEmail').value = '';
+      document.getElementById('inputWhatsapp').value = '';
+      document.getElementById('inputNotes').value = '';
+      
+      // Reset whatsapp validation feedback
+      validateWhatsappLive();
+      
+      // Reset Selected room Card borders
+      ['Balcony', 'Porch', 'Villa'].forEach(code => {
+        const card = document.getElementById(`roomCard-${code}`);
+        card.className = "group border border-gray-200 bg-white rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md hover:border-brand/40 transition-all duration-200 relative flex flex-col justify-between";
+        const checkIcon = card.querySelector('.select-check');
+        const selectLabel = card.querySelector('.select-label');
+        if (checkIcon) checkIcon.classList.add('opacity-0');
+        if (selectLabel) selectLabel.innerHTML = `Pilih <i data-lucide="chevron-right" class="w-3 h-3"></i>`;
+      });
+
+      // Reset payment card selection states
+      ['Midtrans', 'Xendit', 'QRIS'].forEach(id => {
+        const card = document.getElementById(`payCard-${id}`);
+        card.className = "group border border-gray-200 bg-white rounded-2xl p-5 cursor-pointer shadow-sm hover:shadow-md hover:border-brand/40 transition-all duration-200 relative flex flex-col justify-between";
+        const check = card.querySelector('.select-check');
+        if (check) check.classList.add('opacity-0');
+      });
+
+      // Reset Displays
+      document.getElementById('summaryRoomEmpty').classList.remove('hidden');
+      document.getElementById('summaryRoomDetail').classList.add('hidden');
+      updateStayDisplays();
+      calculateBilling();
+      
+      // Reset summaries labels
+      document.getElementById('summaryName').innerText = '-';
+      document.getElementById('summaryEmail').innerText = '-';
+      document.getElementById('summaryWhatsapp').innerText = '-';
+      document.getElementById('summaryPayment').innerText = '-';
+      document.getElementById('summaryArrival').innerText = '-';
+
+      // Reset steps tabs
+      updateWizardUI();
+
+      // Show Booking Grid, hide receipt screen
+      document.getElementById('successPage').classList.add('hidden');
+      document.getElementById('bookingGrid').classList.remove('hidden');
+
+      showNotification("Wizard Reset", "Silakan masukkan detail pesanan baru.", "refresh-cw", "text-brand bg-brand/5");
+    }
+
+    // --- CLIENT SIDE INVOICE GENERATION & HTML DIRECT PRINTING ---
+    function downloadActiveInvoice() {
+      if (createdBooking) {
+        printInvoice(createdBooking);
+      } else {
+        alert("Tidak ada booking aktif untuk dicetak.");
+      }
+    }
+
+    function triggerPrintForId(bookingId) {
+      const bookings = getAllBookings();
+      const booking = bookings.find(b => b.bookingId === bookingId);
+      if (booking) {
+        printInvoice(booking);
+      } else {
+        alert("Data booking tidak ditemukan.");
+      }
+    }
+
+    function printInvoice(booking) {
+      const invoiceWindow = window.open('', '_blank', 'width=900,height=750,scrollbars=yes');
+      
+      const invoiceHTML = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Invoice Resmi #${booking.bookingId}</title>
+          <style>
+            body { font-family: 'Segoe UI', Arial, sans-serif; color: #1f2421; margin: 40px; line-height: 1.5; background-color: #ffffff; }
+            .invoice-box { max-width: 800px; margin: auto; border: 1px solid #e2e8f0; padding: 30px; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+            .header-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+            .header-logo { height: 45px; }
+            .title { text-align: right; font-size: 24px; font-weight: bold; color: #1b7f5a; }
+            .info-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
+            .info-col { width: 50%; vertical-align: top; font-size: 13px; color: #5f635f; }
+            .info-col strong { color: #1d2a25; font-size: 14px; }
+            .detail-table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 30px; text-align: left; }
+            .detail-table th { background-color: #1b7f5a; color: #ffffff; padding: 12px; font-size: 13px; font-weight: 600; text-transform: uppercase; }
+            .detail-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; font-size: 13px; }
+            .badge { background-color: #d1fae5; color: #065f46; font-weight: bold; padding: 4px 10px; border-radius: 9999px; font-size: 11px; text-transform: uppercase; display: inline-block; }
+            .totals-table { width: 40%; margin-left: auto; border-collapse: collapse; font-size: 13px; margin-bottom: 35px; }
+            .totals-table td { padding: 8px 0; }
+            .total-row { font-size: 16px; font-weight: bold; color: #1b7f5a; border-top: 2px dashed #1b7f5a; }
+            .footer { border-top: 1px solid #e2e8f0; padding-top: 15px; text-align: center; font-size: 11px; color: #5f635f; margin-top: 40px; }
+            .btn-print-trigger { background-color: #1b7f5a; color: white; border: none; padding: 10px 20px; font-size: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; float: right; margin-bottom: 20px; }
+            @media print {
+              .btn-print-trigger { display: none; }
+              body { margin: 0; }
+              .invoice-box { border: none; box-shadow: none; padding: 0; }
+            }
+          </style>
+        </head>
+        <body>
+          <button class="btn-print-trigger" onclick="window.print()">Cetak Invoice</button>
+          
+          <div class="invoice-box">
+            <table class="header-table">
+              <tr>
+                <td>
+                  <h2 style="margin:0; font-family: Georgia, serif; color: #1d2a25;">ANAIRA</h2>
+                  <span style="font-size:12px; color: #1b7f5a; letter-spacing: 2px; font-weight: bold;">GLAMPING & RESORT</span>
+                </td>
+                <td class="title">INVOICE RESERVASI</td>
+              </tr>
+            </table>
+
+            <table class="info-table">
+              <tr>
+                <td class="info-col">
+                  <strong>Penerbit:</strong><br>
+                  Anaira Glamping &amp; Resort<br>
+                  Jl. Raya Curug Nangka, Bogor<br>
+                  WhatsApp: +62 813-9969-3499<br>
+                  Email: billing@anairaglamping.com
+                </td>
+                <td class="info-col" style="text-align: right;">
+                  <strong>Ditujukan Kepada:</strong><br>
+                  ${booking.guestName}<br>
+                  WhatsApp: ${booking.guestWhatsapp}<br>
+                  Email: ${booking.guestEmail}<br><br>
+                  <strong>No. Invoice:</strong> #${booking.bookingId}<br>
+                  <strong>Tanggal Penerbitan:</strong> ${booking.bookingDate}
+                </td>
+              </tr>
+            </table>
+
+            <table class="detail-table">
+              <thead>
+                <tr>
+                  <th>Unit Glamping</th>
+                  <th>Jadwal Reservasi</th>
+                  <th style="text-align: center;">Durasi</th>
+                  <th style="text-align: right;">Rate / Malam</th>
+                  <th style="text-align: right;">Jumlah Sewa</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="font-weight: bold; color: #1d2a25;">${ROOM_RATES[booking.roomType].name}</td>
+                  <td>${formatIndoStringDate(booking.checkIn)} s/d ${formatIndoStringDate(booking.checkOut)}</td>
+                  <td style="text-align: center;">${booking.nights} Malam</td>
+                  <td style="text-align: right;">Rp ${formatRupiah(ROOM_RATES[booking.roomType].rate)}</td>
+                  <td style="text-align: right; font-weight: bold;">Rp ${formatRupiah(ROOM_RATES[booking.roomType].rate * booking.nights)}</td>
+                </tr>
+                <tr>
+                  <td colspan="5" style="background-color: #f8fafc; font-size: 11px; color: #64748b; padding: 8px 12px;">
+                    <strong>Fasilitas Unit:</strong> ${booking.roomType === 'Villa' ? 'AC, Android TV, Kitchen, Karaoke Set, Private Pool Access' : booking.roomType === 'Balcony' ? 'AC, Android TV, Amenities, Private Balcony' : 'Kipas, Android TV, Amenities, Private Terrace'}
+                    ${booking.notes ? `<br><strong>Permintaan Khusus:</strong> "${booking.notes}"` : ''}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="totals-table">
+              <tr>
+                <td>Subtotal Akomodasi</td>
+                <td style="text-align: right; font-weight: 600;">Rp ${formatRupiah(ROOM_RATES[booking.roomType].rate * booking.nights)}</td>
+              </tr>
+              <tr>
+                <td>Pajak &amp; PPN (10%)</td>
+                <td style="text-align: right; font-weight: 600;">Rp ${formatRupiah(ROOM_RATES[booking.roomType].rate * booking.nights * 0.1)}</td>
+              </tr>
+              <tr>
+                <td>Service Charge</td>
+                <td style="text-align: right; color: #1b7f5a; font-weight: bold;">Complimentary</td>
+              </tr>
+              <tr class="total-row">
+                <td style="padding-top: 10px;">Total Pembayaran</td>
+                <td style="text-align: right; padding-top: 10px; font-weight: bold;">Rp ${formatRupiah(booking.amount)}</td>
+              </tr>
+            </table>
+
+            <div style="font-size: 11px; background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; margin-top: 20px;">
+              <strong style="color: #1d2a25;">Informasi Transaksi:</strong>
+              <ul style="margin: 5px 0 0 0; padding-left: 20px; color: #5f635f;">
+                <li>Status Pembayaran: <span class="badge">LUNAS / PAID</span></li>
+                <li>Metode Pembayaran: <strong>${booking.paymentMethod}</strong></li>
+                <li>Estimasi Jam Kedatangan: <strong>${booking.arrivalSlot}</strong></li>
+                <li>Harap bawa invoice ini (cetak atau digital) saat melakukan check-in untuk ditukarkan dengan kunci fisik unit.</li>
+              </ul>
+            </div>
+
+            <div class="footer">
+              Terima kasih atas kunjungan Anda. Sampai jumpa di kesegaran alam Anaira Glamping &amp; Resort!<br>
+              <strong>Anaira Glamping &amp; Resort - Jl. Curug Nangka, Bogor</strong>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      invoiceWindow.document.write(invoiceHTML);
+      invoiceWindow.document.close();
+    }
+
+    // --- BOOKING HISTORY ADMIN TABLE RENDER & SEARCH ---
+    function renderHistoryTable() {
+      const tbody = document.getElementById('adminHistoryTableBody');
+      const emptyState = document.getElementById('adminHistoryEmpty');
+      tbody.innerHTML = '';
+
+      const query = document.getElementById('adminSearch').value.toLowerCase().trim();
+      const filter = document.getElementById('adminFilter').value;
+
+      let bookings = getAllBookings();
+
+      // Apply Filter by Tipe Kamar
+      if (filter !== 'All') {
+        bookings = bookings.filter(b => b.roomType === filter);
+      }
+
+      // Apply Search filter
+      if (query !== '') {
+        bookings = bookings.filter(b => 
+          b.guestName.toLowerCase().includes(query) || 
+          b.bookingId.toLowerCase().includes(query)
+        );
+      }
+
+      if (bookings.length === 0) {
+        tbody.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      bookings.forEach(b => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-brand/5 transition-colors border-b border-gray-100";
+        
+        tr.innerHTML = `
+          <td class="px-4 sm:px-6 py-4 font-bold text-brand font-mono">${b.bookingId}</td>
+          <td class="px-4 sm:px-6 py-4">
+            <div class="font-semibold text-gray-800">${b.guestName}</div>
+            <div class="text-[11px] text-gray-400 font-mono">${b.guestEmail}</div>
+            <a href="https://wa.me/${cleanPhoneForWa(b.guestWhatsapp)}?text=Halo%20${encodeURIComponent(b.guestName)}%2C%20kami%20dari%20pihak%20Anaira%20Glamping%20ingin%20mengonfirmasi%20reservasi%20Anda%20dengan%20ID%20${b.bookingId}." target="_blank" class="inline-flex items-center gap-1 text-[11px] text-emerald-600 hover:underline font-bold mt-1">
+              <i data-lucide="phone" class="w-3 h-3"></i> ${b.guestWhatsapp}
+            </a>
+          </td>
+          <td class="px-4 sm:px-6 py-4 font-serif font-bold text-darkbg">${b.roomType}</td>
+          <td class="px-4 sm:px-6 py-4">
+            <div class="font-medium">${formatIndoStringDate(b.checkIn)}</div>
+            <div class="text-[11px] text-gray-400">s/d ${formatIndoStringDate(b.checkOut)} (${b.nights} Malam)</div>
+          </td>
+          <td class="px-4 sm:px-6 py-4 font-bold text-gray-900">Rp ${formatRupiah(b.amount)}</td>
+          <td class="px-4 sm:px-6 py-4 text-xs font-semibold text-gray-500">${b.paymentMethod}</td>
+          <td class="px-4 sm:px-6 py-4">
+            <span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full text-[10px] border border-emerald-200">
+              <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span> Paid
+            </span>
+          </td>
+          <td class="px-4 sm:px-6 py-4 text-center">
+            <div class="flex items-center justify-center gap-2">
+              <button onclick="triggerPrintForId('${b.bookingId}')" title="Cetak Invoice" class="p-2 bg-brand/10 hover:bg-brand text-brand hover:text-white rounded-xl transition-all duration-150 active:scale-95 shadow-sm">
+                <i data-lucide="printer" class="w-4 h-4"></i>
+              </button>
+              <button onclick="deleteBooking('${b.bookingId}')" title="Hapus Booking" class="p-2 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white rounded-xl transition-all duration-150 active:scale-95 shadow-sm">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+
+      lucide.createIcons();
+    }
+
+    function scrollToHistory() {
+      const historyTable = document.getElementById('adminSearch');
+      historyTable.scrollIntoView({ behavior: 'smooth' });
+      historyTable.focus();
+    }
+
+    // --- REUSABLE HELPER UTILITIES ---
+    
+    // Copy VA to Clipboard
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showNotification("Berhasil", "Nomor Virtual Account tersalin ke clipboard.", "check", "text-brand bg-brand/5");
+      });
+    }
+
+    // Notification banner
+    function showNotification(title, message, iconName, colors) {
+      const toast = document.getElementById('toastNotification');
+      const iconWrap = document.getElementById('toastIcon');
+      const titleElem = document.getElementById('toastTitle');
+      const msgElem = document.getElementById('toastMessage');
+
+      toastTitle.innerText = title;
+      toastMessage.innerText = message;
+      iconWrap.className = `w-8 h-8 rounded-full flex items-center justify-center ${colors}`;
+      iconWrap.innerHTML = `<i data-lucide="${iconName}" class="w-4.5 h-4.5"></i>`;
+
+      lucide.createIcons();
+
+      // Slide In Toast
+      toast.className = "fixed bottom-5 right-5 z-50 glass-card text-darkbg border border-brand/20 px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 transform translate-x-0 opacity-100 transition-all duration-300";
+
+      // Hide after 3.5 seconds
+      setTimeout(() => {
+        toast.className = "fixed bottom-5 right-5 z-50 glass-card text-darkbg border border-brand/20 px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 transform translate-x-72 opacity-0 transition-all duration-300";
+      }, 3500);
+    }
+
+    // Money Formatting
+    function formatRupiah(amount) {
+      return new Intl.NumberFormat('id-ID').format(amount);
+    }
+
+    // Date Object Formatting (YYYY-MM-DD)
+    function formatDateString(dateObj) {
+      if (!dateObj) return '';
+      const year = dateObj.getFullYear();
+      const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+      const day = dateObj.getDate().toString().padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    // Date Indonesian Formatting (e.g. 24 Mei 2026)
+    function formatIndoDate(dateObj) {
+      if (!dateObj) return '';
+      const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+      const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+      return `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+    }
+
+    function formatIndoDateShort(dateObj) {
+      if (!dateObj) return '';
+      const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agt", "Sep", "Okt", "Nov", "Des"];
+      return `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear().toString().substring(2)}`;
+    }
+
+    // Format Indo from raw string date "YYYY-MM-DD"
+    function formatIndoStringDate(dateStr) {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-');
+      if (parts.length < 3) return dateStr;
+      const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+      return `${parseInt(parts[2])} ${months[parseInt(parts[1]) - 1]} ${parts[0]}`;
+    }
+
+    // Clean Phone number prefix for direct wa.me link redirection
+    function cleanPhoneForWa(phoneNum) {
+      if (!phoneNum) return '';
+      let cleaned = phoneNum.replace(/\D/g, ''); // keep only numbers
+      if (cleaned.startsWith('0')) {
+        cleaned = '62' + cleaned.substring(1);
+      }
+      return cleaned;
+    }
+  </script>
+</body>
+</html>
