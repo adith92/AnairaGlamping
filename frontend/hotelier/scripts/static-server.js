@@ -14,8 +14,8 @@ const routeMap = {
   '/contact': '/contact.html',
   '/booking': '/booking.html',
   '/login': '/login.html',
-  '/admin': '/admin/index.html',
-  '/admin/': '/admin/index.html',
+  '/admin': '/admin/pms.html',
+  '/admin/': '/admin/pms.html',
   '/admin/pms': '/admin/pms.html',
   '/admin/pms/': '/admin/pms.html',
 };

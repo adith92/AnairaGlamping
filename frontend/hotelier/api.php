@@ -37,11 +37,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-// 2. Database Kredensial (Silakan sesuaikan dengan database cPanel / Shared Hosting Anda)
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'anaira_db');
-define('DB_USER', 'anaira_user');
-define('DB_PASS', 'KatasandiDbAnda123!'); // Disarankan menggunakan password kuat
+// 2. Database Kredensial (Memuat secara aman dari Environment Variables jika tersedia, atau fallback ke default)
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_NAME', getenv('DB_NAME') ?: 'anaira_db');
+define('DB_USER', getenv('DB_USER') ?: 'anaira_user');
+define('DB_PASS', getenv('DB_PASS') ?: 'KatasandiDbAnda123!'); // Disarankan menggunakan password kuat di Environment Variables
 
 try {
     // Koneksi menggunakan PDO (PHP Data Objects) demi keamanan SQL Injection

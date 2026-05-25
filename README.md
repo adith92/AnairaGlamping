@@ -5,7 +5,7 @@
 <h1 align="center">🏕️ Anaira Glamping PMS & Booking Center</h1>
 
 <p align="center">
-  <strong>Sistem reservasi glamping, booking online, PMS dashboard, content editor, dan payment gateway scaffold untuk Anaira Glamping & Resort.</strong>
+  <strong>Sistem reservasi glamping, booking online, PMS dashboard, manajemen voucher & paket staycation, galeri slideshow, dan payment gateway scaffold untuk Anaira Glamping & Resort.</strong>
 </p>
 
 <p align="center">
@@ -22,10 +22,10 @@
 
 | Environment | URL | Notes |
 |---|---|---|
-| 🚀 **Vercel Production** | [hotelier-adith92.vercel.app](https://hotelier-adith92.vercel.app) | Static frontend demo |
-| 🖥️ **Local Frontend** | `http://localhost:4173` | Via Node static server |
-| 🔐 **Admin PMS** | `http://localhost:4173/admin/pms` | Full PMS dashboard |
-| ✏️ **Content Editor** | `http://localhost:4173/admin/` | Site content manager |
+| 🚀 **Vercel Production** | [hotelier-adith92.vercel.app](https://hotelier-adith92.vercel.app) | Deployed production-ready application |
+| 🖥️ **Local Frontend** | `http://localhost:4173` | Via local static preview server |
+| 🔐 **Admin PMS** | `http://localhost:4173/admin/pms` | Full PMS dashboard (Vouchers, Packages, Settings) |
+| 🛡️ **Manage Booking Door** | `http://localhost:4173/login` | Disguised gateway login for Guests & Admins |
 
 ---
 
@@ -34,21 +34,16 @@
 | Emoji | Feature | Description |
 |---|---|---|
 | 🛏️ | **Room/Villa Management** | 3 types: Balcony Suite (6), Porch Cabin (6), Presidential Villa (1) |
-| 📅 | **4-Step Booking Wizard** | Interactive wizard with room selection, calendar, guest form, payment simulation |
-| 🧾 | **PMS Dashboard** | Full CRUD booking management with glassmorphism UI, search, filter, and real-time stats |
-| 📊 | **Statistics & Analytics** | Revenue tracking, occupancy rates per room type, active bookings count |
-| 👥 | **Guest Management** | Create, edit, and delete guest records with contact info, email, and payment history |
-| 💳 | **Payment Settings** | QRIS scan, Bank Transfer, Midtrans scaffold, Xendit scaffold, INDOPAY QRIS |
-| 🖼️ | **Gallery & Content Editor** | Visual content manager with JSON-driven site content and image uploads |
-| ⚙️ | **Comprehensive Settings** | Room pricing (weekday/weekend), policies, contact info, brand configuration |
-| 🌍 | **Google Maps Integration** | Direct link to Anaira Glamping location on Jl. Raya Curug Nangka |
-| 📲 | **WhatsApp CTA** | One-click WhatsApp reservation to 081399693499 |
-| 🚀 | **Vercel Deploy Ready** | Configured with `vercel.json`, clean URLs, and SPA fallback routing |
-| 🧩 | **QloApps/PHP Backend Roadmap** | Shared hosting backend with MySQL, payment modules, and admin panel |
-| 🎨 | **Premium UI Design** | Glassmorphism, animated sparkle effects, Tailwind CSS, Lucide Icons, Plus Jakarta Sans |
-| 📱 | **Mobile Responsive** | Fully responsive design across all pages and admin panel |
-| 🔐 | **Admin Authentication** | Session-based login guard with redirect protection |
-| 📄 | **Invoice Generation** | Digital invoice/receipt generation after successful booking |
+| 📅 | **4-Step Booking Wizard** | Wizard with room selection, scheduling, guest details (Indonesia WhatsApp validated) |
+| 🎟️ | **Staycation Packages** | Curated packages (Lebaran Family Escape, Romantic Honeymoon, Weekend BBQ) |
+| 💸 | **Voucher Code Engine** | Asynchronous redemption checks against usage limits, dates, and room limits |
+| 🧾 | **PMS Dashboard** | Premium CRUD booking dashboard with occupancy stats, calendar, guests list |
+| 🎟️ | **PMS Voucher CRUD** | Create and track vouchers from IG, Threads, Influencer, Partner, and Manual |
+| 📦 | **PMS Packages CRUD** | Visual stay promo packages manager with title, price, inclusions, terms |
+| 🗺️ | **Direct Map Load** | lazy-loaded responsive maps widget in contacts page with Google Maps link fallback |
+| 🖼️ | **Stunning Lightbox** | SwipeableFullscreen gallery modal with scale animations and Play/Pause slideshow |
+| 📲 | **WhatsApp Cleanup** | Visual WA spam cleanup; official WhatsApp calls limited strictly to Contact page |
+| 🎨 | **Premium Visuals** | Glassmorphism grids, starry sparkle effects, Tailwind CSS, Plus Jakarta Sans |
 
 ---
 
@@ -62,46 +57,42 @@
 
 ---
 
+## 🎟️ Staycation Promo Packages
+
+Tersedia pilihan paket staycation hemat pegunungan yang sudah mencakup sewa kamar, santap sarapan, party BBQ outdoor, dekorasi room, dan api unggun:
+*   **Paket Lebaran Family Escape 📅** (Rp 3.500.000 nett) - Menginap 2 malam di Villa mewah + BBQ set + Hampers spesial.
+*   **Paket Honeymoon Romantic Stay 💖** (Rp 2.500.000 nett) - Stay 2 malam di Balcony Suite + romantic candle-light dinner + floating breakfast.
+*   **Paket Weekend BBQ Glamping 🪵** (Rp 1.800.000 nett) - Stay 1 malam di Porch Cabin akhir pekan + outdoor grill BBQ set lengkap.
+
+---
+
 ## 📁 Project Structure
 
 ```text
 WebProject/
 ├── frontend/hotelier/                 # 🌐 Static frontend (Vercel root)
-│   ├── index.html                     #   Homepage
+│   ├── index.html                     #   Homepage (Featured deals, trust section)
 │   ├── rooms.html                     #   Room listings
-│   ├── booking.html                   #   4-step booking wizard (2200+ lines)
-│   ├── gallery.html                   #   Photo gallery
-│   ├── packages.html                  #   Add-on packages
-│   ├── contact.html                   #   Contact & map
-│   ├── login.html                     #   Admin login page
+│   ├── booking.html                   #   4-step booking wizard with package params
+│   ├── gallery.html                   #   Photo gallery with lightbox slideshow
+│   ├── packages.html                  #   Staycation packages catalog
+│   ├── contact.html                   #   Contact page with lazy maps embed
+│   ├── login.html                     #   Manage Booking disguised login portal
 │   ├── admin/                         #   🔐 Admin panel
-│   │   ├── pms.html                   #     PMS dashboard (1141 lines)
-│   │   ├── index.html                 #     Content editor
-│   │   ├── admin.js                   #     Admin logic
-│   │   └── admin.css                  #     Admin styles
-│   ├── assets/                        #   🖼️ Visual assets
-│   │   ├── brand/                     #     Logo, favicon, OG image
-│   │   ├── images/                    #     Hero, rooms, gallery, facilities
-│   │   └── video/                     #     Promo video
+│   │   └── pms.html                   #     PMS dashboard (Packages & Vouchers CRUD)
+│   ├── assets/                        #   🖼️ Visual assets (brand, images, video)
 │   ├── data/
-│   │   └── site-content.json          #   📝 CMS content data
-│   ├── scripts/                       #   🧰 Dev tools
+│   │   └── site-content.json          #   📝 Dynamic CMS data source
+│   ├── scripts/                       #   🧰 Dev and rebuilder tools
 │   │   ├── static-server.js           #     Local static file server
 │   │   ├── admin-server.js            #     Admin API server
-│   │   ├── build-pages.js             #     HTML page builder
-│   │   └── start-local.ps1            #     PowerShell launcher
-│   ├── vercel.json                    #   ☁️ Vercel deploy config
+│   │   └── build-pages.js             #     Static pages compiler script
+│   ├── vercel.json                    #   ☁️ Vercel rewrite rules
 │   └── package.json                   #   📦 Node package config
-├── modules/                           #   🧩 QloApps payment modules
-│   ├── midtranspayment/               #     Midtrans scaffold
-│   ├── xenditpayment/                 #     Xendit scaffold
-│   └── anairamultipayment/            #     Unified payment architecture
-├── data/
-│   └── seed_anaira.sql                #   🗃️ Database seed data
-├── docs/                              #   📚 Documentation
-├── CHANGELOG_ANAIRA.md                #   🧾 Project changelog
-├── AGENTS.md                          #   🤖 AI agent guidelines
-└── LICENSE.md                         #   📜 OSL-3.0 / AFL-3.0
+├── docs/                              #   📚 Documentation files
+├── tasks/                             #   📋 Implementation task logs
+├── CHANGELOG.md                       #   CHANGELOG
+└── AGENTS.md                          #   Robot instructions
 ```
 
 ---
@@ -124,229 +115,48 @@ node scripts/admin-server.js
 # Open http://localhost:4173/admin/pms
 ```
 
-### PowerShell Launcher
-
-```powershell
-cd frontend\hotelier
-.\scripts\start-local.ps1
-```
-
-> 💡 **Tip:** If port 4173 is busy, kill the process first:
-> ```powershell
-> netstat -ano | findstr :4173
-> taskkill /PID <PID> /F
-> ```
-
 ---
 
 ## 🔐 Admin Access
 
 | Field | Value |
 |---|---|
-| 👤 Username | `admin` |
-| 🔑 Password | `221221` |
-| 🌐 URL | `http://localhost:4173/login.html` → redirects to `/admin/pms` |
-
-> ⚠️ **Warning:** Demo credentials only. This is a `sessionStorage`-based login guard — **not production-grade authentication**. Do not use in production without implementing proper server-side auth.
+| 👤 Portal Gate | Ketikkan kata `admin` di kolom input Booking ID di `/login.html` |
+| 🔑 Password | `221221` (kolom input kata sandi rahasia muncul otomatis) |
+| 🌐 URL | `http://localhost:4173/login` |
 
 ---
 
-## 💾 Data & Storage Status
+## 💾 Dual-Mode Database Engine
 
-### Current: LocalStorage Demo
+Sistem dilengkapi dengan **Dual-Mode Database** yang diabstraksikan melalui modul `AnairaDB` di `anaira-data-lib.js`. Pengelola dapat mengubah mode secara langsung di **PMS Dashboard → Settings**:
 
-All data is stored in the browser's `localStorage` for demo purposes:
+### 1. Demo Mode (LocalStorage Fallback)
+Semua data transaksi dan pengaturan disimpan di dalam `localStorage` browser. Memungkinkan pengujian fungsionalitas penuh tanpa memerlukan penyiapan server basis data:
+*   `anaira_bookings`: 📅 Data reservasi tamu lengkap.
+*   `anaira_vouchers`: 🎟️ Daftar kode voucher promo diskon.
+*   `anaira_rooms` & `anaira_guests`: 🛏️ Status inventaris kamar dan basis data tamu.
+*   `anaira_settings`: ⚙️ Pengaturan umum & switch database.
 
-| Key | Purpose |
-|---|---|
-| `anaira_bookings` | 📅 Booking records with guest info, room, dates, payment |
-| `anaira_rooms` | 🛏️ Room inventory and availability |
-| `anaira_guests` | 👥 Guest contact database |
-| `anaira_pricing_settings` | 💰 Weekday/weekend pricing configuration |
-| `anaira_payment_settings` | 💳 Payment method preferences |
-| `anaira_payment_logs` | 📋 Payment transaction log |
-| `anaira_blocked_dates` | 🚫 Blocked/unavailable dates |
-| `anaira_settings` | ⚙️ General application settings |
-
-### Static Content
-
-| File | Purpose |
-|---|---|
-| `frontend/hotelier/data/site-content.json` | 📝 Brand, rooms, packages, facilities, gallery, contact |
-
-### Future: Real Database
-
-| Target | Technology |
-|---|---|
-| 🐬 Production DB | MySQL 5.7+ / MariaDB 10.5+ via QloApps |
-| 🐘 Alternative | PostgreSQL (if custom backend) |
-| 🔑 Auth | QloApps Back Office or custom JWT |
+### 2. Live Mode (SQL Database)
+Sistem terhubung langsung ke basis data relasional SQL secara real-time:
+*   **Supabase (PostgreSQL):** Komunikasi langsung berbasis REST API dari client-side ke database Supabase yang super cepat.
+*   **Shared Hosting (MySQL/PDO):** Terkoneksi menggunakan skrip jembatan ultra-aman `api.php` yang menyimpan kredensial sensitif di sisi server cPanel menggunakan `getenv()`.
 
 ---
 
-## 💳 Payment Gateway Status
+## 🎟️ PMS Voucher Code Setup
 
-| Gateway | Status | Notes |
-|---|---|---|
-| 📱 **Manual QRIS** | ✅ Ready | Scan QR code & upload payment proof |
-| 🏦 **Bank Transfer** | ✅ Ready | Manual confirmation via admin |
-| 💳 **Midtrans Snap** | 🟡 Scaffold | VA, CC, E-wallet — needs backend endpoint |
-| 💸 **Xendit Invoice** | 🟡 Scaffold | OVO, ShopeePay, DANA — needs backend endpoint |
-| 🔴 **INDOPAY QRIS** | 🟡 Scaffold | Dynamic QR — needs acquirer credentials |
-| 🏧 **DOKU** | ⚠️ Planned | Awaiting official credentials & docs |
-| 🔄 **Indopay Custom** | ⚠️ Planned | Awaiting official API documentation |
-| 🌏 **UnionPay** | ❌ Via Provider | Provider/acquirer integration only |
-
-### 🔐 Payment Security Notes
-
-- ✅ No hardcoded API keys in source code
-- ✅ Sandbox/production separation via config
-- ✅ Webhook signature verification scaffold
-- ✅ Idempotency via `last_event_hash`
-- ✅ Amount mismatch rejection logic
-- ✅ Payment logs never store full secrets
-
----
-
-## ☁️ Deployment Guide
-
-### Vercel (Static Frontend)
-
-1. Connect your GitHub repo to [Vercel](https://vercel.com)
-2. Set **Root Directory** to: `frontend/hotelier`
-3. No build command needed (static site)
-4. Deploy! 🚀
-
-```text
-Root Directory: frontend/hotelier
-Build Command: (leave empty)
-Output Directory: (leave empty / auto)
-```
-
-### Shared Hosting (PHP Backend)
-
-1. Upload QloApps source to shared hosting
-2. Create MySQL database
-3. Import QloApps schema + `data/seed_anaira.sql`
-4. Update `config/settings.inc.php` with DB credentials
-5. Enable payment modules in QloApps Back Office
-6. Set sandbox credentials for payment providers
-7. Configure HTTPS and webhook callback URLs
-
-### Hybrid Architecture (Recommended)
-
-```text
-┌─────────────────────┐     ┌──────────────────────┐
-│   Vercel (Free)     │     │  Shared Hosting/VPS  │
-│   Static Frontend   │────▶│  QloApps PHP Backend │
-│   booking.html      │     │  MySQL Database      │
-│   gallery.html      │     │  Payment Webhooks    │
-│   admin/pms.html    │     │  Real Auth           │
-└─────────────────────┘     └──────────────────────┘
-```
-
----
-
-## 📋 Current Readiness Status
-
-| Feature | Status | Details |
-|---|---|---|
-| 📅 Booking Wizard | ✅ Ready | 4-step interactive wizard with calendar |
-| 🧾 Admin PMS | ✅ Ready | Full CRUD with glassmorphism UI |
-| 🛏️ Room Management | ✅ Ready | 3 room types with pricing |
-| 👥 Guest Management | ✅ Ready | Create, edit, delete guests |
-| 📊 Analytics Dashboard | ✅ Ready | Revenue, occupancy, active bookings |
-| 🖼️ Content Editor | ✅ Ready | JSON-driven with image upload |
-| 📅 Availability Calendar | ✅ Ready | Interactive date picker with range selection |
-| 📲 WhatsApp CTA | ✅ Ready | Direct booking link |
-| 🌍 Google Maps | ✅ Ready | Embedded location |
-| 🎨 Responsive UI | ✅ Ready | Mobile + desktop optimized |
-| 💳 Payment Settings | 🟡 Demo | LocalStorage-only, no real transactions |
-| 🗃️ Real Database | ⚠️ Needs Backend | Currently localStorage demo |
-| 🔐 Production Auth | ⚠️ Needs Backend | Currently sessionStorage guard |
-| 💰 Payment Processing | ❌ Not Production | Scaffold only, no live payments |
-| 📧 Email Notifications | ❌ Not Built | Needs backend SMTP integration |
-
----
-
-## 🧾 Recent Changelog
-
-### 🚀 2026-05-24 — AntiGravity AI Finishing Sprint
-
-- ✨ Complete README rewrite with comprehensive documentation
-- 🧾 Full functionality audit documentation
-- 📋 Admin settings checklist
-- 🗃️ Database migration roadmap
-- ☁️ Deployment guide for Vercel & shared hosting
-- 📊 AntiGravity finishing report
-
-### 🏕️ 2026-05-23 — Documentation & Readiness Refresh
-
-- ✨ Branded README with Anaira identity
-- 📌 Progress tracking and deploy readiness status
-- 🧪 Local preview instructions and troubleshooting
-- 🌐 Vercel vs shared hosting deployment guide
-
-### 💳 2026-05-22 — Frontend, Assets & Payment Architecture
-
-- 🖼️ Logo, hero images, gallery, video integration
-- 📍 Google Maps and WhatsApp CTA
-- 🛏️ Room cards with Balcony, Porch, Villa data
-- 💳 Midtrans, Xendit, and unified payment module scaffolds
-- 🔐 Webhook verification and idempotency scaffolds
-- 🧭 Local Node static server
-
-> 📝 Full changelog: [CHANGELOG_ANAIRA.md](CHANGELOG_ANAIRA.md)
-
----
-
-## 🖼️ Visual Assets
-
-| Asset | Path | Status |
-|---|---|---|
-| 🖤 Logo (Black) | `frontend/hotelier/assets/brand/logo-anaira-black-transparent.png` | ✅ |
-| 🤍 Logo (White) | `frontend/hotelier/assets/brand/logo-anaira-white-transparent.png` | ✅ |
-| 🌐 OG Image | `frontend/hotelier/assets/brand/og-anaira-glamping.jpg` | ✅ |
-| ⭐ Favicon | `frontend/hotelier/assets/brand/favicon.ico` | ✅ |
-| 📱 Apple Touch | `frontend/hotelier/assets/brand/apple-touch-icon.png` | ✅ |
-| 🖥️ Hero Desktop | `frontend/hotelier/assets/images/hero/hero-pool-mountain-desktop.webp` | ✅ |
-| 📱 Hero Mobile | `frontend/hotelier/assets/images/hero/hero-pool-mountain-mobile.webp` | ✅ |
-| 🏡 Room Images | `frontend/hotelier/assets/images/rooms/` | ✅ |
-| 📷 Gallery | `frontend/hotelier/assets/images/gallery/` | ✅ |
-| 🎥 Video | `frontend/hotelier/assets/video/anaira-glamping-video.mp4` | ✅ |
-
----
-
-## 📍 Location & Contact
-
-| Info | Value |
-|---|---|
-| 📍 Address | Jl. Raya Curug Nangka, Bogor |
-| 🗺️ Google Maps | [maps.app.goo.gl/YVSmNtEsiK9tQNRS6](https://maps.app.goo.gl/YVSmNtEsiK9tQNRS6) |
-| 📞 WhatsApp | [081399693499](https://wa.me/6281399693499) |
-| ⏰ Check-in | 13:00 |
-| ⏰ Check-out | 12:00 |
-| ❌ Cancellation | DP non-refundable, reschedule available |
-
----
-
-## 📌 Development Flow
-
-```text
-Branch: feature/anaira-glamping → develop → main
-
-Workflow:
-Code edit → Local preview → Push branch → Vercel preview → Visual review → Merge → Production deploy
-```
+Dari dasbor PMS menu **"Vouchers"**, pengelola dapat:
+1.  Mengklik **Gen** untuk mengenerate kode promo teratur secara otomatis (contoh: `INFJ4B57`, `THR72V90`, dll.).
+2.  Memilih **Promo Source** (IG, Threads, Influencer, Partner, Manual, Website).
+3.  Mengisi nama influencer jika source yang dipilih adalah `Promo Influencer` (field ini wajib diisi).
+4.  Menentukan diskon persen/fixed, kuota batas limit, minimal transaksi, dan masa berlaku.
+5.  Melihat `usedCount` secara live dari pemesanan yang sukses menempelkan voucher.
 
 ---
 
 ## 📜 License
-
-This project is a fork of [QloApps](https://github.com/Qloapps/QloApps). Original QloApps license terms are fully preserved:
-
-- **Core:** [Open Software License v3.0 (OSL-3.0)](https://opensource.org/licenses/OSL-3.0)
-- **Modules:** [Academic Free License v3.0 (AFL-3.0)](https://opensource.org/licenses/AFL-3.0)
 
 Custom branding, frontend Hotelier integration, PMS dashboard, booking wizard, and Anaira-specific features are developed for **Anaira Glamping & Resort**.
 

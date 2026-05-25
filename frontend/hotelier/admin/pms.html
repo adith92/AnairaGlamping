@@ -14,6 +14,7 @@
   
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="../scripts/anaira-data-lib.js"></script>
 
   <script>
     tailwind.config = {
@@ -189,6 +190,18 @@
         <div class="w-10 h-10 border-4 border-t-red-500 border-red-950/30 rounded-full animate-spin"></div>
         <span class="text-xs text-[#f6f1e7]/40 uppercase tracking-widest mt-2">Mengarahkan ke Halaman Login...</span>
       </div>
+    </div>
+  </div>
+
+  <!-- Premium Connection & Data Fetching Loader Overlay -->
+  <div id="pms-loader-overlay" class="fixed inset-0 z-40 flex items-center justify-center bg-[#050d0a]/95 backdrop-blur-md p-4 text-center transition-opacity duration-300">
+    <div class="glass-panel-dark p-6 rounded-2xl max-w-xs w-full border border-brand-500/20 shadow-2xl flex flex-col items-center">
+      <div class="relative mb-4">
+        <div class="absolute inset-0 bg-brand-500/20 rounded-full blur-md animate-pulse"></div>
+        <div class="w-12 h-12 border-4 border-t-brand-500 border-brand-900/30 rounded-full animate-spin"></div>
+      </div>
+      <span class="text-xs font-bold text-brand-200 tracking-wider uppercase">Menghubungkan Database...</span>
+      <span class="text-[9px] text-[#f6f1e7]/40 uppercase tracking-widest mt-1">Mengunduh Metrik PMS Terkini</span>
     </div>
   </div>
 
@@ -802,8 +815,11 @@
             <table class="w-full text-left border-collapse">
               <thead>
                 <tr class="border-b border-[#1b7f5a]/10 text-[#f6f1e7]/40 uppercase tracking-wider text-[11px] font-bold">
+                  <th class="py-4 px-4">Banner</th>
                   <th class="py-4 px-4">Nama Paket</th>
-                  <th class="py-4 px-4">Deskripsi</th>
+                  <th class="py-4 px-4">Tipe</th>
+                  <th class="py-4 px-4">Harga (Promo / Normal)</th>
+                  <th class="py-4 px-4 text-center">Status / Unggulan</th>
                   <th class="py-4 px-4 text-center">Aksi</th>
                 </tr>
               </thead>
@@ -1444,8 +1460,8 @@
   </div>
 
   <!-- ===================== MODAL: PACKAGE CRUD ===================== -->
-  <div id="modal-package" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-    <div class="glass-modal w-full max-w-md rounded-3xl p-6 md:p-8 shadow-2xl relative">
+  <div id="modal-package" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+    <div class="glass-modal w-full max-w-2xl rounded-3xl p-6 md:p-8 shadow-2xl relative my-8">
       <div class="flex items-center justify-between border-b border-[#1b7f5a]/20 pb-4 mb-6">
         <h3 id="package-modal-title" class="text-xl font-extrabold text-white">Tambah Paket</h3>
         <button onclick="closePackageModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-all">
@@ -1454,13 +1470,89 @@
       </div>
       <form id="package-form" onsubmit="handleSavePackage(event)" class="space-y-4">
         <input type="hidden" id="package-edit-id">
-        <div>
-          <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Nama Paket</label>
-          <input required id="package-name" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs" placeholder="e.g. Breakfast">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Judul Paket</label>
+            <input required id="package-title" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white" placeholder="e.g. Paket Lebaran Family Escape">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Slug Paket (Unique URL key)</label>
+            <input required id="package-slug" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white" placeholder="e.g. paket-lebaran-family-escape">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Tipe Paket</label>
+            <select id="package-type" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white appearance-none bg-[#07130f]">
+              <option value="lebaran">Lebaran Family Escape</option>
+              <option value="new-year">Tahun Baru</option>
+              <option value="honeymoon">Honeymoon Romantic Stay</option>
+              <option value="family">Weekend BBQ Glamping</option>
+              <option value="corporate">Corporate / Retreat</option>
+              <option value="custom" selected>Custom Promo</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Kode Voucher Pemicu (Optional)</label>
+            <input id="package-voucher" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white uppercase" placeholder="e.g. LEBARAN10">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Harga Promo (IDR)</label>
+            <input required id="package-price" type="number" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white" placeholder="3500000">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Harga Asli / Sebelum Diskon (IDR)</label>
+            <input required id="package-original-price" type="number" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white" placeholder="4500000">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Label Diskon (Badge)</label>
+            <input required id="package-discount-label" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white" placeholder="e.g. Hemat 22%">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Status Keaktifan</label>
+            <select id="package-status" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white appearance-none bg-[#07130f]">
+              <option value="active" selected>Aktif (Tampil di Web)</option>
+              <option value="inactive">Nonaktif</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Mulai Berlaku</label>
+            <input required id="package-start-date" type="date" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Berakhir Berlaku</label>
+            <input required id="package-end-date" type="date" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Tanggal Event Spesial (Jika Ada)</label>
+            <input id="package-event-date" type="date" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Banner Image Path / URL</label>
+            <input required id="package-banner-image" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white" placeholder="assets/images/rooms/villa.jpg">
+          </div>
         </div>
         <div>
-          <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Deskripsi</label>
-          <textarea required id="package-desc" rows="3" class="w-full px-3 py-2 rounded-lg glass-input text-xs" placeholder="Deskripsi paket..."></textarea>
+          <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Deskripsi Pendek</label>
+          <input required id="package-short-desc" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white" placeholder="Deskripsi singkat menarik untuk homepage card...">
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Deskripsi Lengkap / Detail Fasilitas</label>
+          <textarea required id="package-full-desc" rows="3" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white" placeholder="Detail lengkap fasilitas paket promo..."></textarea>
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Fasilitas Termasuk (Pisahkan dengan Koma)</label>
+          <input required id="package-inclusions" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white" placeholder="e.g. Menginap 2 malam, Sarapan pagi 4 pax, BBQ Dinner Set">
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Daftar Menu Makanan (Pisahkan dengan Koma - Opsional)</label>
+          <input id="package-food-menu" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white" placeholder="e.g. Nasi Liwet Lengkap, Sate Ayam BBQ, Es Kelapa Muda">
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Syarat & Ketentuan</label>
+          <input required id="package-terms" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white" placeholder="e.g. Booking minimal H-3. DP minimal 50% non-refundable.">
+        </div>
+        <div class="flex items-center gap-2">
+          <input id="package-featured" type="checkbox" class="w-4 h-4 rounded border-brand-500 bg-transparent text-brand-500 focus:ring-brand-500">
+          <label for="package-featured" class="text-xs font-bold text-white select-none">Tampilkan Sebagai Promo Unggulan di Halaman Utama</label>
         </div>
         <div class="flex justify-end gap-3 pt-4 border-t border-[#1b7f5a]/20">
           <button type="button" onclick="closePackageModal()" class="px-5 py-2.5 rounded-xl border border-[#f6f1e7]/20 text-[#f6f1e7]/80 hover:text-white hover:bg-white/5 transition-all text-sm font-bold">Batal</button>
@@ -1499,8 +1591,9 @@
   </div>
 
   <!-- ===================== MODAL: VOUCHER CRUD ===================== -->
-  <div id="modal-voucher" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-    <div class="glass-modal w-full max-w-md rounded-3xl p-6 md:p-8 shadow-2xl relative">
+  <!-- ===================== MODAL: VOUCHER CRUD ===================== -->
+  <div id="modal-voucher" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+    <div class="glass-modal w-full max-w-2xl rounded-3xl p-6 md:p-8 shadow-2xl relative my-8">
       <div class="flex items-center justify-between border-b border-[#1b7f5a]/20 pb-4 mb-6">
         <h3 id="voucher-modal-title" class="text-xl font-extrabold text-white">Tambah Voucher</h3>
         <button onclick="closeVoucherModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-all">
@@ -1509,34 +1602,72 @@
       </div>
       <form id="voucher-form" onsubmit="handleSaveVoucher(event)" class="space-y-4">
         <input type="hidden" id="voucher-edit-id">
-        <div>
-          <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Kode Voucher</label>
-          <input required id="voucher-code" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs" placeholder="e.g. ANAIRA10">
-        </div>
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Sumber Promo</label>
+            <select required id="voucher-source" onchange="toggleInfluencerInput()" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white appearance-none bg-[#07130f]">
+              <option value="IG">Promo IG</option>
+              <option value="Threads">Promo Threads</option>
+              <option value="Influencer">Promo Influencer</option>
+              <option value="Partner">Partner</option>
+              <option value="Manual" selected>Manual</option>
+              <option value="Website">Website</option>
+            </select>
+          </div>
+          <div id="voucher-influencer-container" class="hidden">
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Nama Influencer</label>
+            <input id="voucher-influencer" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white" placeholder="e.g. Syafira Rahma">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Kode Voucher</label>
+            <div class="flex gap-2">
+              <input required id="voucher-code" type="text" class="flex-1 px-3 py-2 rounded-lg glass-input text-xs text-white uppercase" placeholder="e.g. ANAIRA10">
+              <button type="button" onclick="generateVoucherCode()" class="px-3 py-2 rounded-lg bg-brand-700/40 hover:bg-brand-700/60 text-brand-200 border border-brand-500/20 text-xs font-bold transition-all active:scale-95 flex items-center gap-1">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Gen
+              </button>
+            </div>
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Deskripsi Singkat</label>
+            <input required id="voucher-desc" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white" placeholder="e.g. Voucher diskon staycation">
+          </div>
           <div>
             <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Tipe Diskon</label>
-            <select id="voucher-type" class="w-full px-3 py-2 rounded-lg glass-input text-xs appearance-none">
+            <select id="voucher-type" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white appearance-none bg-[#07130f]">
               <option value="percentage">Persentase (%)</option>
               <option value="fixed">Nominal Rupiah (Rp)</option>
             </select>
           </div>
           <div>
             <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Nilai Diskon</label>
-            <input required id="voucher-value" type="number" min="1" class="w-full px-3 py-2 rounded-lg glass-input text-xs" placeholder="e.g. 10 atau 50000">
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Batas Penggunaan</label>
-            <input required id="voucher-max-uses" type="number" min="1" class="w-full px-3 py-2 rounded-lg glass-input text-xs" value="100">
+            <input required id="voucher-value" type="number" min="1" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white" placeholder="e.g. 10 atau 50000">
           </div>
           <div>
-            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Status</label>
-            <select id="voucher-active" class="w-full px-3 py-2 rounded-lg glass-input text-xs appearance-none">
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Batas Penggunaan (Max Uses)</label>
+            <input required id="voucher-max-uses" type="number" min="1" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white" value="100">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Minimal Pembayaran Booking (IDR)</label>
+            <input required id="voucher-min-booking" type="number" min="0" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white" value="0">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Maksimal Diskon (IDR - Untuk Persentase)</label>
+            <input id="voucher-max-discount" type="number" min="0" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white" placeholder="e.g. 500000">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Status Keaktifan</label>
+            <select id="voucher-active" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white appearance-none bg-[#07130f]">
               <option value="true">Aktif</option>
               <option value="false">Non-Aktif</option>
             </select>
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Tanggal Mulai</label>
+            <input required id="voucher-start-date" type="date" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Tanggal Kedaluwarsa</label>
+            <input required id="voucher-end-date" type="date" class="w-full px-3 py-2 rounded-lg glass-input text-xs text-white">
           </div>
         </div>
         <div class="flex justify-end gap-3 pt-4 border-t border-[#1b7f5a]/20">
@@ -1627,6 +1758,13 @@
       document.getElementById('pms-wrapper').classList.remove('hidden');
       document.addEventListener('DOMContentLoaded', () => {
         initDashboard();
+        setTimeout(() => {
+          const loader = document.getElementById('pms-loader-overlay');
+          if (loader) {
+            loader.style.opacity = '0';
+            setTimeout(() => loader.classList.add('hidden'), 300);
+          }
+        }, 800);
       });
     }
 
@@ -2427,21 +2565,14 @@
     }
 
     // ==================== PACKAGES & ADD-ONS CRUD ====================
-    const defaultPackages = [
-      { id: 'breakfast', name: 'Breakfast', description: 'Paket sarapan untuk tamu.' },
-      { id: 'bbq', name: 'BBQ', description: 'Paket BBQ untuk malam santai.' },
-      { id: 'honeymoon', name: 'Honeymoon', description: 'Paket romantis untuk pasangan.' },
-      { id: 'family', name: 'Family', description: 'Paket keluarga dan group.' }
-    ];
-
     function getPackages() {
       const data = localStorage.getItem('anaira_packages');
       if (!data) {
-        localStorage.setItem('anaira_packages', JSON.stringify(defaultPackages));
-        return [...defaultPackages];
+        localStorage.setItem('anaira_packages', JSON.stringify(DEFAULT_PACKAGES));
+        return [...DEFAULT_PACKAGES];
       }
       try { return JSON.parse(data); }
-      catch(e) { return [...defaultPackages]; }
+      catch(e) { return [...DEFAULT_PACKAGES]; }
     }
 
     function savePackages(packages) {
@@ -2452,17 +2583,43 @@
       const packages = getPackages();
       const tbody = document.getElementById('packages-table-body');
       tbody.innerHTML = '';
+      if (packages.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400 text-xs italic">Belum ada paket promo yang dibuat.</td></tr>`;
+        return;
+      }
       packages.forEach(p => {
+        const badgeStatus = p.status === 'active' 
+          ? '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Aktif</span>'
+          : '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-zinc-500/10 text-zinc-400 border border-zinc-500/20">Nonaktif</span>';
+        
+        const badgeFeatured = p.featured 
+          ? '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">Unggulan</span>'
+          : '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-500/10 text-slate-400 border border-slate-500/20">Standar</span>';
+
         tbody.innerHTML += `
-          <tr class="hover:bg-white/5 transition-all">
-            <td class="py-4 px-4 font-bold text-white">${p.name}</td>
-            <td class="py-4 px-4 text-xs text-[#f6f1e7]/70">${p.description}</td>
-            <td class="py-4 px-4 text-center">
+          <tr class="hover:bg-white/5 transition-all text-xs">
+            <td class="py-3 px-4">
+              <img src="../${p.bannerImage}" class="w-12 h-10 rounded-lg object-cover border border-[#1b7f5a]/20" onerror="this.src='../assets/images/rooms/villa.jpg';">
+            </td>
+            <td class="py-3 px-4">
+              <div class="font-bold text-white">${p.title}</div>
+              <div class="text-[10px] text-[#f6f1e7]/45">${p.slug}</div>
+            </td>
+            <td class="py-3 px-4 text-xs font-semibold text-[#a7eed0] uppercase tracking-wider">${p.packageType}</td>
+            <td class="py-3 px-4 text-xs">
+              <div class="font-bold text-emerald-400">Rp ${formatRupiah(p.price)}</div>
+              <div class="line-through text-[10px] text-[#f6f1e7]/40">Rp ${formatRupiah(p.originalPrice)}</div>
+            </td>
+            <td class="py-3 px-4 text-center space-y-1">
+              <div>${badgeStatus}</div>
+              <div>${badgeFeatured}</div>
+            </td>
+            <td class="py-3 px-4 text-center">
               <div class="flex items-center justify-center gap-1.5">
-                <button onclick="openPackageModal('${p.id}')" class="p-1.5 bg-brand-700/20 hover:bg-brand-700/40 text-brand-200 rounded-lg transition-all border border-brand-500/20" title="Edit">
+                <button onclick="openPackageModal('${p.id || p.slug}')" class="p-1.5 bg-brand-700/20 hover:bg-brand-700/40 text-brand-200 rounded-lg transition-all border border-brand-500/20" title="Edit">
                   <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                 </button>
-                <button onclick="deletePackage('${p.id}')" class="p-1.5 bg-red-950/20 hover:bg-red-950/40 text-red-400 rounded-lg transition-all border border-red-500/20" title="Hapus">
+                <button onclick="deletePackage('${p.id || p.slug}')" class="p-1.5 bg-red-950/20 hover:bg-red-950/40 text-red-400 rounded-lg transition-all border border-red-500/20" title="Hapus">
                   <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                 </button>
               </div>
@@ -2479,12 +2636,28 @@
 
       if (packageId) {
         const packages = getPackages();
-        const p = packages.find(x => x.id === packageId);
+        const p = packages.find(x => x.id === packageId || x.slug === packageId);
         if (p) {
           document.getElementById('package-modal-title').textContent = 'Edit Paket';
-          document.getElementById('package-edit-id').value = p.id;
-          document.getElementById('package-name').value = p.name;
-          document.getElementById('package-desc').value = p.description;
+          document.getElementById('package-edit-id').value = p.id || p.slug;
+          document.getElementById('package-title').value = p.title || '';
+          document.getElementById('package-slug').value = p.slug || '';
+          document.getElementById('package-type').value = p.packageType || 'custom';
+          document.getElementById('package-voucher').value = p.voucherCode || '';
+          document.getElementById('package-price').value = p.price || 0;
+          document.getElementById('package-original-price').value = p.originalPrice || 0;
+          document.getElementById('package-discount-label').value = p.discountLabel || '';
+          document.getElementById('package-status').value = p.status || 'active';
+          document.getElementById('package-start-date').value = p.startDate || '';
+          document.getElementById('package-end-date').value = p.endDate || '';
+          document.getElementById('package-event-date').value = p.eventDate || '';
+          document.getElementById('package-banner-image').value = p.bannerImage || '';
+          document.getElementById('package-short-desc').value = p.shortDescription || '';
+          document.getElementById('package-full-desc').value = p.fullDescription || '';
+          document.getElementById('package-inclusions').value = (p.includedItems || []).join(', ');
+          document.getElementById('package-food-menu').value = (p.foodMenu || []).join(', ');
+          document.getElementById('package-terms').value = p.terms || '';
+          document.getElementById('package-featured').checked = !!p.featured;
         }
       } else {
         document.getElementById('package-modal-title').textContent = 'Tambah Paket';
@@ -2504,19 +2677,44 @@
       e.preventDefault();
       const packages = getPackages();
       const editId = document.getElementById('package-edit-id').value;
+      
+      const inclRaw = document.getElementById('package-inclusions').value;
+      const inclArray = inclRaw ? inclRaw.split(',').map(item => item.trim()).filter(Boolean) : [];
+      
+      const foodRaw = document.getElementById('package-food-menu').value;
+      const foodArray = foodRaw ? foodRaw.split(',').map(item => item.trim()).filter(Boolean) : [];
+      
+      const slugVal = document.getElementById('package-slug').value.trim().toLowerCase().replace(/[^a-z0-9-_]/g, '-');
+
       const packageData = {
-        name: document.getElementById('package-name').value.trim(),
-        description: document.getElementById('package-desc').value.trim()
+        id: editId || 'package-' + Date.now(),
+        title: document.getElementById('package-title').value.trim(),
+        slug: slugVal,
+        packageType: document.getElementById('package-type').value,
+        voucherCode: document.getElementById('package-voucher').value.trim().toUpperCase(),
+        price: parseInt(document.getElementById('package-price').value) || 0,
+        originalPrice: parseInt(document.getElementById('package-original-price').value) || 0,
+        discountLabel: document.getElementById('package-discount-label').value.trim(),
+        status: document.getElementById('package-status').value,
+        startDate: document.getElementById('package-start-date').value,
+        endDate: document.getElementById('package-end-date').value,
+        eventDate: document.getElementById('package-event-date').value,
+        bannerImage: document.getElementById('package-banner-image').value.trim(),
+        shortDescription: document.getElementById('package-short-desc').value.trim(),
+        fullDescription: document.getElementById('package-full-desc').value.trim(),
+        includedItems: inclArray,
+        foodMenu: foodArray,
+        terms: document.getElementById('package-terms').value.trim(),
+        featured: document.getElementById('package-featured').checked,
+        bookingUrl: `booking.html?package=${slugVal}` + (document.getElementById('package-voucher').value ? `&voucher=${document.getElementById('package-voucher').value.trim().toUpperCase()}` : '')
       };
 
       if (editId) {
-        const idx = packages.findIndex(p => p.id === editId);
+        const idx = packages.findIndex(p => p.id === editId || p.slug === editId);
         if (idx !== -1) {
-          packageData.id = editId;
           packages[idx] = packageData;
         }
       } else {
-        packageData.id = 'package-' + Date.now();
         packages.push(packageData);
       }
 
@@ -2529,7 +2727,7 @@
     function deletePackage(packageId) {
       if (!confirm('Hapus paket ini?')) return;
       let packages = getPackages();
-      packages = packages.filter(p => p.id !== packageId);
+      packages = packages.filter(p => p.id !== packageId && p.slug !== packageId);
       savePackages(packages);
       renderPackagesTable();
       syncSiteContent();
@@ -2639,10 +2837,31 @@
         // 2. Sync Packages
         const pmsPackages = getPackages();
         content.packages = pmsPackages.map(p => ({
-          id: p.id || p.name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
-          name: p.name,
-          description: p.description
+          id: p.id || p.slug || p.title.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+          slug: p.slug || p.id,
+          title: p.title || p.name || '',
+          status: p.status || 'active',
+          featured: !!p.featured,
+          packageType: p.packageType || 'custom',
+          startDate: p.startDate || '',
+          endDate: p.endDate || '',
+          eventDate: p.eventDate || '',
+          price: parseInt(p.price) || 0,
+          originalPrice: parseInt(p.originalPrice) || 0,
+          discountLabel: p.discountLabel || '',
+          bannerImage: p.bannerImage || '',
+          shortDescription: p.shortDescription || p.description || '',
+          fullDescription: p.fullDescription || p.description || '',
+          includedItems: Array.isArray(p.includedItems) ? p.includedItems : (typeof p.includedItems === 'string' ? p.includedItems.split(',').map(x => x.trim()) : []),
+          foodMenu: Array.isArray(p.foodMenu) ? p.foodMenu : (typeof p.foodMenu === 'string' ? p.foodMenu.split(',').map(x => x.trim()) : []),
+          terms: p.terms || '',
+          voucherCode: p.voucherCode || '',
+          bookingUrl: p.bookingUrl || `booking.html?package=${p.slug || p.id}`
         }));
+
+        // 2.5 Sync Deals
+        const pmsDeals = loadData('anaira_deals', DEFAULT_DEALS);
+        content.deals = pmsDeals;
 
         // 3. Sync Gallery
         const pmsGallery = getGallery();
@@ -2750,18 +2969,54 @@
     }
 
     // ==================== VOUCHERS CRUD SYSTEM ====================
+    function generateVoucherCode() {
+      const source = document.getElementById('voucher-source').value;
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let random = '';
+      for (let i = 0; i < 4; i++) {
+        random += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      let prefix = 'ANR';
+      if (source === 'IG') prefix = 'IG';
+      else if (source === 'Threads') prefix = 'THR';
+      else if (source === 'Influencer') prefix = 'INF';
+      else if (source === 'Partner') prefix = 'PTN';
+      
+      const generated = `${prefix}${random}${Math.floor(10 + Math.random() * 90)}`;
+      document.getElementById('voucher-code').value = generated;
+    }
+
+    function toggleInfluencerInput() {
+      const source = document.getElementById('voucher-source').value;
+      const container = document.getElementById('voucher-influencer-container');
+      const input = document.getElementById('voucher-influencer');
+      if (source === 'Influencer') {
+        container.classList.remove('hidden');
+        input.setAttribute('required', 'true');
+      } else {
+        container.classList.add('hidden');
+        input.removeAttribute('required');
+        input.value = '';
+      }
+    }
+
     function getVouchers() {
       const data = localStorage.getItem('anaira_vouchers');
       if (!data) {
-        const defaultVouchers = [
-          { code: 'ANAIRA10', type: 'percentage', value: 10, maxUses: 100, usedCount: 0, active: true },
-          { code: 'WELCOMETOANAIRA', type: 'fixed', value: 50000, maxUses: 50, usedCount: 0, active: true }
-        ];
-        localStorage.setItem('anaira_vouchers', JSON.stringify(defaultVouchers));
-        return defaultVouchers;
+        localStorage.setItem('anaira_vouchers', JSON.stringify(DEFAULT_VOUCHERS));
+        return [...DEFAULT_VOUCHERS];
       }
-      try { return JSON.parse(data); }
-      catch(e) { return []; }
+      try {
+        const list = JSON.parse(data);
+        list.forEach(v => {
+          if (v.discountType === undefined) v.discountType = v.type || 'percentage';
+          if (v.discountValue === undefined) v.discountValue = v.value || 0;
+          if (v.status === undefined) v.status = v.active !== false ? 'active' : 'inactive';
+          if (v.usageLimit === undefined) v.usageLimit = v.maxUses || 100;
+        });
+        return list;
+      }
+      catch(e) { return [...DEFAULT_VOUCHERS]; }
     }
 
     function saveVouchers(vouchers) {
@@ -2777,21 +3032,40 @@
         return;
       }
       vouchers.forEach(v => {
-        const typeBadge = v.type === 'percentage' ? 'Persentase (%)' : 'Rupiah (Rp)';
-        const valText = v.type === 'percentage' ? `${v.value}%` : formatIDR(v.value);
-        const statusBadge = v.active
+        const type = v.discountType || v.type || 'percentage';
+        const val = v.discountValue !== undefined ? v.discountValue : (v.value || 0);
+        
+        const typeBadge = type === 'percentage' ? 'Persentase (%)' : 'Rupiah (Rp)';
+        const valText = type === 'percentage' ? `${val}%` : formatIDR(val);
+        
+        const status = v.status || (v.active !== false ? 'active' : 'inactive');
+        const statusBadge = status === 'active'
           ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950/50 text-emerald-400 border border-emerald-500/20">Aktif</span>'
           : '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-950/50 text-red-400 border border-red-500/20">Non-Aktif</span>';
 
+        const source = v.source || 'Manual';
+        const inflDetails = source === 'Influencer' && v.influencerName ? ` (${v.influencerName})` : '';
+        const sourceText = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-brand-900/30 text-brand-200 border border-brand-500/10">${source}${inflDetails}</span>`;
+
+        const start = v.startDate || '-';
+        const end = v.endDate || '-';
+        const limit = v.usageLimit !== undefined ? v.usageLimit : (v.maxUses || 100);
+
         tbody.innerHTML += `
           <tr class="hover:bg-white/5 transition-all text-xs">
-            <td class="py-4 px-4 font-bold text-white font-mono tracking-wide">${v.code}</td>
-            <td class="py-4 px-4">${typeBadge}</td>
-            <td class="py-4 px-4 font-mono font-bold">${valText}</td>
-            <td class="py-4 px-4 text-center font-mono">${v.maxUses}</td>
-            <td class="py-4 px-4 text-center font-mono">${v.usedCount || 0}</td>
-            <td class="py-4 px-4 text-center">${statusBadge}</td>
-            <td class="py-4 px-4 text-center">
+            <td class="py-3 px-4 font-bold text-white font-mono tracking-wide">${v.code}</td>
+            <td class="py-3 px-4">${sourceText}</td>
+            <td class="py-3 px-4">
+              <div class="font-bold text-[#a7eed0]">${valText}</div>
+              <div class="text-[9px] text-[#f6f1e7]/40">${typeBadge}</div>
+            </td>
+            <td class="py-3 px-4 text-xs text-[#f6f1e7]/80">
+              <div>Mulai: ${start}</div>
+              <div>Batas: ${end}</div>
+            </td>
+            <td class="py-3 px-4 text-center font-mono font-bold text-white">${v.usedCount || 0} / ${limit}</td>
+            <td class="py-3 px-4 text-center">${statusBadge}</td>
+            <td class="py-3 px-4 text-center">
               <div class="flex items-center justify-center gap-1.5">
                 <button onclick="openVoucherModal('${v.code}')" class="p-1.5 bg-brand-700/20 hover:bg-brand-700/40 text-brand-200 rounded-lg transition-all border border-brand-500/20" title="Edit">
                   <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
@@ -2818,13 +3092,31 @@
           document.getElementById('voucher-modal-title').textContent = 'Edit Voucher';
           document.getElementById('voucher-edit-id').value = v.code;
           document.getElementById('voucher-code').value = v.code;
-          document.getElementById('voucher-type').value = v.type;
-          document.getElementById('voucher-value').value = v.value;
-          document.getElementById('voucher-max-uses').value = v.maxUses;
-          document.getElementById('voucher-active').value = String(v.active !== false);
+          
+          document.getElementById('voucher-source').value = v.source || 'Manual';
+          document.getElementById('voucher-influencer').value = v.influencerName || '';
+          toggleInfluencerInput();
+          
+          document.getElementById('voucher-desc').value = v.description || '';
+          
+          const type = v.discountType || v.type || 'percentage';
+          const val = v.discountValue !== undefined ? v.discountValue : (v.value || 0);
+          const limit = v.usageLimit !== undefined ? v.usageLimit : (v.maxUses || 100);
+          const status = v.status || (v.active !== false ? 'active' : 'inactive');
+
+          document.getElementById('voucher-type').value = type;
+          document.getElementById('voucher-value').value = val;
+          document.getElementById('voucher-max-uses').value = limit;
+          document.getElementById('voucher-min-booking').value = v.minBookingAmount || 0;
+          document.getElementById('voucher-max-discount').value = v.maxDiscount || '';
+          
+          document.getElementById('voucher-active').value = status === 'active' ? 'true' : 'false';
+          document.getElementById('voucher-start-date').value = v.startDate || '';
+          document.getElementById('voucher-end-date').value = v.endDate || '';
         }
       } else {
         document.getElementById('voucher-modal-title').textContent = 'Tambah Voucher';
+        toggleInfluencerInput();
       }
 
       modal.classList.remove('hidden');
@@ -2843,23 +3135,46 @@
       const editId = document.getElementById('voucher-edit-id').value;
       const codeInput = document.getElementById('voucher-code').value.trim().toUpperCase();
 
+      const sourceVal = document.getElementById('voucher-source').value;
+      const inflNameVal = sourceVal === 'Influencer' ? document.getElementById('voucher-influencer').value.trim() : '';
+
+      const typeVal = document.getElementById('voucher-type').value;
+      const discountVal = Number(document.getElementById('voucher-value').value);
+      const limitVal = Number(document.getElementById('voucher-max-uses').value);
+      const statusActive = document.getElementById('voucher-active').value === 'true';
+
       const voucherData = {
         code: codeInput,
-        type: document.getElementById('voucher-type').value,
-        value: Number(document.getElementById('voucher-value').value),
-        maxUses: Number(document.getElementById('voucher-max-uses').value),
+        source: sourceVal,
+        influencerName: inflNameVal,
+        description: document.getElementById('voucher-desc').value.trim(),
+        discountType: typeVal,
+        type: typeVal,
+        discountValue: discountVal,
+        value: discountVal,
+        minBookingAmount: Number(document.getElementById('voucher-min-booking').value) || 0,
+        maxDiscount: Number(document.getElementById('voucher-max-discount').value) || null,
+        usageLimit: limitVal,
+        maxUses: limitVal,
         usedCount: 0,
-        active: document.getElementById('voucher-active').value === 'true',
+        status: statusActive ? 'active' : 'inactive',
+        active: statusActive,
+        startDate: document.getElementById('voucher-start-date').value,
+        endDate: document.getElementById('voucher-end-date').value,
+        applicableRoomSlugs: [],
+        applicablePackageSlugs: [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       };
 
       if (editId) {
         const idx = vouchers.findIndex(v => v.code === editId);
         if (idx !== -1) {
           voucherData.usedCount = vouchers[idx].usedCount || 0;
+          voucherData.createdAt = vouchers[idx].createdAt || voucherData.createdAt;
           vouchers[idx] = voucherData;
         }
       } else {
-        // Check duplicate
         if (vouchers.some(v => v.code === codeInput)) {
           alert('Kode voucher tersebut sudah terdaftar!');
           return;

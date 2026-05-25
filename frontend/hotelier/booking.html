@@ -190,6 +190,11 @@
         <a href="booking.html" class="bg-brand text-white px-5 py-2.5 rounded-xl font-semibold shadow-md hover:bg-brand-hover hover:shadow-lg transition-all duration-200 inline-flex items-center gap-2">
           <i data-lucide="calendar-days" class="w-4 h-4"></i> Booking Online
         </a>
+        <div style="display: flex; gap: 4px; align-items: center; margin-left: 8px; border-left: 1px solid rgba(27,127,90,0.3); padding-left: 8px;">
+          <button onclick="setAnairaLanguage('id')" id="lang-id" style="background: none; border: none; color: #1b7f5a; font-size: 0.8rem; font-weight: 700; cursor: pointer; opacity: 1; padding: 2px 4px; font-family: inherit; transition: opacity 0.2s;">ID</button>
+          <span style="opacity: 0.3; font-size: 0.8rem; color: #1b7f5a;">|</span>
+          <button onclick="setAnairaLanguage('en')" id="lang-en" style="background: none; border: none; color: #1b7f5a; font-size: 0.8rem; font-weight: 400; cursor: pointer; opacity: 0.4; padding: 2px 4px; font-family: inherit; transition: opacity 0.2s;">EN</button>
+        </div>
       </nav>
 
       <!-- Mobile Book Button -->
@@ -734,6 +739,21 @@
               </div>
             </div>
 
+            <!-- Package selection summary -->
+            <div id="summaryPackageDetail" class="hidden bg-emerald-50/50 p-3.5 rounded-2xl border border-emerald-100 shadow-sm space-y-2 transition-all duration-300">
+              <div class="flex gap-3">
+                <img id="summaryPackageImg" src="" alt="Package banner" class="w-16 h-16 rounded-xl object-cover border border-emerald-200">
+                <div class="flex-grow space-y-0.5">
+                  <h4 id="summaryPackageTitle" class="font-serif font-bold text-darkbg text-sm sm:text-base">-</h4>
+                  <p id="summaryPackagePrice" class="text-brand text-xs font-semibold">-</p>
+                  <span class="inline-flex items-center text-[10px] bg-rose-600/10 text-rose-600 font-semibold px-2 py-0.5 rounded">Paket Promo Aktif</span>
+                </div>
+              </div>
+              <div id="summaryPackageInclusions" class="text-[10px] text-gray-600 pt-1 border-t border-emerald-100/50 space-y-1">
+                <!-- Inclusions will be listed here -->
+              </div>
+            </div>
+
             <!-- Date Stay Summary -->
             <div class="space-y-2 text-xs">
               <h4 class="font-bold text-darkbg uppercase tracking-wider text-[10px]">Detail Menginap</h4>
@@ -1157,22 +1177,6 @@
     // Wizard wizard states
     let currentStep = 1;
     let selectedRoom = null;
-  <!-- INTERACTIVE WIZARD & DATA BINDING JAVASCRIPT -->
-  <script>
-    // --- Application State Constants & Variables ---
-    const ROOM_RATES = {
-      'Balcony': { name: 'Balcony Suite', rate: 500000, img: 'assets/images/rooms/balcony/balcony-exterior-garden.webp' },
-      'Porch': { name: 'Porch Cabin', rate: 350000, img: 'assets/images/rooms/porch/porch-cabin-garden.webp' },
-      'Villa': { name: 'Presidential Villa', rate: 2100000, img: 'assets/images/rooms/villa/villa-view-pool-area.webp' }
-    };
-
-    // Calendar states
-    let calendarDate = new Date(2026, 4, 24); // Start at May 2026 (based on additional metadata)
-    const todayLimit = new Date(2026, 4, 24); // Today's date to disable past selections
-
-    // Wizard wizard states
-    let currentStep = 1;
-    let selectedRoom = null;
     let checkInDate = null; // Date Object
     let checkOutDate = null; // Date Object
     let arrivalSlot = null; // String
@@ -1184,6 +1188,61 @@
     let createdBooking = null; // To hold newly created booking object on checkout success
     let countdownTimer = null;
     let activeVoucher = null; // To hold applied discount voucher
+    let selectedPackage = null; // Stay package object
+
+    async function loadPackageFromParam(slug) {
+      if (!slug) return;
+      try {
+        const packages = await AnairaDB.getPackages();
+        const pkg = packages.find(p => p.slug === slug || p.id === slug);
+        if (pkg) {
+          selectedPackage = pkg;
+          
+          // Map to appropriate room code
+          let roomCode = 'Villa';
+          if (pkg.slug.includes('honeymoon')) roomCode = 'Balcony';
+          else if (pkg.slug.includes('weekend') || pkg.slug.includes('bbq')) roomCode = 'Porch';
+          
+          selectRoom(roomCode);
+          
+          // Set stay duration nights based on package
+          let pkgNights = 2;
+          if (pkg.slug.includes('weekend') || pkg.slug.includes('bbq')) pkgNights = 1;
+          
+          if (!checkInDate) {
+            checkInDate = new Date(2026, 4, 25); // default checkin tomorrow
+          }
+          checkOutDate = new Date(checkInDate);
+          checkOutDate.setDate(checkOutDate.getDate() + pkgNights);
+          
+          // Update stay displays
+          updateStayDisplays();
+          renderCalendar();
+          
+          // Render Package Summary Box
+          const summaryPkgBox = document.getElementById('summaryPackageDetail');
+          const summaryRoomEmpty = document.getElementById('summaryRoomEmpty');
+          const summaryRoomDetail = document.getElementById('summaryRoomDetail');
+          
+          if (summaryPkgBox) {
+            summaryRoomEmpty.classList.add('hidden');
+            summaryRoomDetail.classList.add('hidden');
+            
+            summaryPkgBox.classList.remove('hidden');
+            document.getElementById('summaryPackageTitle').innerText = pkg.title;
+            document.getElementById('summaryPackagePrice').innerText = `Rp ${formatRupiah(pkg.price)} (Nett / Paket)`;
+            document.getElementById('summaryPackageImg').src = pkg.bannerImage;
+            
+            const inclusionsList = (pkg.includedItems || []).map(item => `• ${item}`).join('<br>');
+            document.getElementById('summaryPackageInclusions').innerHTML = inclusionsList;
+          }
+          
+          calculateBilling();
+        }
+      } catch (e) {
+        console.error("Failed to load package:", e);
+      }
+    }
 
     // --- Mount Initiation ---
     window.addEventListener('DOMContentLoaded', () => {
@@ -1197,20 +1256,14 @@
         renderCalendar();
         renderHistoryTable();
 
-        // Check query parameters (Guest selected room or dates from independent room pages)
+        // Check query parameters (Guest selected room, dates, or packages)
         const urlParams = new URLSearchParams(window.location.search);
         
         const roomParam = urlParams.get('room');
         const checkinParam = urlParams.get('checkin');
         const checkoutParam = urlParams.get('checkout');
-
-        if (roomParam) {
-          const codeMap = { 'balcony': 'Balcony', 'porch': 'Porch', 'villa': 'Villa' };
-          const mapped = codeMap[roomParam.toLowerCase()];
-          if (mapped && ROOM_RATES[mapped]) {
-            selectRoom(mapped);
-          }
-        }
+        const packageParam = urlParams.get('package');
+        const voucherParam = urlParams.get('voucher');
 
         if (checkinParam) {
           checkInDate = new Date(checkinParam);
@@ -1221,13 +1274,33 @@
           checkOutDate.setHours(0, 0, 0, 0);
         }
 
+        if (packageParam) {
+          await loadPackageFromParam(packageParam);
+        } else if (roomParam) {
+          const codeMap = { 'balcony': 'Balcony', 'porch': 'Porch', 'villa': 'Villa' };
+          const mapped = codeMap[roomParam.toLowerCase()];
+          if (mapped && ROOM_RATES[mapped]) {
+            selectRoom(mapped);
+          }
+        }
+
         if (checkInDate || checkOutDate) {
           updateStayDisplays();
           renderCalendar();
           calculateBilling();
-          // Auto transition if room is already selected
-          if (roomParam && currentStep === 1) {
+          // Auto transition if room/package is already selected
+          if ((roomParam || packageParam) && currentStep === 1) {
             goToStep(2);
+          }
+        }
+
+        if (voucherParam) {
+          const vInput = document.getElementById('voucherCodeInput');
+          if (vInput) {
+            vInput.value = voucherParam;
+            setTimeout(() => {
+              applyVoucher();
+            }, 500);
           }
         }
 
@@ -1491,6 +1564,13 @@
     }
 
     // --- VOUCHER REDEMPTION SYSTEM ---
+    function calculateBasePriceOnly() {
+      const nights = getNightsCount() || (selectedPackage ? (selectedPackage.slug.includes('weekend') ? 1 : 2) : 0);
+      if (selectedPackage) return selectedPackage.price;
+      if (selectedRoom) return ROOM_RATES[selectedRoom].rate * nights;
+      return 0;
+    }
+
     async function applyVoucher() {
       const codeInput = document.getElementById('voucherCodeInput').value.trim().toUpperCase();
       const statusDiv = document.getElementById('voucherStatus');
@@ -1506,26 +1586,26 @@
       btn.innerText = "Memproses...";
 
       try {
-        const vouchers = await AnairaDB.get(ANAIRA_KEYS.VOUCHERS, DEFAULT_VOUCHERS);
-        const found = vouchers.find(v => v.code.toUpperCase() === codeInput);
+        const context = {
+          amount: calculateBasePriceOnly(),
+          roomType: selectedRoom ? selectedRoom.toLowerCase() : '',
+          packageSlug: selectedPackage ? selectedPackage.slug : ''
+        };
+        const validation = await AnairaDB.validateVoucher(codeInput, context);
 
-        if (!found) {
+        if (!validation.valid) {
           statusDiv.className = "text-rose-600 text-[10px] font-semibold mt-1 block";
-          statusDiv.innerText = "Kode voucher tidak valid.";
-          activeVoucher = null;
-        } else if (!found.active) {
-          statusDiv.className = "text-rose-600 text-[10px] font-semibold mt-1 block";
-          statusDiv.innerText = "Voucher ini sedang tidak aktif.";
-          activeVoucher = null;
-        } else if (found.usedCount >= found.maxUses) {
-          statusDiv.className = "text-rose-600 text-[10px] font-semibold mt-1 block";
-          statusDiv.innerText = "Kuota penggunaan voucher telah habis.";
+          statusDiv.innerText = validation.error;
           activeVoucher = null;
         } else {
-          activeVoucher = found;
+          activeVoucher = validation.voucher;
           statusDiv.className = "text-emerald-600 text-[10px] font-semibold mt-1 block";
-          const discountDesc = found.type === 'percentage' ? `${found.value}%` : `Rp ${formatRupiah(found.value)}`;
-          statusDiv.innerText = `Voucher ${found.code} berhasil dipasang! Diskon ${discountDesc}`;
+          
+          const val = activeVoucher.discountValue !== undefined ? activeVoucher.discountValue : activeVoucher.value;
+          const type = activeVoucher.discountType !== undefined ? activeVoucher.discountType : activeVoucher.type;
+          const discountDesc = type === 'percentage' ? `${val}%` : `Rp ${formatRupiah(val)}`;
+          
+          statusDiv.innerText = `Voucher ${activeVoucher.code} berhasil dipasang! Diskon ${discountDesc}`;
           showNotification("Voucher Diaplikasikan", `Diskon ${discountDesc} berhasil ditambahkan ke reservasi Anda.`, "ticket", "text-emerald-600 bg-emerald-50");
         }
       } catch (e) {
@@ -1543,10 +1623,16 @@
     function calculateVoucherDiscount(basePrice) {
       if (!activeVoucher) return 0;
       let discountAmount = 0;
-      if (activeVoucher.type === 'percentage') {
-        discountAmount = Math.round(basePrice * (activeVoucher.value / 100));
-      } else if (activeVoucher.type === 'fixed') {
-        discountAmount = activeVoucher.value;
+      const val = activeVoucher.discountValue !== undefined ? activeVoucher.discountValue : activeVoucher.value;
+      const type = activeVoucher.discountType !== undefined ? activeVoucher.discountType : activeVoucher.type;
+      
+      if (type === 'percentage') {
+        discountAmount = Math.round(basePrice * (val / 100));
+        if (activeVoucher.maxDiscount && discountAmount > activeVoucher.maxDiscount) {
+          discountAmount = activeVoucher.maxDiscount;
+        }
+      } else if (type === 'fixed') {
+        discountAmount = val;
       }
       return Math.min(discountAmount, basePrice);
     }
@@ -1706,21 +1792,31 @@
     }
 
     function selectDate(dateObj) {
-      // Scenario 1: No check-in date set or both are already set
-      if (!checkInDate || (checkInDate && checkOutDate)) {
+      if (selectedPackage) {
         checkInDate = dateObj;
-        checkOutDate = null;
-        showNotification("Check-In Terpilih", `Check-in diatur pada tanggal ${formatIndoDate(dateObj)}.`, "calendar", "text-brand bg-brand/5");
-      } 
-      // Scenario 2: Check-in set, check-out empty
-      else if (checkInDate && !checkOutDate) {
-        if (dateObj <= checkInDate) {
-          // If clicked date is before check-in, treat it as new check-in date
+        let pkgNights = 2;
+        if (selectedPackage.slug.includes('weekend') || selectedPackage.slug.includes('bbq')) pkgNights = 1;
+        
+        checkOutDate = new Date(checkInDate);
+        checkOutDate.setDate(checkOutDate.getDate() + pkgNights);
+        showNotification("Tanggal Paket Teratur", `Menginap ${pkgNights} malam dari ${formatIndoDate(checkInDate)} sampai ${formatIndoDate(checkOutDate)}.`, "calendar", "text-brand bg-brand/5");
+      } else {
+        // Scenario 1: No check-in date set or both are already set
+        if (!checkInDate || (checkInDate && checkOutDate)) {
           checkInDate = dateObj;
-          showNotification("Check-In Diperbarui", `Check-in dipindahkan ke ${formatIndoDate(dateObj)}.`, "calendar", "text-brand bg-brand/5");
-        } else {
-          checkOutDate = dateObj;
-          showNotification("Check-Out Terpilih", `Check-out diatur pada ${formatIndoDate(dateObj)}.`, "calendar", "text-brand bg-brand/5");
+          checkOutDate = null;
+          showNotification("Check-In Terpilih", `Check-in diatur pada tanggal ${formatIndoDate(dateObj)}.`, "calendar", "text-brand bg-brand/5");
+        } 
+        // Scenario 2: Check-in set, check-out empty
+        else if (checkInDate && !checkOutDate) {
+          if (dateObj <= checkInDate) {
+            // If clicked date is before check-in, treat it as new check-in date
+            checkInDate = dateObj;
+            showNotification("Check-In Diperbarui", `Check-in dipindahkan ke ${formatIndoDate(dateObj)}.`, "calendar", "text-brand bg-brand/5");
+          } else {
+            checkOutDate = dateObj;
+            showNotification("Check-Out Terpilih", `Check-out diatur pada ${formatIndoDate(dateObj)}.`, "calendar", "text-brand bg-brand/5");
+          }
         }
       }
 
@@ -1875,20 +1971,19 @@
 
     // --- LIVE BILLING CALCULATIONS ---
     function calculateBilling() {
-      const nights = getNightsCount();
-      let roomRate = 0;
-      if (selectedRoom) {
-        roomRate = ROOM_RATES[selectedRoom].rate;
-      }
-
-      const basePrice = roomRate * nights;
+      const nights = getNightsCount() || (selectedPackage ? (selectedPackage.slug.includes('weekend') ? 1 : 2) : 0);
+      const basePrice = calculateBasePriceOnly();
       const discountAmount = calculateVoucherDiscount(basePrice);
       const baseAfterDiscount = Math.max(0, basePrice - discountAmount);
       const tax = baseAfterDiscount * 0.10; // 10% tax
       const totalAmount = baseAfterDiscount + tax;
 
       // Update right summary displays
-      document.getElementById('labelBillBase').innerText = `Sewa Kamar (${nights} Malam)`;
+      if (selectedPackage) {
+        document.getElementById('labelBillBase').innerText = `${selectedPackage.title}`;
+      } else {
+        document.getElementById('labelBillBase').innerText = `Sewa Kamar (${nights} Malam)`;
+      }
       document.getElementById('summaryBillBase').innerText = `Rp ${formatRupiah(basePrice)}`;
       
       const rowDiscount = document.getElementById('rowVoucherDiscount');
@@ -1902,6 +1997,14 @@
 
       document.getElementById('summaryBillTax').innerText = `Rp ${formatRupiah(tax)}`;
       document.getElementById('summaryBillTotal').innerText = `Rp ${formatRupiah(totalAmount)}`;
+    }
+
+    function calculateTotalPaidAmount() {
+      const basePrice = calculateBasePriceOnly();
+      const discountAmount = calculateVoucherDiscount(basePrice);
+      const baseAfterDiscount = Math.max(0, basePrice - discountAmount);
+      const tax = baseAfterDiscount * 0.10;
+      return baseAfterDiscount + tax;
     }
 
     // --- SIMULATED PAYMENT MODALS INTERFACE TRIGGER ---
@@ -1924,18 +2027,7 @@
       }
     }
 
-    function calculateTotalPaidAmount() {
-      const nights = getNightsCount();
-      let roomRate = 0;
-      if (selectedRoom) {
-        roomRate = ROOM_RATES[selectedRoom].rate;
-      }
-      const basePrice = roomRate * nights;
-      const discountAmount = calculateVoucherDiscount(basePrice);
-      const baseAfterDiscount = Math.max(0, basePrice - discountAmount);
-      const tax = baseAfterDiscount * 0.10;
-      return baseAfterDiscount + tax;
-    }
+
 
     function closePaymentModal(type) {
       document.getElementById(`modal${type}`).classList.add('hidden');
@@ -2023,7 +2115,7 @@
 
         // Generate Booking Object
         const newBookingId = `ANR-2026-${Math.floor(10000 + Math.random() * 90000)}`;
-        const nights = getNightsCount();
+        const nights = getNightsCount() || (selectedPackage ? (selectedPackage.slug.includes('weekend') ? 1 : 2) : 0);
         const totalAmount = calculateTotalPaidAmount();
         
         createdBooking = {
@@ -2045,25 +2137,26 @@
           method: selectedPayment,
           bookingDate: formatDateString(new Date()),
           status: 'Paid',
-          notes: guestNotes
+          notes: guestNotes,
+          packageSlug: selectedPackage ? selectedPackage.slug : '',
+          packageName: selectedPackage ? selectedPackage.title : ''
         };
 
         // Record Voucher details in booking
+        const basePrice = calculateBasePriceOnly();
         if (activeVoucher) {
           createdBooking.voucherCode = activeVoucher.code;
-          const basePrice = ROOM_RATES[selectedRoom].rate * nights;
-          createdBooking.discount = calculateVoucherDiscount(basePrice);
+          createdBooking.voucherSource = activeVoucher.source || '';
+          createdBooking.influencerName = activeVoucher.influencerName || '';
+          createdBooking.discountAmount = calculateVoucherDiscount(basePrice);
+          createdBooking.discount = createdBooking.discountAmount;
+          createdBooking.finalTotal = totalAmount;
           
           // Increment usedCount of voucher in database
           try {
-            const vouchers = await AnairaDB.get(ANAIRA_KEYS.VOUCHERS, DEFAULT_VOUCHERS);
-            const idx = vouchers.findIndex(v => v.code.toUpperCase() === activeVoucher.code.toUpperCase());
-            if (idx !== -1) {
-              vouchers[idx].usedCount = (vouchers[idx].usedCount || 0) + 1;
-              await AnairaDB.set(ANAIRA_KEYS.VOUCHERS, vouchers);
-            }
+            await AnairaDB.incrementVoucherUsage(activeVoucher.code);
           } catch(e) {
-            console.error("Failed to update voucher use count:", e);
+            console.error("Failed to increment voucher usage:", e);
           }
         }
 

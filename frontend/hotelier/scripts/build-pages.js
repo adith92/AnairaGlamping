@@ -41,7 +41,18 @@ function head(content, title, description) {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" href="assets/brand/favicon.ico">
 <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+
+<!-- SEO & OpenGraph Meta Tags -->
+<meta name="keywords" content="Anaira Glamping, Glamping Bogor, Glamping Puncak, Resort Mewah Puncak, Hotel Puncak, Staycation Alam">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(description)}">
 <meta property="og:image" content="assets/brand/og-anaira-glamping.jpg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="${esc(content.brand.name)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(title)}">
+<meta name="twitter:description" content="${esc(description)}">
+<meta name="twitter:image" content="assets/brand/og-anaira-glamping.jpg">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
 :root {
@@ -240,7 +251,7 @@ function nav(content) {
       <a href="contact.html">Contact</a>
       <a href="booking.html" style="color: #a7eed0; font-weight: 600; border: 1.5px dashed rgba(27,127,90,0.5); background: rgba(27,127,90,0.15); border-radius: 12px; margin: 0 4px;">Book Online 📅</a>
       <a href="login.html" style="font-size: 0.8rem; opacity: 0.5; margin: 0 4px;" class="hover:opacity-100">Manage Booking 🔐</a>
-      <a class="btn" href="${wa(content)}">WhatsApp</a>
+      <a class="btn" href="contact.html">Hubungi Kami 📞</a>
       <div style="display: flex; gap: 4px; align-items: center; margin-left: 8px; border-left: 1px solid rgba(27,127,90,0.3); padding-left: 8px;">
         <button onclick="setAnairaLanguage('id')" id="lang-id" style="background: none; border: none; color: #a7eed0; font-size: 0.8rem; font-weight: 700; cursor: pointer; opacity: 1; padding: 2px 4px; font-family: inherit; transition: opacity 0.2s;">ID</button>
         <span style="opacity: 0.3; font-size: 0.8rem;">|</span>
@@ -317,7 +328,7 @@ function roomCard(content, room) {
     <div class="flex gap-2 mt-4" style="display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap;">
       <a class="btn" href="rooms/${room.id}.html">Lihat Detail 🔍</a>
       <a class="btn alt" href="booking.html?room=${room.id}">Pesan Sekarang 📅</a>
-      <a class="btn alt" href="${wa(content)}">WhatsApp</a>
+      <a class="btn alt" href="contact.html">Hubungi Kami 📞</a>
     </div>
   </div>
 </article>`;
@@ -485,8 +496,8 @@ function buildRoomDetailPage(content, room) {
               <button onclick="bookRoomOnline('${room.id}')" class="w-full py-3.5 bg-brand hover:bg-brand-hover active:scale-98 text-white font-extrabold rounded-xl shadow-lg transition-all duration-150 inline-flex items-center justify-center gap-2 text-sm flex items-center justify-center">
                 Pesan Sekarang (Online) 📅
               </button>
-              <a href="${wa(content)}" class="w-full py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold rounded-xl text-center transition-all inline-flex items-center justify-center gap-2 text-sm backdrop-blur-sm">
-                Hubungi via WhatsApp
+              <a href="../contact.html" class="w-full py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold rounded-xl text-center transition-all inline-flex items-center justify-center gap-2 text-sm backdrop-blur-sm">
+                Hubungi Kami 📞
               </a>
             </div>
           </div>
@@ -618,13 +629,24 @@ function buildRoomDetailPage(content, room) {
   `;
 
   // Wrap in custom layout with adapted parent path prefix
-  const relativeHead = `<title>Anaira Glamping & Resort | ${esc(room.name)}</title>
-<meta name="description" content="${esc(room.description)}">
+  const relativeHead = `<title>Anaira Glamping & Resort | ${esc(room.name)} Suite</title>
+<meta name="description" content="Rasakan kemewahan menginap di ${esc(room.name)} Suite Anaira Glamping. ${esc(room.description)}">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" href="../assets/brand/favicon.ico">
 <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png">
-<meta property="og:image" content="../assets/brand/og-anaira-glamping.jpg">
+
+<!-- SEO & OpenGraph Meta Tags -->
+<meta name="keywords" content="Anaira Glamping, ${esc(room.name)}, Glamping Bogor, Glamping Puncak, Hotel Mewah, Resort Alam">
+<meta property="og:title" content="Anaira Glamping & Resort | ${esc(room.name)} Suite">
+<meta property="og:description" content="Rasakan kemewahan menginap di ${esc(room.name)} Suite Anaira Glamping. ${esc(room.description)}">
+<meta property="og:image" content="../${esc(room.image)}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="${esc(content.brand.name)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Anaira Glamping & Resort | ${esc(room.name)} Suite">
+<meta name="twitter:description" content="Rasakan kemewahan menginap di ${esc(room.name)} Suite Anaira Glamping. ${esc(room.description)}">
+<meta name="twitter:image" content="../${esc(room.image)}">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
 :root {
@@ -776,7 +798,7 @@ footer {
       <a href="../contact.html">Contact</a>
       <a href="../booking.html" style="color: #a7eed0; font-weight: 600; border: 1.5px dashed rgba(27,127,90,0.5); background: rgba(27,127,90,0.15); border-radius: 12px; margin: 0 4px;">Book Online 📅</a>
       <a href="../login.html" style="font-size: 0.8rem; opacity: 0.5; margin: 0 4px;" class="hover:opacity-100">Manage Booking 🔐</a>
-      <a class="btn" href="${wa(content)}">WhatsApp</a>
+      <a class="btn" href="../contact.html">Hubungi Kami 📞</a>
       <div style="display: flex; gap: 4px; align-items: center; margin-left: 8px; border-left: 1px solid rgba(27,127,90,0.3); padding-left: 8px;">
         <button onclick="setAnairaLanguage('id')" id="lang-id" style="background: none; border: none; color: #a7eed0; font-size: 0.8rem; font-weight: 700; cursor: pointer; opacity: 1; padding: 2px 4px; font-family: inherit; transition: opacity 0.2s;">ID</button>
         <span style="opacity: 0.3; font-size: 0.8rem;">|</span>
@@ -840,6 +862,53 @@ ${relativeHead}
 function buildIndex(content) {
   const facilities = content.facilities.slice(0, 3).map((item) => `<article class="card"><img src="${esc(item.image)}" alt="${esc(item.name)}"><div class="p"><h3>${esc(item.name)}</h3><p class="muted">Bagian dari pengalaman menginap di ${esc(content.brand.name)}.</p></div></article>`).join('\n');
 
+  const dealsHtml = (content.deals || []).map((deal) => `
+    <article class="card relative overflow-hidden group">
+      <div style="position: absolute; top: 12px; left: 12px; background: #e11d48; color: #fff; font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 9999px; z-index: 10; box-shadow: 0 4px 6px rgba(0,0,0,0.15);" class="animate-pulse">
+        PROMO SPESIAL
+      </div>
+      <img src="${esc(deal.bannerImage)}" alt="${esc(deal.title)}" style="height: 200px; width: 100%; object-fit: cover;">
+      <div class="p" style="display: flex; flex-direction: column; gap: 8px;">
+        <h3 style="color: #fff; font-size: 1.25rem; margin: 0;">${esc(deal.title)}</h3>
+        <p class="muted" style="font-size: 0.85rem; line-height: 1.4; height: 60px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">${esc(deal.description)}</p>
+        
+        <div style="background: rgba(255, 255, 255, 0.04); padding: 8px; border-radius: 12px; border: 1px solid var(--border); text-align: center; margin: 4px 0;">
+          <span style="font-size: 0.7rem; color: #a7eed0; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; display: block;">Gunakan Kode Voucher:</span>
+          <strong style="font-family: monospace; font-size: 1.1rem; color: #fff; background: rgba(27, 127, 90, 0.2); border: 1.5px dashed var(--brand); padding: 2px 8px; border-radius: 6px; display: inline-block; margin-top: 4px;">${esc(deal.voucherCode)}</strong>
+        </div>
+
+        <a class="btn" href="booking.html?package=${esc(deal.targetPackage)}&voucher=${esc(deal.voucherCode)}" style="text-align: center; font-size: 0.85rem; padding: 10px 14px; width: 100%;">
+          Klaim Promo Spesial ➔
+        </a>
+      </div>
+    </article>
+  `).join('\n');
+
+  const packagesHtml = (content.packages || []).map((pkg) => `
+    <article class="card relative overflow-hidden group">
+      <div style="position: absolute; top: 12px; left: 12px; background: var(--brand); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 9999px; z-index: 10; box-shadow: 0 4px 6px rgba(0,0,0,0.15);">
+        ${esc(pkg.discountLabel)}
+      </div>
+      <img src="${esc(pkg.bannerImage)}" alt="${esc(pkg.title)}" style="height: 200px; width: 100%; object-fit: cover;">
+      <div class="p" style="display: flex; flex-direction: column; gap: 8px;">
+        <h3 style="color: #a7eed0; font-size: 1.25rem; margin: 0;">${esc(pkg.title)}</h3>
+        <p style="font-size: 0.95rem; font-weight: 700; color: #fff; margin: 0;">
+          Harga: <span style="text-decoration: line-through; opacity: 0.5; font-size: 0.85rem; margin-right: 6px;">${rupiah(pkg.originalPrice)}</span> ${rupiah(pkg.price)}
+        </p>
+        <p class="muted" style="font-size: 0.85rem; line-height: 1.4; height: 60px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">${esc(pkg.shortDescription)}</p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+          <a class="btn alt" href="packages.html#${esc(pkg.slug)}" style="text-align: center; font-size: 0.8rem; padding: 8px 10px;">
+            Detail Paket
+          </a>
+          <a class="btn" href="${esc(pkg.bookingUrl)}" style="text-align: center; font-size: 0.8rem; padding: 8px 10px;">
+            Booking Paket 📅
+          </a>
+        </div>
+      </div>
+    </article>
+  `).join('\n');
+
   return layout(content, `${content.brand.name} | Home`, content.brand.description, `<section class="hero">
   <picture>
     <source media="(max-width: 700px)" srcset="assets/images/hero/hero-pool-mountain-mobile.webp">
@@ -852,18 +921,65 @@ function buildIndex(content) {
     <p>${esc(content.brand.description)}</p>
     <!-- ANAIRA:BRAND_END -->
     <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px;">
-      <a class="btn" href="booking.html">Book Online 📅</a>
-      <a class="btn alt" href="${wa(content)}">Book via WhatsApp</a>
-      <a class="btn alt" href="rooms.html">Rooms & Rates</a>
+      <a class="btn" href="booking.html">Pesan Online 📅</a>
+      <a class="btn alt" href="contact.html">Hubungi Kami 📞</a>
+      <a class="btn alt" href="rooms.html">Kamar & Tarif</a>
     </div>
   </div></div>
 </section>
+
+<!-- FEATURED DEALS SECTION -->
+<section>
+  <h2>Promo Spesial Anaira (Featured Deals)</h2>
+  <p class="muted">Klaim penawaran terbatas kami menggunakan kode voucher eksklusif di bawah ini.</p>
+  <div class="grid" style="margin-top: 20px;">
+    ${dealsHtml}
+  </div>
+</section>
+
+<!-- PROMO PACKAGES SECTION -->
+<section>
+  <h2>Paket Menginap Favorit (Promo Packages)</h2>
+  <p class="muted">Pilihan paket lengkap liburan bersama keluarga atau staycation romantis Anda.</p>
+  <div class="grid" style="margin-top: 20px;">
+    ${packagesHtml}
+  </div>
+</section>
+
 <section>
   <h2>Fasilitas</h2>
   <!-- ANAIRA:FACILITIES_START -->
   <div class="grid">${facilities}</div>
   <!-- ANAIRA:FACILITIES_END -->
 </section>
+
+<!-- WHY CHOOSE US (TRUST SECTION) -->
+<section style="background: var(--card); border: 1px solid var(--border); padding: 32px; border-radius: 24px; text-align: center; margin-top: 40px; backdrop-filter: blur(12px);">
+  <h2 style="border: none; padding: 0; text-align: center; margin-bottom: 24px; color: #a7eed0;">Mengapa Memilih Anaira Glamping?</h2>
+  <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px;">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px;">
+      <span style="font-size: 2rem;">🏕️</span>
+      <h3 style="font-size: 1.05rem; margin: 0; color: #fff;">Private Glamping Experience</h3>
+      <p class="muted" style="font-size: 0.8rem; margin: 0;">Suasana privat yang damai, jauh dari hiruk-pikuk kota untuk ketenangan batin Anda.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px;">
+      <span style="font-size: 2rem;">✨</span>
+      <h3 style="font-size: 1.05rem; margin: 0; color: #fff;">Curated Stay Packages</h3>
+      <p class="muted" style="font-size: 0.8rem; margin: 0;">Pilihan paket menginap yang dirancang khusus untuk liburan keluarga atau momen romantis.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px;">
+      <span style="font-size: 2rem;">📅</span>
+      <h3 style="font-size: 1.05rem; margin: 0; color: #fff;">Easy Booking Assistance</h3>
+      <p class="muted" style="font-size: 0.8rem; margin: 0;">Proses pemesanan online cepat dengan dukungan konfirmasi instan via sistem PMS.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px;">
+      <span style="font-size: 2rem;">⛰️</span>
+      <h3 style="font-size: 1.05rem; margin: 0; color: #fff;">Premium Mountain Stay</h3>
+      <p class="muted" style="font-size: 0.8rem; margin: 0;">Lokasi eksklusif dekat Curug Nangka dengan pemandangan pegunungan dan udara segar alami.</p>
+    </div>
+  </div>
+</section>
+
 <section class="video">
   <h2>Video Anaira</h2>
   <video controls preload="metadata" muted playsinline poster="${esc(content.video.poster)}">
@@ -882,13 +998,146 @@ ${content.rooms.map((room) => roomCard(content, room)).join('\n')}
 }
 
 function buildGallery(content) {
-  const gallery = content.gallery.map((image) => `<a href="${esc(image)}"><img loading="lazy" src="${esc(image)}" alt="Gallery Anaira"></a>`).join('\n');
+  const gallery = content.gallery.map((image, idx) => `<a href="javascript:void(0)" onclick="openLightbox(${idx})"><img loading="lazy" src="${esc(image)}" alt="Gallery Anaira"></a>`).join('\n');
   return layout(content, `${content.brand.name} | Gallery`, 'Galeri Anaira Glamping & Resort.', `<section><h1>Gallery</h1><p class="muted">Suasana alami Anaira Glamping & Resort.</p></section>
 <!-- ANAIRA:GALLERY_START -->
 <section class="gallery">
 ${gallery}
 </section>
 <!-- ANAIRA:GALLERY_END -->
+
+<!-- Fullscreen Lightbox Modal -->
+<div id="gallery-lightbox" style="position: fixed; inset: 0; background: rgba(4, 10, 8, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 9999; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; outline: none;" role="dialog" aria-modal="true" aria-label="Pratampil Galeri Foto Anaira" tabindex="-1">
+  <div id="lightbox-loader" style="position: absolute; width: 40px; height: 40px; border: 3px solid rgba(27,127,90,0.2); border-top-color: var(--brand); border-radius: 50%; animation: spin 1s infinite linear;"></div>
+  <div style="position: relative; max-width: 90vw; max-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <img id="lightbox-img" src="" alt="Pratampil Gambar" style="max-width: 100%; max-height: 80vh; object-fit: contain; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 20px 50px rgba(0,0,0,0.5); opacity: 0; transform: scale(0.95); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+    <div id="lightbox-caption" style="margin-top: 16px; text-align: center; color: #a7eed0; font-size: 0.95rem; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.5);"></div>
+  </div>
+  <button id="lightbox-close" onclick="closeLightbox()" style="position: absolute; top: 24px; right: 24px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: #fff; border-radius: 50%; width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; outline: none; font-size: 1.25rem;" aria-label="Tutup Galeri">✕</button>
+  <button id="lightbox-prev" onclick="prevImage()" style="position: absolute; left: 24px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: #fff; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; outline: none;" aria-label="Foto Sebelumnya">
+    <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+  </button>
+  <button id="lightbox-next" onclick="nextImage()" style="position: absolute; right: 24px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: #fff; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; outline: none;" aria-label="Foto Berikutnya">
+    <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+  </button>
+  <div style="position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; background: rgba(10, 46, 32, 0.7); border: 1px solid var(--border); padding: 8px 18px; border-radius: 9999px; backdrop-filter: blur(8px);">
+    <button id="lightbox-play" onclick="toggleSlideshow()" style="background: var(--brand); border: none; color: #fff; font-size: 0.85rem; font-weight: 700; padding: 6px 14px; border-radius: 9999px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;">
+      <span>▶ Play Slideshow</span>
+    </button>
+    <span id="slideshow-status" style="font-size: 0.8rem; color: rgba(246, 241, 231, 0.7); align-self: center;">Slide otomatis mati</span>
+  </div>
+</div>
+
+<style>
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+#gallery-lightbox button:hover {
+  background: var(--brand) !important;
+  border-color: transparent !important;
+  transform: scale(1.08) !important;
+}
+#lightbox-prev:active, #lightbox-next:active {
+  transform: translateY(-50%) scale(0.95) !important;
+}
+</style>
+
+<script>
+  let galleryImages = ${JSON.stringify(content.gallery)};
+  let activeIndex = 0;
+  let slideshowInterval = null;
+  let slideshowRunning = false;
+
+  function openLightbox(idx) {
+    activeIndex = idx;
+    const lightbox = document.getElementById('gallery-lightbox');
+    lightbox.style.display = 'flex';
+    lightbox.focus();
+    setTimeout(() => {
+      lightbox.style.opacity = '1';
+    }, 50);
+    loadImage(idx);
+  }
+
+  function closeLightbox() {
+    stopSlideshow();
+    const lightbox = document.getElementById('gallery-lightbox');
+    lightbox.style.opacity = '0';
+    setTimeout(() => {
+      lightbox.style.display = 'none';
+    }, 300);
+  }
+
+  function loadImage(idx) {
+    const imgElement = document.getElementById('lightbox-img');
+    const caption = document.getElementById('lightbox-caption');
+    const loader = document.getElementById('lightbox-loader');
+    
+    loader.style.display = 'block';
+    imgElement.style.opacity = '0';
+    imgElement.style.transform = 'scale(0.95)';
+    
+    const path = galleryImages[idx];
+    imgElement.src = path;
+    
+    imgElement.onload = () => {
+      loader.style.display = 'none';
+      imgElement.style.opacity = '1';
+      imgElement.style.transform = 'scale(1)';
+      const basename = path.split('/').pop().split('.').shift().replace(/-/g, ' ').toUpperCase();
+      caption.innerText = basename + ' - ANAIRA GLAMPING & RESORT';
+    };
+  }
+
+  function nextImage() {
+    activeIndex = (activeIndex + 1) % galleryImages.length;
+    loadImage(activeIndex);
+  }
+
+  function prevImage() {
+    activeIndex = (activeIndex - 1 + galleryImages.length) % galleryImages.length;
+    loadImage(activeIndex);
+  }
+
+  function toggleSlideshow() {
+    if (slideshowRunning) {
+      stopSlideshow();
+    } else {
+      startSlideshow();
+    }
+  }
+
+  function startSlideshow() {
+    slideshowRunning = true;
+    document.getElementById('lightbox-play').innerHTML = '<span>⏸ Pause Slideshow</span>';
+    document.getElementById('lightbox-play').style.backgroundColor = '#b91c1c';
+    document.getElementById('slideshow-status').innerText = 'Slide berjalan (4s)';
+    slideshowInterval = setInterval(() => {
+      nextImage();
+    }, 4000);
+  }
+
+  function stopSlideshow() {
+    slideshowRunning = false;
+    document.getElementById('lightbox-play').innerHTML = '<span>▶ Play Slideshow</span>';
+    document.getElementById('lightbox-play').style.backgroundColor = 'var(--brand)';
+    document.getElementById('slideshow-status').innerText = 'Slide otomatis mati';
+    if (slideshowInterval) {
+      clearInterval(slideshowInterval);
+      slideshowInterval = null;
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    const lightbox = document.getElementById('gallery-lightbox');
+    if (lightbox && lightbox.style.display === 'flex') {
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') nextImage();
+      if (e.key === 'ArrowLeft') prevImage();
+    }
+  });
+</script>
+
 <section class="video">
   <h2>Video Tour</h2>
   <video controls preload="metadata" muted playsinline poster="${esc(content.video.poster)}">
@@ -898,26 +1147,105 @@ ${gallery}
 }
 
 function buildPackages(content) {
-  const packages = content.packages.map((item) => `<article class="card"><div class="p"><h3>${esc(item.name)}</h3><p>${esc(item.description)}</p></div></article>`).join('\n');
-  return layout(content, `${content.brand.name} | Packages`, 'Paket tambahan Anaira Glamping.', `<section><h1>Packages</h1><p class="muted">Tambahkan pengalaman terbaik untuk menginap Anda.</p></section>
+  const packagesHtml = (content.packages || []).map((pkg) => {
+    const includedItemsList = (pkg.includedItems || []).map(item => `
+      <li style="display: flex; items-center; gap: 8px; font-size: 0.85rem; color: #f6f1e7; margin: 4px 0;">
+        <span style="color: var(--brand); font-weight: 700; margin-right: 8px;">✓</span> ${esc(item)}
+      </li>
+    `).join('\n');
+    
+    const foodMenuHtml = (pkg.foodMenu || []).length > 0 ? `
+      <div style="background: rgba(27, 127, 90, 0.1); border: 1.5px dashed var(--border); padding: 14px; border-radius: 16px; margin: 12px 0;">
+        <h4 style="margin: 0 0 6px 0; color: #a7eed0; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">🍽️ Paket Menu Makanan:</h4>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          ${(pkg.foodMenu || []).map(food => `<li style="font-size: 0.8rem; opacity: 0.9;">🔥 ${esc(food)}</li>`).join('\n')}
+        </ul>
+      </div>
+    ` : '';
+
+    return `
+    <article id="${esc(pkg.slug)}" class="card" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; padding: 24px; margin-bottom: 32px; background: var(--card); border: 1px solid var(--border); border-radius: 24px; backdrop-filter: blur(12px);">
+      <div style="border-radius: 16px; overflow: hidden; border: 1px solid var(--border); position: relative; height: 100%; min-height: 240px;">
+        <img src="${esc(pkg.bannerImage)}" alt="${esc(pkg.title)}" style="width: 100%; height: 100%; object-fit: cover;">
+        <div style="position: absolute; top: 12px; left: 12px; background: #e11d48; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 9999px; box-shadow: 0 4px 6px rgba(0,0,0,0.15);">
+          ${esc(pkg.discountLabel)}
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
+        <div>
+          <h2 style="border: none; padding: 0; font-size: 1.6rem; color: #fff; margin-bottom: 6px;">${esc(pkg.title)}</h2>
+          <div style="display: flex; gap: 8px; align-items: baseline; margin-bottom: 12px;">
+            <span style="text-decoration: line-through; opacity: 0.5; font-size: 1rem; color: #f6f1e7;">${rupiah(pkg.originalPrice)}</span>
+            <strong style="font-size: 1.7rem; color: #a7eed0; font-serif">${rupiah(pkg.price)}</strong>
+            <span style="font-size: 0.8rem; opacity: 0.6;">(Nett)</span>
+          </div>
+          <p class="muted" style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 12px;">${esc(pkg.fullDescription)}</p>
+          
+          <h4 style="margin: 12px 0 6px 0; color: #fff; font-size: 0.95rem;">🎁 Sudah Termasuk (Inclusions):</h4>
+          <ul style="list-style: none; padding: 0; margin: 0 0 12px 0;">
+            ${includedItemsList}
+          </ul>
+          
+          ${foodMenuHtml}
+          
+          <p style="font-size: 0.75rem; opacity: 0.5; font-style: italic; margin-top: 10px;">
+            * Syarat & Ketentuan: ${esc(pkg.terms)}
+          </p>
+        </div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <a class="btn" href="${esc(pkg.bookingUrl)}" style="flex: 1; min-width: 160px; text-align: center; padding: 12px 18px; font-weight: 700;">
+            Booking Paket Ini 📅
+          </a>
+          <a class="btn alt" href="contact.html" style="text-align: center; padding: 12px 18px;">
+            Tanya Info Lengkap
+          </a>
+        </div>
+      </div>
+    </article>
+    `;
+  }).join('\n');
+
+  return layout(content, `${content.brand.name} | Packages`, 'Daftar paket promo staycation glamping premium terbaik dekat Curug Nangka.', `<section><h1>Paket Promo Staycation</h1><p class="muted">Pilih paket promo staycation eksklusif Anaira Glamping dengan harga dan fasilitas terbaik.</p></section>
 <!-- ANAIRA:PACKAGES_START -->
-<section class="grid">
-${packages}
+<section style="margin-top: 24px;">
+${packagesHtml}
 </section>
-<!-- ANAIRA:PACKAGES_END -->
-<p><a class="btn" href="${wa(content)}">Book via WhatsApp</a></p>`);
+<!-- ANAIRA:PACKAGES_END -->`);
 }
 
 function buildContact(content) {
+  let mapHtml = '';
+  const defaultEmbed = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3962.9157297394593!2d106.7909337!3d-6.6573359!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69cf2454b03657%3A0xea8dbda09cfeb5ad!2sAnaira%20Glamping%20%26%20Resort!5e0!3m2!1sid!2sid!4v1716656754000!5m2!1sid!2sid`;
+  
+  let embedUrl = defaultEmbed;
+  if (content.contact.googleMapsUrl) {
+    if (content.contact.googleMapsUrl.includes('google.com/maps/embed')) {
+      embedUrl = content.contact.googleMapsUrl;
+    } else if (content.contact.googleMapsUrl.includes('<iframe')) {
+      const match = content.contact.googleMapsUrl.match(/src="([^"]+)"/);
+      if (match) embedUrl = match[1];
+    }
+  }
+
+  mapHtml = `
+  <div class="map-container" style="margin-top: 24px; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); background: var(--card); box-shadow: 0 8px 32px rgba(0,0,0,0.2); height: 400px; position: relative;">
+    <iframe src="${esc(embedUrl)}" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+  <p style="text-align: center; margin-top: 16px;">
+    <a href="${esc(content.contact.googleMapsUrl || 'https://maps.app.goo.gl/YVSmNtEsiK9tQNRS6')}" target="_blank" rel="noopener noreferrer" class="btn alt" style="font-size: 0.85rem; padding: 10px 20px;">
+      Buka di Google Maps ↗
+    </a>
+  </p>`;
+
   return layout(content, `${content.brand.name} | Contact`, `Kontak dan reservasi ${content.brand.name}.`, `<!-- ANAIRA:CONTACT_START -->
 <section><h1>Contact & Reservation</h1>
   <p><strong>Address:</strong> ${esc(content.contact.address)}</p>
   <p><strong>WhatsApp:</strong> ${esc(content.contact.whatsappDisplay)} / ${esc(content.contact.whatsappInternational)}</p>
   <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px;">
     <a class="btn" href="booking.html">Book Online 📅</a>
-    <a class="btn alt" href="${wa(content)}">WhatsApp</a>
-    <a class="btn alt" href="${esc(content.contact.googleMapsUrl)}" target="_blank" rel="noopener noreferrer">Buka Google Maps</a>
+    <a class="btn alt" href="${wa(content)}">WhatsApp Utama</a>
   </div>
+  ${mapHtml}
 </section>
 <!-- ANAIRA:CONTACT_END -->
 <section class="grid">

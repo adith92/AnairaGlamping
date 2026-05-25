@@ -7,7 +7,18 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" href="assets/brand/favicon.ico">
 <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+
+<!-- SEO & OpenGraph Meta Tags -->
+<meta name="keywords" content="Anaira Glamping, Glamping Bogor, Glamping Puncak, Resort Mewah Puncak, Hotel Puncak, Staycation Alam">
+<meta property="og:title" content="Anaira Glamping &amp; Resort | Gallery">
+<meta property="og:description" content="Galeri Anaira Glamping &amp; Resort.">
 <meta property="og:image" content="assets/brand/og-anaira-glamping.jpg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Anaira Glamping &amp; Resort">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Anaira Glamping &amp; Resort | Gallery">
+<meta name="twitter:description" content="Galeri Anaira Glamping &amp; Resort.">
+<meta name="twitter:image" content="assets/brand/og-anaira-glamping.jpg">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
 :root {
@@ -231,7 +242,7 @@ footer {
       <a href="contact.html">Contact</a>
       <a href="booking.html" style="color: #a7eed0; font-weight: 600; border: 1.5px dashed rgba(27,127,90,0.5); background: rgba(27,127,90,0.15); border-radius: 12px; margin: 0 4px;">Book Online 📅</a>
       <a href="login.html" style="font-size: 0.8rem; opacity: 0.5; margin: 0 4px;" class="hover:opacity-100">Manage Booking 🔐</a>
-      <a class="btn" href="https://wa.me/6281399693499?text=Halo%20Anaira%20Glamping%2C%20saya%20ingin%20booking">WhatsApp</a>
+      <a class="btn" href="contact.html">Hubungi Kami 📞</a>
       <div style="display: flex; gap: 4px; align-items: center; margin-left: 8px; border-left: 1px solid rgba(27,127,90,0.3); padding-left: 8px;">
         <button onclick="setAnairaLanguage('id')" id="lang-id" style="background: none; border: none; color: #a7eed0; font-size: 0.8rem; font-weight: 700; cursor: pointer; opacity: 1; padding: 2px 4px; font-family: inherit; transition: opacity 0.2s;">ID</button>
         <span style="opacity: 0.3; font-size: 0.8rem;">|</span>
@@ -244,13 +255,146 @@ footer {
   <section><h1>Gallery</h1><p class="muted">Suasana alami Anaira Glamping & Resort.</p></section>
 <!-- ANAIRA:GALLERY_START -->
 <section class="gallery">
-<a href="assets/images/gallery/gallery-01-pool.webp"><img loading="lazy" src="assets/images/gallery/gallery-01-pool.webp" alt="Gallery Anaira"></a>
-<a href="assets/images/gallery/gallery-02-overview.webp"><img loading="lazy" src="assets/images/gallery/gallery-02-overview.webp" alt="Gallery Anaira"></a>
-<a href="assets/images/gallery/gallery-03-corridor.webp"><img loading="lazy" src="assets/images/gallery/gallery-03-corridor.webp" alt="Gallery Anaira"></a>
-<a href="assets/images/gallery/gallery-04-balcony.webp"><img loading="lazy" src="assets/images/gallery/gallery-04-balcony.webp" alt="Gallery Anaira"></a>
-<a href="assets/images/gallery/gallery-05-porch.webp"><img loading="lazy" src="assets/images/gallery/gallery-05-porch.webp" alt="Gallery Anaira"></a>
+<a href="javascript:void(0)" onclick="openLightbox(0)"><img loading="lazy" src="assets/images/gallery/gallery-01-pool.webp" alt="Gallery Anaira"></a>
+<a href="javascript:void(0)" onclick="openLightbox(1)"><img loading="lazy" src="assets/images/gallery/gallery-02-overview.webp" alt="Gallery Anaira"></a>
+<a href="javascript:void(0)" onclick="openLightbox(2)"><img loading="lazy" src="assets/images/gallery/gallery-03-corridor.webp" alt="Gallery Anaira"></a>
+<a href="javascript:void(0)" onclick="openLightbox(3)"><img loading="lazy" src="assets/images/gallery/gallery-04-balcony.webp" alt="Gallery Anaira"></a>
+<a href="javascript:void(0)" onclick="openLightbox(4)"><img loading="lazy" src="assets/images/gallery/gallery-05-porch.webp" alt="Gallery Anaira"></a>
 </section>
 <!-- ANAIRA:GALLERY_END -->
+
+<!-- Fullscreen Lightbox Modal -->
+<div id="gallery-lightbox" style="position: fixed; inset: 0; background: rgba(4, 10, 8, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 9999; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; outline: none;" role="dialog" aria-modal="true" aria-label="Pratampil Galeri Foto Anaira" tabindex="-1">
+  <div id="lightbox-loader" style="position: absolute; width: 40px; height: 40px; border: 3px solid rgba(27,127,90,0.2); border-top-color: var(--brand); border-radius: 50%; animation: spin 1s infinite linear;"></div>
+  <div style="position: relative; max-width: 90vw; max-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <img id="lightbox-img" src="" alt="Pratampil Gambar" style="max-width: 100%; max-height: 80vh; object-fit: contain; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 20px 50px rgba(0,0,0,0.5); opacity: 0; transform: scale(0.95); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+    <div id="lightbox-caption" style="margin-top: 16px; text-align: center; color: #a7eed0; font-size: 0.95rem; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.5);"></div>
+  </div>
+  <button id="lightbox-close" onclick="closeLightbox()" style="position: absolute; top: 24px; right: 24px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: #fff; border-radius: 50%; width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; outline: none; font-size: 1.25rem;" aria-label="Tutup Galeri">✕</button>
+  <button id="lightbox-prev" onclick="prevImage()" style="position: absolute; left: 24px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: #fff; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; outline: none;" aria-label="Foto Sebelumnya">
+    <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+  </button>
+  <button id="lightbox-next" onclick="nextImage()" style="position: absolute; right: 24px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: #fff; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; outline: none;" aria-label="Foto Berikutnya">
+    <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+  </button>
+  <div style="position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; background: rgba(10, 46, 32, 0.7); border: 1px solid var(--border); padding: 8px 18px; border-radius: 9999px; backdrop-filter: blur(8px);">
+    <button id="lightbox-play" onclick="toggleSlideshow()" style="background: var(--brand); border: none; color: #fff; font-size: 0.85rem; font-weight: 700; padding: 6px 14px; border-radius: 9999px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;">
+      <span>▶ Play Slideshow</span>
+    </button>
+    <span id="slideshow-status" style="font-size: 0.8rem; color: rgba(246, 241, 231, 0.7); align-self: center;">Slide otomatis mati</span>
+  </div>
+</div>
+
+<style>
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+#gallery-lightbox button:hover {
+  background: var(--brand) !important;
+  border-color: transparent !important;
+  transform: scale(1.08) !important;
+}
+#lightbox-prev:active, #lightbox-next:active {
+  transform: translateY(-50%) scale(0.95) !important;
+}
+</style>
+
+<script>
+  let galleryImages = ["assets/images/gallery/gallery-01-pool.webp","assets/images/gallery/gallery-02-overview.webp","assets/images/gallery/gallery-03-corridor.webp","assets/images/gallery/gallery-04-balcony.webp","assets/images/gallery/gallery-05-porch.webp"];
+  let activeIndex = 0;
+  let slideshowInterval = null;
+  let slideshowRunning = false;
+
+  function openLightbox(idx) {
+    activeIndex = idx;
+    const lightbox = document.getElementById('gallery-lightbox');
+    lightbox.style.display = 'flex';
+    lightbox.focus();
+    setTimeout(() => {
+      lightbox.style.opacity = '1';
+    }, 50);
+    loadImage(idx);
+  }
+
+  function closeLightbox() {
+    stopSlideshow();
+    const lightbox = document.getElementById('gallery-lightbox');
+    lightbox.style.opacity = '0';
+    setTimeout(() => {
+      lightbox.style.display = 'none';
+    }, 300);
+  }
+
+  function loadImage(idx) {
+    const imgElement = document.getElementById('lightbox-img');
+    const caption = document.getElementById('lightbox-caption');
+    const loader = document.getElementById('lightbox-loader');
+    
+    loader.style.display = 'block';
+    imgElement.style.opacity = '0';
+    imgElement.style.transform = 'scale(0.95)';
+    
+    const path = galleryImages[idx];
+    imgElement.src = path;
+    
+    imgElement.onload = () => {
+      loader.style.display = 'none';
+      imgElement.style.opacity = '1';
+      imgElement.style.transform = 'scale(1)';
+      const basename = path.split('/').pop().split('.').shift().replace(/-/g, ' ').toUpperCase();
+      caption.innerText = basename + ' - ANAIRA GLAMPING & RESORT';
+    };
+  }
+
+  function nextImage() {
+    activeIndex = (activeIndex + 1) % galleryImages.length;
+    loadImage(activeIndex);
+  }
+
+  function prevImage() {
+    activeIndex = (activeIndex - 1 + galleryImages.length) % galleryImages.length;
+    loadImage(activeIndex);
+  }
+
+  function toggleSlideshow() {
+    if (slideshowRunning) {
+      stopSlideshow();
+    } else {
+      startSlideshow();
+    }
+  }
+
+  function startSlideshow() {
+    slideshowRunning = true;
+    document.getElementById('lightbox-play').innerHTML = '<span>⏸ Pause Slideshow</span>';
+    document.getElementById('lightbox-play').style.backgroundColor = '#b91c1c';
+    document.getElementById('slideshow-status').innerText = 'Slide berjalan (4s)';
+    slideshowInterval = setInterval(() => {
+      nextImage();
+    }, 4000);
+  }
+
+  function stopSlideshow() {
+    slideshowRunning = false;
+    document.getElementById('lightbox-play').innerHTML = '<span>▶ Play Slideshow</span>';
+    document.getElementById('lightbox-play').style.backgroundColor = 'var(--brand)';
+    document.getElementById('slideshow-status').innerText = 'Slide otomatis mati';
+    if (slideshowInterval) {
+      clearInterval(slideshowInterval);
+      slideshowInterval = null;
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    const lightbox = document.getElementById('gallery-lightbox');
+    if (lightbox && lightbox.style.display === 'flex') {
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') nextImage();
+      if (e.key === 'ArrowLeft') prevImage();
+    }
+  });
+</script>
+
 <section class="video">
   <h2>Video Tour</h2>
   <video controls preload="metadata" muted playsinline poster="assets/images/hero/hero-pool-mountain-desktop.webp">

@@ -10,8 +10,8 @@
     { "source": "/contact", "destination": "/contact.html" },
     { "source": "/booking", "destination": "/booking.html" },
     { "source": "/login", "destination": "/login.html" },
-    { "source": "/admin", "destination": "/admin/index.html" },
-    { "source": "/admin/", "destination": "/admin/index.html" },
+    { "source": "/admin", "destination": "/admin/pms.html" },
+    { "source": "/admin/", "destination": "/admin/pms.html" },
     { "source": "/admin/pms", "destination": "/admin/pms.html" },
     { "source": "/admin/pms/", "destination": "/admin/pms.html" }
   ],

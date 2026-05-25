@@ -30,7 +30,9 @@ const ANAIRA_KEYS = {
   BLOCKED_DATES: 'anaira_blocked_dates',
   SETTINGS:      'anaira_settings',
   VOUCHERS:      'anaira_vouchers',
-  DB_CONFIG:     'anaira_db_config'
+  DB_CONFIG:     'anaira_db_config',
+  PACKAGES:      'anaira_packages',
+  DEALS:         'anaira_deals'
 };
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -73,6 +75,160 @@ const DEFAULT_ROOMS = [
       weekend: 3000000
     },
     description: 'Spacious private villa perfect for group gatherings.'
+  }
+];
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * 2.5 DEFAULT PACKAGES & DEALS DATA
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+const DEFAULT_PACKAGES = [
+  {
+    id: 'paket-lebaran',
+    slug: 'paket-lebaran-family-escape',
+    title: 'Paket Lebaran Family Escape',
+    status: 'active',
+    featured: true,
+    packageType: 'lebaran',
+    startDate: '2026-06-01',
+    endDate: '2026-06-30',
+    eventDate: '2026-06-15',
+    price: 3500000,
+    originalPrice: 4500000,
+    discountLabel: 'Hemat 22%',
+    bannerImage: 'assets/images/rooms/villa.jpg',
+    shortDescription: 'Rayakan hari kemenangan bersama keluarga tercinta di Anaira Glamping dengan paket lengkap super hemat.',
+    fullDescription: 'Paket spesial Lebaran dirancang khusus untuk liburan keluarga yang tak terlupakan. Nikmati suasana alam pegunungan sejuk dekat Curug Nangka dengan fasilitas lengkap terintegrasi.',
+    includedItems: [
+      'Menginap 2 malam di Canopy Luxury Glamping / Villa',
+      'Sarapan pagi lezat untuk 4 pax',
+      'BBQ Dinner Set Spesial Keluarga',
+      'Gratis Akses Kolam Renang & Api Unggun',
+      'Free Gift & Hampers Lebaran Eksklusif'
+    ],
+    foodMenu: [
+      'Nasi Liwet Lengkap dengan Lauk Pauk',
+      'Sate Ayam, Jagung Bakar, dan Sosis BBQ',
+      'Es Kelapa Muda Segar',
+      'Kopi & Teh Hangat'
+    ],
+    terms: 'Booking minimal H-3. Paket berlaku khusus periode libur Lebaran Juni 2026. DP minimal 50% non-refundable.',
+    voucherCode: 'LEBARAN10',
+    bookingUrl: 'booking.html?package=paket-lebaran-family-escape&voucher=LEBARAN10'
+  },
+  {
+    id: 'paket-honeymoon',
+    slug: 'paket-honeymoon-romantic-stay',
+    title: 'Paket Honeymoon Romantic Stay',
+    status: 'active',
+    featured: true,
+    packageType: 'honeymoon',
+    startDate: '2026-05-01',
+    endDate: '2026-12-31',
+    eventDate: '',
+    price: 2500000,
+    originalPrice: 3200000,
+    discountLabel: 'Diskon 21%',
+    bannerImage: 'assets/images/rooms/balcony.jpg',
+    shortDescription: 'Ciptakan kenangan romantis tak terlupakan bersama pasangan di tengah keindahan alam pegunungan sunyi.',
+    fullDescription: 'Madu kasih yang damai dan intim. Nikmati staycation eksklusif di Balcony Glass Suite dengan dekorasi bunga romantis, makan malam hangat di bawah bintang-bintang, dan layanan premium.',
+    includedItems: [
+      'Menginap 2 malam di Balcony Glass Suite Premium',
+      'Sarapan pagi romantis di kamar (Floating Breakfast)',
+      '1x Romantic Candlelight Dinner',
+      'Dekorasi Romantis Tempat Tidur & Bathtub',
+      'Cokelat & Welcome Drink Eksklusif'
+    ],
+    foodMenu: [
+      'Ribeye Steak dengan Pilihan Saus',
+      'Chocolate Lava Cake Dessert',
+      'Fresh Juices & Mocktails',
+      'Warm Bonfire Roasted Marshmallows'
+    ],
+    terms: 'Berlaku sepanjang tahun kecuali libur high-season. Harap konfirmasi pilihan dekorasi H-5.',
+    voucherCode: 'HONEYMOON15',
+    bookingUrl: 'booking.html?package=paket-honeymoon-romantic-stay&voucher=HONEYMOON15'
+  },
+  {
+    id: 'paket-weekend-bbq',
+    slug: 'paket-weekend-bbq-glamping',
+    title: 'Paket Weekend BBQ Glamping',
+    status: 'active',
+    featured: true,
+    packageType: 'family',
+    startDate: '2026-05-01',
+    endDate: '2026-12-31',
+    eventDate: '',
+    price: 1800000,
+    originalPrice: 2200000,
+    discountLabel: 'Diskon 18%',
+    bannerImage: 'assets/images/rooms/porch.jpg',
+    shortDescription: 'Liburan akhir pekan seru dengan pesta BBQ outdoor lengkap di bawah langit berbintang.',
+    fullDescription: 'Hilangkan penat akhir pekan bersama sahabat atau keluarga kecil dengan paket Weekend Escape. Nikmati udara malam yang sejuk sembari memanggang hidangan BBQ pilihan di area glamping pribadi.',
+    includedItems: [
+      'Menginap 1 malam di Canopy Luxury Glamping',
+      'Sarapan pagi lezat untuk 4 pax',
+      'Paket Bahan & Alat Panggang BBQ Outdoor Lengkap',
+      'Gratis Kayu Bakar untuk Api Unggun',
+      'Free Flow Kopi & Teh Sore Hari'
+    ],
+    foodMenu: [
+      'Daging Sapi Slice & Sosis Premium',
+      'Jagung Manis & Marshmallow',
+      'Nasi Goreng Spesial Camp',
+      'Minuman Soda & Es Teh Manis'
+    ],
+    terms: 'Hanya berlaku untuk check-in pada hari Jumat atau Sabtu. Reservasi H-2.',
+    voucherCode: 'WEEKEND10',
+    bookingUrl: 'booking.html?package=paket-weekend-bbq-glamping&voucher=WEEKEND10'
+  }
+];
+
+const DEFAULT_DEALS = [
+  {
+    id: 'deal-villa-lebaran',
+    title: 'Diskon Spesial Villa Keluarga',
+    type: 'package',
+    targetRoom: '',
+    targetPackage: 'paket-lebaran-family-escape',
+    voucherCode: 'LEBARAN10',
+    discountType: 'percentage',
+    discountValue: 10,
+    startDate: '2026-05-01',
+    endDate: '2026-07-31',
+    status: 'active',
+    bannerImage: 'assets/images/rooms/villa.jpg',
+    description: 'Nikmati diskon 10% untuk Paket Lebaran Family Escape. Cocok untuk reuni keluarga besar.'
+  },
+  {
+    id: 'deal-romantic-honeymoon',
+    title: 'Honeymoon Romantic Escape',
+    type: 'package',
+    targetRoom: '',
+    targetPackage: 'paket-honeymoon-romantic-stay',
+    voucherCode: 'HONEYMOON15',
+    discountType: 'percentage',
+    discountValue: 15,
+    startDate: '2026-05-01',
+    endDate: '2026-12-31',
+    status: 'active',
+    bannerImage: 'assets/images/rooms/balcony.jpg',
+    description: 'Potongan spesial 15% untuk Paket Honeymoon Romantis di Balcony Glass Suite.'
+  },
+  {
+    id: 'deal-weekend-glamping',
+    title: 'Promo Seru Akhir Pekan BBQ',
+    type: 'package',
+    targetRoom: '',
+    targetPackage: 'paket-weekend-bbq-glamping',
+    voucherCode: 'WEEKEND10',
+    discountType: 'percentage',
+    discountValue: 10,
+    startDate: '2026-05-01',
+    endDate: '2026-12-31',
+    status: 'active',
+    bannerImage: 'assets/images/rooms/porch.jpg',
+    description: 'Pesta BBQ seru di glamping pribadi dengan diskon 10% khusus akhir pekan.'
   }
 ];
 
@@ -463,8 +619,101 @@ function restoreAllData(jsonString) {
  * ───────────────────────────────────────────────────────────────────────────── */
 
 const DEFAULT_VOUCHERS = [
-  { code: 'ANAIRA10', type: 'percentage', value: 10, maxUses: 100, usedCount: 0, active: true },
-  { code: 'WELCOMETOANAIRA', type: 'fixed', value: 50000, maxUses: 50, usedCount: 0, active: true }
+  {
+    code: 'LEBARAN10',
+    status: 'active',
+    source: 'Influencer',
+    influencerName: 'Syafira Rahma',
+    description: 'Promo Spesial Lebaran Bersama Syafira',
+    discountType: 'percentage',
+    discountValue: 10,
+    minBookingAmount: 1000000,
+    maxDiscount: 500000,
+    startDate: '2026-05-01',
+    endDate: '2026-07-31',
+    usageLimit: 100,
+    usedCount: 0,
+    applicableRoomSlugs: ['villa', 'balcony'],
+    applicablePackageSlugs: ['paket-lebaran-family-escape'],
+    createdAt: '2026-05-26T00:00:00Z',
+    updatedAt: '2026-05-26T00:00:00Z'
+  },
+  {
+    code: 'HONEYMOON15',
+    status: 'active',
+    source: 'IG',
+    influencerName: '',
+    description: 'Diskon Madu Kasih Romantis 15%',
+    discountType: 'percentage',
+    discountValue: 15,
+    minBookingAmount: 2000000,
+    maxDiscount: 600000,
+    startDate: '2026-05-01',
+    endDate: '2026-12-31',
+    usageLimit: 50,
+    usedCount: 0,
+    applicableRoomSlugs: ['balcony'],
+    applicablePackageSlugs: ['paket-honeymoon-romantic-stay'],
+    createdAt: '2026-05-26T00:00:00Z',
+    updatedAt: '2026-05-26T00:00:00Z'
+  },
+  {
+    code: 'WEEKEND10',
+    status: 'active',
+    source: 'Threads',
+    influencerName: 'Ahmad Giffari',
+    description: 'Promo Liburan Akhir Pekan Seru 10%',
+    discountType: 'percentage',
+    discountValue: 10,
+    minBookingAmount: 1500000,
+    maxDiscount: 300000,
+    startDate: '2026-05-01',
+    endDate: '2026-12-31',
+    usageLimit: 80,
+    usedCount: 0,
+    applicableRoomSlugs: ['porch', 'balcony'],
+    applicablePackageSlugs: ['paket-weekend-bbq-glamping'],
+    createdAt: '2026-05-26T00:00:00Z',
+    updatedAt: '2026-05-26T00:00:00Z'
+  },
+  {
+    code: 'ANAIRA10',
+    status: 'active',
+    source: 'Manual',
+    influencerName: '',
+    description: 'Voucher Selamat Datang Anaira 10%',
+    discountType: 'percentage',
+    discountValue: 10,
+    minBookingAmount: 0,
+    maxDiscount: 200000,
+    startDate: '2026-05-01',
+    endDate: '2026-12-31',
+    usageLimit: 100,
+    usedCount: 0,
+    applicableRoomSlugs: [],
+    applicablePackageSlugs: [],
+    createdAt: '2026-05-26T00:00:00Z',
+    updatedAt: '2026-05-26T00:00:00Z'
+  },
+  {
+    code: 'WELCOMETOANAIRA',
+    status: 'active',
+    source: 'Website',
+    influencerName: '',
+    description: 'Potongan Langsung Rp 50.000',
+    discountType: 'fixed',
+    discountValue: 50000,
+    minBookingAmount: 300000,
+    maxDiscount: 50000,
+    startDate: '2026-05-01',
+    endDate: '2026-12-31',
+    usageLimit: 200,
+    usedCount: 0,
+    applicableRoomSlugs: [],
+    applicablePackageSlugs: [],
+    createdAt: '2026-05-26T00:00:00Z',
+    updatedAt: '2026-05-26T00:00:00Z'
+  }
 ];
 
 const DEFAULT_DB_CONFIG = {
@@ -487,11 +736,19 @@ const DEFAULT_DB_CONFIG = {
   if (!loadData(ANAIRA_KEYS.SETTINGS, null)) {
     saveData(ANAIRA_KEYS.SETTINGS, DEFAULT_SETTINGS);
   }
-  if (!loadData(ANAIRA_KEYS.VOUCHERS, null)) {
+  // Selalu timpa / inisialisasi ulang vouchers jika versinya masih lama (tanpa source)
+  const currentVouchers = loadData(ANAIRA_KEYS.VOUCHERS, []);
+  if (currentVouchers.length === 0 || !currentVouchers[0].source) {
     saveData(ANAIRA_KEYS.VOUCHERS, DEFAULT_VOUCHERS);
   }
   if (!loadData(ANAIRA_KEYS.DB_CONFIG, null)) {
     saveData(ANAIRA_KEYS.DB_CONFIG, DEFAULT_DB_CONFIG);
+  }
+  if (!loadData(ANAIRA_KEYS.PACKAGES, null)) {
+    saveData(ANAIRA_KEYS.PACKAGES, DEFAULT_PACKAGES);
+  }
+  if (!loadData(ANAIRA_KEYS.DEALS, null)) {
+    saveData(ANAIRA_KEYS.DEALS, DEFAULT_DEALS);
   }
 })();
 
@@ -636,6 +893,7 @@ function applyAnairaLanguage() {
   const idLabel = document.querySelector('label[for="identifier"]');
   const pwdLabel = document.querySelector('label[for="password"]');
   const btnSubmit = document.querySelector('#loginForm button[type="submit"]');
+  const backBtn = document.getElementById('backToHomeBtn');
   
   if (loginHeader && loginHeader.innerText.includes('Manage Booking')) {
     if (lang === 'en') {
@@ -643,11 +901,13 @@ function applyAnairaLanguage() {
       if (idLabel) idLabel.innerText = 'Guest Booking ID (e.g. ANR-2026-92813)';
       if (pwdLabel) pwdLabel.innerText = 'Admin Password';
       if (btnSubmit) btnSubmit.innerHTML = 'Enter <i data-lucide="arrow-right" class="w-4 h-4"></i>';
+      if (backBtn) backBtn.innerHTML = '<i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Home';
     } else {
       if (loginSub) loginSub.innerText = 'Masukkan Booking ID Anda untuk memuat tiket & rincian pesanan';
       if (idLabel) idLabel.innerText = 'Booking ID Tamu (e.g. ANR-2026-92813)';
       if (pwdLabel) pwdLabel.innerText = 'Kata Sandi Admin';
       if (btnSubmit) btnSubmit.innerHTML = 'Masuk <i data-lucide="arrow-right" class="w-4 h-4"></i>';
+      if (backBtn) backBtn.innerHTML = '<i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Beranda';
     }
     if (typeof lucide !== 'undefined') lucide.createIcons();
   }
@@ -746,6 +1006,153 @@ const AnairaDB = {
     try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) {}
     const storeKey = key.replace('anaira_', '');
     await this.query(storeKey, 'POST', data);
+  },
+
+  // === PACKAGES OPERATIONS ===
+  async getPackages() {
+    return await this.get(ANAIRA_KEYS.PACKAGES, DEFAULT_PACKAGES);
+  },
+  async savePackages(packages) {
+    await this.set(ANAIRA_KEYS.PACKAGES, packages);
+  },
+  async createPackage(pkg) {
+    const pkgs = await this.getPackages();
+    pkg.createdAt = new Date().toISOString();
+    pkg.updatedAt = new Date().toISOString();
+    pkgs.push(pkg);
+    await this.savePackages(pkgs);
+    return pkg;
+  },
+  async updatePackage(slug, updated) {
+    const pkgs = await this.getPackages();
+    const idx = pkgs.findIndex(p => p.slug === slug || p.id === slug);
+    if (idx !== -1) {
+      pkgs[idx] = { ...pkgs[idx], ...updated, updatedAt: new Date().toISOString() };
+      await this.savePackages(pkgs);
+      return pkgs[idx];
+    }
+    return null;
+  },
+  async deletePackage(slug) {
+    const pkgs = await this.getPackages();
+    const filtered = pkgs.filter(p => p.slug !== slug && p.id !== slug);
+    await this.savePackages(filtered);
+    return true;
+  },
+  async getActivePackages() {
+    const pkgs = await this.getPackages();
+    return pkgs.filter(p => p.status === 'active');
+  },
+  async getFeaturedPackages() {
+    const pkgs = await this.getPackages();
+    return pkgs.filter(p => p.status === 'active' && p.featured);
+  },
+
+  // === DEALS OPERATIONS ===
+  async getDeals() {
+    return await this.get(ANAIRA_KEYS.DEALS, DEFAULT_DEALS);
+  },
+  async saveDeals(deals) {
+    await this.set(ANAIRA_KEYS.DEALS, deals);
+  },
+
+  // === VOUCHERS OPERATIONS ===
+  async getVouchers() {
+    return await this.get(ANAIRA_KEYS.VOUCHERS, DEFAULT_VOUCHERS);
+  },
+  async saveVouchers(vouchers) {
+    await this.set(ANAIRA_KEYS.VOUCHERS, vouchers);
+  },
+  async createVoucher(voucher) {
+    const vouchers = await this.getVouchers();
+    voucher.createdAt = new Date().toISOString();
+    voucher.updatedAt = new Date().toISOString();
+    vouchers.push(voucher);
+    await this.saveVouchers(vouchers);
+    return voucher;
+  },
+  async updateVoucher(code, updated) {
+    const vouchers = await this.getVouchers();
+    const idx = vouchers.findIndex(v => v.code.toUpperCase() === code.toUpperCase());
+    if (idx !== -1) {
+      vouchers[idx] = { ...vouchers[idx], ...updated, updatedAt: new Date().toISOString() };
+      await this.saveVouchers(vouchers);
+      return vouchers[idx];
+    }
+    return null;
+  },
+  async deleteVoucher(code) {
+    const vouchers = await this.getVouchers();
+    const filtered = vouchers.filter(v => v.code.toUpperCase() !== code.toUpperCase());
+    await this.saveVouchers(filtered);
+    return true;
+  },
+  async validateVoucher(code, context = {}) {
+    if (!code) return { valid: false, error: 'Masukkan kode voucher.' };
+    const vouchers = await this.getVouchers();
+    const voucher = vouchers.find(v => v.code.toUpperCase() === code.toUpperCase());
+    if (!voucher) {
+      return { valid: false, error: 'Kode voucher tidak ditemukan.' };
+    }
+    if (voucher.status !== 'active') {
+      return { valid: false, error: 'Voucher sudah tidak aktif.' };
+    }
+    const now = new Date();
+    if (voucher.startDate && new Date(voucher.startDate) > now) {
+      return { valid: false, error: 'Voucher belum berlaku.' };
+    }
+    if (voucher.endDate && new Date(voucher.endDate) < now) {
+      return { valid: false, error: 'Voucher telah kedaluwarsa.' };
+    }
+    if (voucher.usageLimit && voucher.usedCount >= voucher.usageLimit) {
+      return { valid: false, error: 'Batas penggunaan voucher telah habis.' };
+    }
+    if (context.amount !== undefined && voucher.minBookingAmount && context.amount < voucher.minBookingAmount) {
+      return { valid: false, error: `Minimal pemesanan untuk voucher ini adalah ${formatIDR(voucher.minBookingAmount)}.` };
+    }
+    if (context.roomType && voucher.applicableRoomSlugs && voucher.applicableRoomSlugs.length > 0) {
+      if (!voucher.applicableRoomSlugs.includes(context.roomType)) {
+        return { valid: false, error: 'Voucher tidak berlaku untuk kamar yang dipilih.' };
+      }
+    }
+    if (context.packageSlug && voucher.applicablePackageSlugs && voucher.applicablePackageSlugs.length > 0) {
+      if (!voucher.applicablePackageSlugs.includes(context.packageSlug)) {
+        return { valid: false, error: 'Voucher tidak berlaku untuk paket promo yang dipilih.' };
+      }
+    }
+    return { valid: true, voucher };
+  },
+  async applyVoucher(total, voucher, context = {}) {
+    const validation = await this.validateVoucher(voucher.code, context);
+    if (!validation.valid) return { success: false, error: validation.error };
+    
+    let discount = 0;
+    if (voucher.discountType === 'percentage') {
+      discount = Math.round(total * (voucher.discountValue / 100));
+      if (voucher.maxDiscount && discount > voucher.maxDiscount) {
+        discount = voucher.maxDiscount;
+      }
+    } else if (voucher.discountType === 'fixed') {
+      discount = voucher.discountValue;
+    }
+    
+    discount = Math.min(discount, total);
+    return {
+      success: true,
+      discount,
+      finalTotal: total - discount
+    };
+  },
+  async incrementVoucherUsage(code) {
+    const vouchers = await this.getVouchers();
+    const idx = vouchers.findIndex(v => v.code.toUpperCase() === code.toUpperCase());
+    if (idx !== -1) {
+      vouchers[idx].usedCount = (vouchers[idx].usedCount || 0) + 1;
+      vouchers[idx].updatedAt = new Date().toISOString();
+      await this.saveVouchers(vouchers);
+      return true;
+    }
+    return false;
   }
 };
 
@@ -761,6 +1168,8 @@ if (typeof module !== 'undefined' && module.exports) {
     DEFAULT_PAYMENT,
     DEFAULT_SETTINGS,
     DEFAULT_VOUCHERS,
+    DEFAULT_PACKAGES,
+    DEFAULT_DEALS,
     AnairaDB,
     loadData,
     saveData,

@@ -69,10 +69,152 @@
     }
   ],
   "packages": [
-    { "id": "breakfast", "name": "Breakfast", "description": "Paket sarapan untuk tamu." },
-    { "id": "bbq", "name": "BBQ", "description": "Paket BBQ untuk malam santai." },
-    { "id": "honeymoon", "name": "Honeymoon", "description": "Paket romantis untuk pasangan." },
-    { "id": "family", "name": "Family", "description": "Paket keluarga dan group." }
+    {
+      "id": "paket-lebaran",
+      "slug": "paket-lebaran-family-escape",
+      "title": "Paket Lebaran Family Escape",
+      "status": "active",
+      "featured": true,
+      "packageType": "lebaran",
+      "startDate": "2026-06-01",
+      "endDate": "2026-06-30",
+      "eventDate": "2026-06-15",
+      "price": 3500000,
+      "originalPrice": 4500000,
+      "discountLabel": "Hemat 22%",
+      "bannerImage": "assets/images/rooms/villa/villa-view-pool-area.webp",
+      "shortDescription": "Rayakan hari kemenangan bersama keluarga tercinta di Anaira Glamping dengan paket lengkap super hemat.",
+      "fullDescription": "Paket spesial Lebaran dirancang khusus untuk liburan keluarga yang tak terlupakan. Nikmati suasana alam pegunungan sejuk dekat Curug Nangka dengan fasilitas lengkap terintegrasi.",
+      "includedItems": [
+        "Menginap 2 malam di Canopy Luxury Glamping / Villa",
+        "Sarapan pagi lezat untuk 4 pax",
+        "BBQ Dinner Set Spesial Keluarga",
+        "Gratis Akses Kolam Renang & Api Unggun",
+        "Free Gift & Hampers Lebaran Eksklusif"
+      ],
+      "foodMenu": [
+        "Nasi Liwet Lengkap dengan Lauk Pauk",
+        "Sate Ayam, Jagung Bakar, dan Sosis BBQ",
+        "Es Kelapa Muda Segar",
+        "Kopi & Teh Hangat"
+      ],
+      "terms": "Booking minimal H-3. Paket berlaku khusus periode libur Lebaran Juni 2026. DP minimal 50% non-refundable.",
+      "voucherCode": "LEBARAN10",
+      "bookingUrl": "booking.html?package=paket-lebaran-family-escape&voucher=LEBARAN10"
+    },
+    {
+      "id": "paket-honeymoon",
+      "slug": "paket-honeymoon-romantic-stay",
+      "title": "Paket Honeymoon Romantic Stay",
+      "status": "active",
+      "featured": true,
+      "packageType": "honeymoon",
+      "startDate": "2026-05-01",
+      "endDate": "2026-12-31",
+      "eventDate": "",
+      "price": 2500000,
+      "originalPrice": 3200000,
+      "discountLabel": "Diskon 21%",
+      "bannerImage": "assets/images/rooms/balcony/balcony-exterior-garden.webp",
+      "shortDescription": "Ciptakan kenangan romantis tak terlupakan bersama pasangan di tengah keindahan alam pegunungan sunyi.",
+      "fullDescription": "Madu kasih yang damai dan intim. Nikmati staycation eksklusif di Balcony Glass Suite dengan dekorasi bunga romantis, makan malam hangat di bawah bintang-bintang, dan layanan premium.",
+      "includedItems": [
+        "Menginap 2 malam di Balcony Glass Suite Premium",
+        "Sarapan pagi romantis di kamar (Floating Breakfast)",
+        "1x Romantic Candlelight Dinner",
+        "Dekorasi Romantis Tempat Tidur & Bathtub",
+        "Cokelat & Welcome Drink Eksklusif"
+      ],
+      "foodMenu": [
+        "Ribeye Steak dengan Pilihan Saus",
+        "Chocolate Lava Cake Dessert",
+        "Fresh Juices & Mocktails",
+        "Warm Bonfire Roasted Marshmallows"
+      ],
+      "terms": "Berlaku sepanjang tahun kecuali libur high-season. Harap konfirmasi pilihan dekorasi H-5.",
+      "voucherCode": "HONEYMOON15",
+      "bookingUrl": "booking.html?package=paket-honeymoon-romantic-stay&voucher=HONEYMOON15"
+    },
+    {
+      "id": "paket-weekend-bbq",
+      "slug": "paket-weekend-bbq-glamping",
+      "title": "Paket Weekend BBQ Glamping",
+      "status": "active",
+      "featured": true,
+      "packageType": "family",
+      "startDate": "2026-05-01",
+      "endDate": "2026-12-31",
+      "eventDate": "",
+      "price": 1800000,
+      "originalPrice": 2200000,
+      "discountLabel": "Diskon 18%",
+      "bannerImage": "assets/images/rooms/porch/porch-cabin-garden.webp",
+      "shortDescription": "Liburan akhir pekan seru dengan pesta BBQ outdoor lengkap di bawah langit berbintang.",
+      "fullDescription": "Hilangkan penat akhir pekan bersama sahabat atau keluarga kecil dengan paket Weekend Escape. Nikmati udara malam yang sejuk sembari memanggang hidangan BBQ pilihan di area glamping pribadi.",
+      "includedItems": [
+        "Menginap 1 malam di Canopy Luxury Glamping",
+        "Sarapan pagi lezat untuk 4 pax",
+        "Paket Bahan & Alat Panggang BBQ Outdoor Lengkap",
+        "Gratis Kayu Bakar untuk Api Unggun",
+        "Free Flow Kopi & Teh Sore Hari"
+      ],
+      "foodMenu": [
+        "Daging Sapi Slice & Sosis Premium",
+        "Jagung Manis & Marshmallow",
+        "Nasi Goreng Spesial Camp",
+        "Minuman Soda & Es Teh Manis"
+      ],
+      "terms": "Hanya berlaku untuk check-in pada hari Jumat atau Sabtu. Reservasi H-2.",
+      "voucherCode": "WEEKEND10",
+      "bookingUrl": "booking.html?package=paket-weekend-bbq-glamping&voucher=WEEKEND10"
+    }
+  ],
+  "deals": [
+    {
+      "id": "deal-villa-lebaran",
+      "title": "Diskon Spesial Villa Keluarga",
+      "type": "package",
+      "targetRoom": "",
+      "targetPackage": "paket-lebaran-family-escape",
+      "voucherCode": "LEBARAN10",
+      "discountType": "percentage",
+      "discountValue": 10,
+      "startDate": "2026-05-01",
+      "endDate": "2026-07-31",
+      "status": "active",
+      "bannerImage": "assets/images/rooms/villa/villa-view-pool-area.webp",
+      "description": "Nikmati diskon 10% untuk Paket Lebaran Family Escape. Cocok untuk reuni keluarga besar."
+    },
+    {
+      "id": "deal-romantic-honeymoon",
+      "title": "Honeymoon Romantic Escape",
+      "type": "package",
+      "targetRoom": "",
+      "targetPackage": "paket-honeymoon-romantic-stay",
+      "voucherCode": "HONEYMOON15",
+      "discountType": "percentage",
+      "discountValue": 15,
+      "startDate": "2026-05-01",
+      "endDate": "2026-12-31",
+      "status": "active",
+      "bannerImage": "assets/images/rooms/balcony/balcony-exterior-garden.webp",
+      "description": "Potongan spesial 15% untuk Paket Honeymoon Romantis di Balcony Glass Suite."
+    },
+    {
+      "id": "deal-weekend-glamping",
+      "title": "Promo Seru Akhir Pekan BBQ",
+      "type": "package",
+      "targetRoom": "",
+      "targetPackage": "paket-weekend-bbq-glamping",
+      "voucherCode": "WEEKEND10",
+      "discountType": "percentage",
+      "discountValue": 10,
+      "startDate": "2026-05-01",
+      "endDate": "2026-12-31",
+      "status": "active",
+      "bannerImage": "assets/images/rooms/porch/porch-cabin-garden.webp",
+      "description": "Pesta BBQ seru di glamping pribadi dengan diskon 10% khusus akhir pekan."
+    }
   ],
   "facilities": [
     { "id": "pool", "name": "Kolam", "image": "assets/images/facilities/pool-mountain-view.webp" },
