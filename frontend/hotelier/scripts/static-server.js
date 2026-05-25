@@ -18,6 +18,17 @@ const routeMap = {
   '/admin/': '/admin/pms.html',
   '/admin/pms': '/admin/pms.html',
   '/admin/pms/': '/admin/pms.html',
+  '/booking-success': '/booking-success.html',
+  '/pre-arrival': '/pre-arrival.html',
+  '/promo': '/promo.html',
+  '/promo/lebaran': '/promo/lebaran.html',
+  '/promo/honeymoon': '/promo/honeymoon.html',
+  '/promo/bbq': '/promo/bbq.html',
+  '/promo/family': '/promo/family.html',
+  '/rooms/balcony': '/rooms/balcony.html',
+  '/rooms/porch': '/rooms/porch.html',
+  '/rooms/villa': '/rooms/villa.html',
+  '/sitemap.xml': '/sitemap.xml',
 };
 
 const contentTypes = {

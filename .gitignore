@@ -256,3 +256,5 @@ admin/themes/default/css/screen.css
 
 **sitemap.xml
 robots.txt
+# Anaira API Bridge local credentials config file
+frontend/hotelier/api.config.php

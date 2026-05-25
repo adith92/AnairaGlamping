@@ -37,11 +37,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-// 2. Database Kredensial (Memuat secara aman dari Environment Variables jika tersedia, atau fallback ke default)
-define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-define('DB_NAME', getenv('DB_NAME') ?: 'anaira_db');
-define('DB_USER', getenv('DB_USER') ?: 'anaira_user');
-define('DB_PASS', getenv('DB_PASS') ?: 'KatasandiDbAnda123!'); // Disarankan menggunakan password kuat di Environment Variables
+// 2. Database Kredensial (Memuat secara aman dari file config jika tersedia, atau Environment Variables, atau fallback ke default)
+if (file_exists(__DIR__ . '/api.config.php')) {
+    include_once __DIR__ . '/api.config.php';
+}
+
+define('DB_HOST', defined('DB_HOST') ? DB_HOST : (getenv('DB_HOST') ?: 'localhost'));
+define('DB_NAME', defined('DB_NAME') ? DB_NAME : (getenv('DB_NAME') ?: 'anaira_db'));
+define('DB_USER', defined('DB_USER') ? DB_USER : (getenv('DB_USER') ?: 'anaira_user'));
+define('DB_PASS', defined('DB_PASS') ? DB_PASS : (getenv('DB_PASS') ?: 'KatasandiDbAnda123!'));
 
 try {
     // Koneksi menggunakan PDO (PHP Data Objects) demi keamanan SQL Injection
