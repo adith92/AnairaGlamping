@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Booking Sukses | Anaira Glamping &amp; Resort</title>
+  <link rel="icon" href="assets/brand/favicon.ico">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Anaira Unified Data & Language Library -->
+  <script src="scripts/anaira-data-lib.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#1b7f5a',
+              light: '#2da174',
+              dark: '#125c40',
+              hover: '#166e4d',
+              accent: '#f6f1e7'
+            },
+            ink: '#1f2421',
+            darkbg: '#1d2a25',
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Segoe UI', 'sans-serif'],
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --bg: #f6f1e7;
+      --brand: #1b7f5a;
+    }
+    body {
+      background-color: #1d2a25;
+      background-image: radial-gradient(circle at 10% 20%, rgba(27, 127, 90, 0.15) 0%, transparent 45%),
+                        radial-gradient(circle at 90% 80%, rgba(45, 161, 116, 0.12) 0%, transparent 50%);
+      color: #1f2421;
+      min-height: 100vh;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    .glass-card-dark {
+      background: rgba(18, 30, 25, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Taylor-made Invoice Print style sheet */
+    @media print {
+      body {
+        background: #ffffff !important;
+        background-image: none !important;
+        color: #000000 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-card {
+        background: #ffffff !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: #000000 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
+      .print-border-b {
+        border-bottom: 2px solid #e5e7eb !important;
+      }
+      .print-text-dark {
+        color: #000000 !important;
+      }
+      .print-bg-gray {
+        background-color: #f3f4f6 !important;
+      }
+      /* Keep branding color clear */
+      .text-brand {
+        color: #1b7f5a !important;
+      }
+      .font-serif {
+        font-family: Georgia, serif !important;
+      }
+    }
+  </style>
+</head>
+<body class="font-sans antialiased py-10 px-4 flex flex-col justify-between items-center">
+
+  <!-- Main container -->
+  <main class="w-full max-w-2xl my-auto space-y-6">
+    
+    <!-- BRAND LOGO HEADER (no-print) -->
+    <header class="text-center no-print space-y-2">
+      <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/10">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+        <span class="text-emerald-400 text-xs font-bold uppercase tracking-widest">Transaksi Berhasil</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-serif font-black text-white tracking-tight mt-2">
+        Anaira <span class="font-light italic text-brand-light">Glamping &amp; Resort</span>
+      </h1>
+      <p class="text-gray-300 text-xs sm:text-sm">Terima kasih atas pemesanan Anda. Tiket digital Anda telah aktif.</p>
+    </header>
+
+    <!-- NOT FOUND STATE -->
+    <div id="notFoundState" class="hidden glass-card rounded-3xl p-8 text-center space-y-6">
+      <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto shadow-md">
+        <i data-lucide="alert-triangle" class="w-8 h-8"></i>
+      </div>
+      <div class="space-y-2">
+        <h2 class="text-2xl font-serif font-bold text-darkbg">Booking Tidak Ditemukan</h2>
+        <p class="text-gray-600 text-sm max-w-md mx-auto">Kami tidak dapat menemukan catatan reservasi dengan kode tersebut. Harap periksa kembali tautan Anda atau hubungi layanan pelanggan kami.</p>
+      </div>
+      
+      <div class="p-4 bg-amber-50 border border-amber-200 rounded-2xl max-w-md mx-auto text-left text-xs text-amber-800 space-y-1">
+        <strong class="block font-bold">Butuh Bantuan?</strong>
+        <p>Hubungi admin Anaira Glamping &amp; Resort melalui WhatsApp resmi di bawah jika Anda merasa ini adalah kesalahan sistem.</p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+        <a href="booking.html" class="px-5 py-3 bg-brand text-white font-bold rounded-xl text-sm shadow-md hover:bg-brand-hover hover:-translate-y-0.5 transition-all inline-flex items-center justify-center gap-2">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i> Buat Booking Baru
+        </a>
+        <a href="https://wa.me/628123456789" target="_blank" class="px-5 py-3 border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 font-bold rounded-xl text-sm transition-all inline-flex items-center justify-center gap-2">
+          <i data-lucide="phone" class="w-4 h-4 text-emerald-600"></i> Hubungi WhatsApp Admin
+        </a>
+      </div>
+    </div>
+
+    <!-- MAIN RECEIPT INVOICE CARD -->
+    <div id="receiptCard" class="glass-card rounded-3xl p-6 sm:p-8 space-y-6 print-card relative overflow-hidden">
+      <!-- Decor Top Line (no-print) -->
+      <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-brand via-brand-light to-amber-400 no-print"></div>
+
+      <!-- Success Icon Area (no-print) -->
+      <div class="flex flex-col items-center text-center space-y-2 pb-4 border-b border-gray-200 no-print">
+        <div class="w-16 h-16 bg-brand/10 border-2 border-brand text-brand rounded-full flex items-center justify-center shadow-lg relative">
+          <span class="absolute inset-0 rounded-full border border-brand/50 animate-ping"></span>
+          <i data-lucide="check" class="w-9 h-9 stroke-[3]"></i>
+        </div>
+        <p class="text-[10px] uppercase font-extrabold tracking-widest text-brand mt-1">Pembayaran Sukses</p>
+        <h2 class="text-xl sm:text-2xl font-serif font-black text-darkbg" id="receiptRoomName">Balcony Suite</h2>
+        <span class="bg-brand/10 border border-brand/20 text-brand text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mt-1" id="receiptStatusBadge">PAID - LUNAS</span>
+      </div>
+
+      <!-- PRINT INVOICE HEADER (Visible only on print) -->
+      <div class="hidden print:block border-b-2 border-gray-300 pb-4 text-center sm:text-left space-y-1">
+        <div class="flex justify-between items-center">
+          <div>
+            <h1 class="text-2xl font-serif font-bold text-brand">Anaira Glamping &amp; Resort</h1>
+            <p class="text-xs text-gray-500">Bogor, Jawa Barat, Indonesia | Hub: +62 812-3456-789</p>
+          </div>
+          <div class="text-right">
+            <span class="text-xs text-gray-400 font-bold uppercase block">Kuitansi Pembayaran</span>
+            <strong class="text-brand text-lg font-mono" id="printBookingId">ANR-XXXX</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid: Detail Tamu & Reservasi -->
+      <div class="space-y-4">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 border-b border-gray-150 pb-1.5 flex items-center gap-1.5">
+          <i data-lucide="info" class="w-3.5 h-3.5 no-print"></i> Detail Reservasi
+        </h3>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+          <!-- Col 1 -->
+          <div class="space-y-2">
+            <div class="flex justify-between sm:justify-start gap-4">
+              <span class="text-gray-400 w-28 shrink-0">Kode Booking</span>
+              <strong class="text-darkbg print-text-dark font-mono text-sm tracking-wider" id="lblBookingId">ANR-XXXX</strong>
+            </div>
+            <div class="flex justify-between sm:justify-start gap-4">
+              <span class="text-gray-400 w-28 shrink-0">Nama Tamu</span>
+              <strong class="text-darkbg print-text-dark" id="lblGuestName">-</strong>
+            </div>
+            <div class="flex justify-between sm:justify-start gap-4">
+              <span class="text-gray-400 w-28 shrink-0">WhatsApp / Telp</span>
+              <span class="text-gray-700 print-text-dark" id="lblGuestPhone">-</span>
+            </div>
+            <div class="flex justify-between sm:justify-start gap-4">
+              <span class="text-gray-400 w-28 shrink-0">Alamat Email</span>
+              <span class="text-gray-700 print-text-dark" id="lblGuestEmail">-</span>
+            </div>
+          </div>
+
+          <!-- Col 2 -->
+          <div class="space-y-2 sm:pl-4 sm:border-l border-gray-150">
+            <div class="flex justify-between sm:justify-start gap-4">
+              <span class="text-gray-400 w-28 shrink-0">Check-In</span>
+              <strong class="text-darkbg print-text-dark" id="lblCheckIn">-</strong>
+            </div>
+            <div class="flex justify-between sm:justify-start gap-4">
+              <span class="text-gray-400 w-28 shrink-0">Check-Out</span>
+              <strong class="text-darkbg print-text-dark" id="lblCheckOut">-</strong>
+            </div>
+            <div class="flex justify-between sm:justify-start gap-4">
+              <span class="text-gray-400 w-28 shrink-0">Durasi Stay</span>
+              <span class="text-gray-700 print-text-dark font-semibold" id="lblNights">-</span>
+            </div>
+            <div class="flex justify-between sm:justify-start gap-4">
+              <span class="text-gray-400 w-28 shrink-0">Jam Tiba (Est)</span>
+              <span class="text-gray-700 print-text-dark font-mono" id="lblArrival">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add-ons Breakdown Table (if available) -->
+      <div id="receiptAddonsContainer" class="space-y-3 hidden">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 border-b border-gray-150 pb-1.5 flex items-center gap-1.5">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 no-print"></i> Layanan Tambahan (Add-ons)
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left">
+            <thead>
+              <tr class="border-b border-gray-200 text-gray-400 font-semibold uppercase">
+                <th class="py-2">Nama Layanan</th>
+                <th class="py-2 text-center">Harga Satuan</th>
+                <th class="py-2 text-center">Qty</th>
+                <th class="py-2 text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody id="tblAddonsBody" class="divide-y divide-gray-100 text-gray-700 print-text-dark">
+              <!-- Addons row will be injected here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Billing Breakdown -->
+      <div class="space-y-3 pt-2">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 border-b border-gray-150 pb-1.5 flex items-center gap-1.5">
+          <i data-lucide="receipt" class="w-3.5 h-3.5 no-print"></i> Rincian Tagihan &amp; Pembayaran
+        </h3>
+        
+        <div class="bg-gray-50 print-bg-gray border border-gray-150 rounded-2xl p-4 text-xs sm:text-sm space-y-2">
+          <div class="flex justify-between text-gray-600 print-text-dark">
+            <span>Biaya Sewa Akomodasi</span>
+            <span id="lblBillBase">Rp 0</span>
+          </div>
+          
+          <div id="rowDiscount" class="hidden flex justify-between text-rose-600 font-semibold">
+            <span>Potongan Voucher (<span id="lblVoucherCode">-</span>)</span>
+            <span id="lblBillDiscount">-Rp 0</span>
+          </div>
+
+          <div id="rowAddonsTotal" class="hidden flex justify-between text-gray-600 print-text-dark">
+            <span>Layanan Tambahan (Add-ons)</span>
+            <span id="lblBillAddons">Rp 0</span>
+          </div>
+
+          <div class="flex justify-between text-gray-600 print-text-dark">
+            <span>Pajak &amp; Jasa Layanan (10% Nett)</span>
+            <span id="lblBillTax">Rp 0</span>
+          </div>
+
+          <div class="border-t border-dashed border-gray-300 my-2 pt-2.5 flex justify-between items-center text-sm sm:text-base font-bold text-darkbg print-text-dark">
+            <span>Total Bayar (Lunas)</span>
+            <span class="text-brand font-serif font-black text-lg sm:text-xl" id="lblBillTotal">Rp 0</span>
+          </div>
+
+          <div class="border-t border-gray-200/50 pt-2 flex justify-between items-center text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wider">
+            <span>Metode Bayar: <strong class="text-gray-700 print-text-dark" id="lblPaymentMethod">-</strong></span>
+            <span>Status: <strong class="text-emerald-600 font-bold">PAID (SUCCESS)</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Catatan Khusus (if any) -->
+      <div id="notesContainer" class="hidden p-3.5 bg-amber-50/50 border border-amber-100 rounded-2xl text-xs text-amber-800 space-y-1">
+        <strong class="font-bold flex items-center gap-1.5">
+          <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Permintaan Khusus Tamu
+        </strong>
+        <p id="lblSpecialNotes" class="italic text-gray-600 print-text-dark"></p>
+      </div>
+
+      <!-- TTD / Stamp for Printed invoice only -->
+      <div class="hidden print:flex justify-between items-end pt-12 text-xs">
+        <div>
+          <p class="text-gray-400 font-bold uppercase">Petunjuk Check-in:</p>
+          <p class="text-gray-500 max-w-sm mt-1">Harap bawa file digital ini atau kuitansi cetak ini ke resepsionis Anaira Glamping saat check-in pada pukul 13:00 WIB.</p>
+        </div>
+        <div class="text-center w-40 border-t border-gray-300 pt-2 font-semibold">
+          <p class="text-darkbg font-bold">Resepsionis Resort</p>
+          <p class="text-gray-400 font-light mt-12">Anaira Glamping &amp; Resort</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- NAVIGATION ACTIONS (no-print) -->
+    <div class="flex flex-col gap-3 no-print">
+      <!-- Pre-Arrival Guide Card -->
+      <div class="bg-brand-dark/40 border border-brand/20 rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left shadow-lg">
+        <div class="space-y-1">
+          <h4 class="font-serif font-bold text-white text-base flex items-center justify-center sm:justify-start gap-1.5">
+            <i data-lucide="luggage" class="text-brand-light"></i> Siap untuk Berangkat?
+          </h4>
+          <p class="text-gray-300 text-xs sm:text-sm">Silakan baca panduan persiapan pre-arrival (waktu check-in, perlengkapan yang wajib dibawa, &amp; peraturan resort).</p>
+        </div>
+        <a href="pre-arrival.html" class="w-full sm:w-auto px-4 py-2.5 bg-brand-light hover:bg-brand text-white font-bold rounded-xl text-xs tracking-wider uppercase transition-all duration-150 text-center shadow-md shrink-0">
+          Buka Panduan <i data-lucide="chevron-right" class="inline w-3.5 h-3.5"></i>
+        </a>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <!-- Download Invoice -->
+        <button onclick="window.print()" class="w-full py-3.5 bg-white border border-brand/20 text-brand font-bold rounded-2xl text-sm shadow-md hover:bg-brand/5 hover:border-brand/40 active:scale-98 transition-all flex items-center justify-center gap-2">
+          <i data-lucide="printer" class="w-4.5 h-4.5"></i> Cetak / Unduh Invoice
+        </button>
+
+        <!-- Google Maps Launcher -->
+        <a href="https://maps.google.com/?q=Anaira+Glamping+Resort+Bogor" target="_blank" class="w-full py-3.5 bg-white border border-brand/20 text-brand font-bold rounded-2xl text-sm shadow-md hover:bg-brand/5 hover:border-brand/40 active:scale-98 transition-all flex items-center justify-center gap-2 text-center">
+          <i data-lucide="map-pin" class="w-4.5 h-4.5 text-rose-500"></i> Petunjuk Arah (Maps)
+        </a>
+
+        <!-- Back to booking or home -->
+        <a href="booking.html" class="w-full py-3.5 bg-brand hover:bg-brand-hover text-white font-bold rounded-2xl text-sm shadow-lg active:scale-98 transition-all flex items-center justify-center gap-2 text-center">
+          <i data-lucide="arrow-left" class="w-4.5 h-4.5"></i> Booking Baru
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- no-print simple footer -->
+  <footer class="text-center no-print text-gray-500 text-xs mt-10">
+    <p>&copy; 2026 Anaira Glamping &amp; Resort. All Rights Reserved.</p>
+    <p class="font-light mt-1">Layanan Reservasi Premium Powered by BookingConciergeAgent</p>
+  </footer>
+
+  <!-- DYNAMIC DATA BINDING SCRIPT -->
+  <script>
+    // Format numeric amounts to Rupiah currency string
+    function formatRupiah(amount) {
+      if (amount === undefined || amount === null) return '0';
+      return new Intl.NumberFormat('id-ID').format(Math.floor(amount));
+    }
+
+    // Format ISO Date String into Indo Date (e.g. 2026-05-24 -> 24 Mei 2026)
+    function formatIndoDate(dateStr) {
+      if (!dateStr) return '-';
+      const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      try {
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return dateStr;
+        return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+      } catch (e) {
+        return dateStr;
+      }
+    }
+
+    // Main execution
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Re-initialize Lucide Icons
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+
+      // Fetch parameters
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+
+      if (!code) {
+        // Toggle view to not found
+        document.getElementById('receiptCard').classList.add('hidden');
+        document.getElementById('notFoundState').classList.remove('hidden');
+        return;
+      }
+
+      try {
+        // Load bookings list from AnairaDB
+        const bookings = await AnairaDB.get(ANAIRA_KEYS.BOOKINGS, []);
+        const booking = bookings.find(b => b.bookingId === code || b.id === code);
+
+        if (!booking) {
+          document.getElementById('receiptCard').classList.add('hidden');
+          document.getElementById('notFoundState').classList.remove('hidden');
+          return;
+        }
+
+        // Room Rate mapping names helper
+        const ROOM_NAMES = {
+          'Balcony': 'Balcony Suite',
+          'Porch': 'Porch Cabin',
+          'Villa': 'Presidential Villa'
+        };
+
+        const roomLabel = booking.packageName || ROOM_NAMES[booking.roomType] || booking.roomType || 'Deluxe glamping Unit';
+
+        // 1. Populate basic text labels
+        document.getElementById('receiptRoomName').innerText = roomLabel;
+        document.getElementById('lblBookingId').innerText = booking.bookingId;
+        document.getElementById('printBookingId').innerText = booking.bookingId;
+        document.getElementById('lblGuestName').innerText = booking.guestName;
+        document.getElementById('lblGuestPhone').innerText = booking.guestWhatsapp || booking.phone || '-';
+        document.getElementById('lblGuestEmail').innerText = booking.guestEmail || booking.email || '-';
+        
+        document.getElementById('lblCheckIn').innerText = formatIndoDate(booking.checkIn);
+        document.getElementById('lblCheckOut').innerText = formatIndoDate(booking.checkOut);
+        document.getElementById('lblNights').innerText = `${booking.nights || 1} Malam`;
+        document.getElementById('lblArrival').innerText = booking.arrivalSlot || 'Sore (14:00 - 18:00)';
+        
+        document.getElementById('lblPaymentMethod').innerText = booking.paymentMethod || booking.method || 'Virtual Account';
+
+        // 2. Populate Special Notes if any
+        if (booking.notes && booking.notes.trim().length > 0) {
+          document.getElementById('notesContainer').classList.remove('hidden');
+          document.getElementById('lblSpecialNotes').innerText = `"${booking.notes}"`;
+        }
+
+        // 3. Billing & Addons Calculations
+        const hasAddons = booking.addons && booking.addons.length > 0;
+        let addonsSum = 0;
+
+        if (hasAddons) {
+          document.getElementById('receiptAddonsContainer').classList.remove('hidden');
+          document.getElementById('rowAddonsTotal').classList.remove('hidden');
+          
+          const tbody = document.getElementById('tblAddonsBody');
+          let tbodyHTML = '';
+          
+          booking.addons.forEach(item => {
+            addonsSum += item.total || 0;
+            tbodyHTML += `
+              <tr class="border-b border-gray-100">
+                <td class="py-2.5 font-semibold text-darkbg">${item.name}</td>
+                <td class="py-2.5 text-center">Rp ${formatRupiah(item.price)}</td>
+                <td class="py-2.5 text-center">x${item.quantity}</td>
+                <td class="py-2.5 text-right font-bold text-brand">Rp ${formatRupiah(item.total)}</td>
+              </tr>
+            `;
+          });
+          tbody.innerHTML = tbodyHTML;
+          document.getElementById('lblBillAddons').innerText = `Rp ${formatRupiah(addonsSum)}`;
+        }
+
+        // Compute Base Price and Taxes mathematically
+        // We know finalAmount = (base - discount + addonsSum) * 1.10
+        // Therefore: finalAmount / 1.10 = base - discount + addonsSum
+        // => base - discount = (finalAmount / 1.10) - addonsSum
+        const finalTotal = booking.amount || 0;
+        const discountAmount = booking.discountAmount || booking.discount || 0;
+        
+        // Base rate is finalTotal / 1.1 - addonsSum + discount
+        const netAmountWithAddons = finalTotal / 1.10;
+        const basePrice = Math.max(0, netAmountWithAddons - addonsSum + discountAmount);
+        const tax = finalTotal - (basePrice - discountAmount + addonsSum);
+
+        // Display Billing Summary values
+        document.getElementById('lblBillBase').innerText = `Rp ${formatRupiah(basePrice)}`;
+        document.getElementById('lblBillTotal').innerText = `Rp ${formatRupiah(finalTotal)}`;
+        document.getElementById('lblBillTax').innerText = `Rp ${formatRupiah(tax)}`;
+
+        if (discountAmount > 0) {
+          document.getElementById('rowDiscount').classList.remove('hidden');
+          document.getElementById('lblVoucherCode').innerText = booking.voucherCode || 'VOUCHER';
+          document.getElementById('lblBillDiscount').innerText = `-Rp ${formatRupiah(discountAmount)}`;
+        }
+
+      } catch (err) {
+        console.error("Failed to load booking details:", err);
+        document.getElementById('receiptCard').classList.add('hidden');
+        document.getElementById('notFoundState').classList.remove('hidden');
+      }
+    });
+  </script>
+  <script src="scripts/anaira-chatbot.js"></script>
+</body>
+</html>

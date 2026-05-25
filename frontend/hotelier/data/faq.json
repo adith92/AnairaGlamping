@@ -1,0 +1,107 @@
+[
+  {
+    "id": "room-balcony",
+    "category": "rooms",
+    "question": "Bagaimana detail dan fasilitas tipe kamar Balcony Suite?",
+    "answer": "Tipe Balcony Suite adalah unit glamping premium dengan balkon pribadi dan pemandangan kebun asri Anaira. Kamar ini berkapasitas maksimal 4 orang. Fasilitas di dalamnya meliputi AC, Android TV, kamar mandi dalam, air panas (water heater), wifi, cangkir pembuat kopi/teh, serta kelengkapan mandi (amenities). Sangat cocok untuk keluarga kecil atau pasangan.",
+    "keywords": ["balcony", "balkon", "suite", "fasilitas balcony", "kapasitas balcony", "kamar balcony"]
+  },
+  {
+    "id": "room-porch",
+    "category": "rooms",
+    "question": "Bagaimana detail dan fasilitas tipe kamar Porch Cabin?",
+    "answer": "Tipe Porch Cabin adalah cabin glamping nyaman dengan teras outdoor (porch) pribadi yang luas untuk bersantai di area taman. Kamar ini berkapasitas maksimal 4 orang. Fasilitas meliputi Kipas Angin, Android TV, kamar mandi dalam, air panas (water heater), wifi, ketel listrik, dan amenities lengkap. Pilihan terbaik untuk staycation hemat dekat alam.",
+    "keywords": ["porch", "cabin", "teras", "fasilitas porch", "kapasitas porch", "kamar porch"]
+  },
+  {
+    "id": "room-villa",
+    "category": "rooms",
+    "question": "Bagaimana detail dan fasilitas tipe Presidential Villa?",
+    "answer": "Presidential Villa adalah villa megah satu-satunya di Anaira yang dirancang untuk acara keluarga besar atau rombongan. Memiliki kapasitas maksimal 20 orang. Fasilitas eksklusifnya meliputi AC, Android TV layar lebar, dapur lengkap (kitchen set dengan kulkas, kompor, alat masak, dispenser), set karaoke eksklusif, ruang kumpul keluarga yang lapang, serta akses dekat ke area kolam renang alami.",
+    "keywords": ["villa", "presidential", "keluarga besar", "fasilitas villa", "kapasitas villa", "karaoke", "dapur"]
+  },
+  {
+    "id": "price-rates",
+    "category": "prices",
+    "question": "Berapa tarif sewa kamar per malam di Anaira Glamping & Resort?",
+    "answer": "Tarif sewa per malam (Nett) untuk masing-masing tipe unit adalah:\n1. **Porch Cabin:** Weekday Rp 350.000 / malam, Weekend Rp 420.000 / malam.\n2. **Balcony Suite:** Weekday Rp 500.000 / malam, Weekend Rp 700.000 / malam.\n3. **Presidential Villa:** Weekday Rp 2.100.000 / malam, Weekend Rp 3.000.000 / malam.\n*Catatan: Weekday berlaku hari Senin - Kamis, sedangkan Weekend berlaku hari Jumat - Minggu.*",
+    "keywords": ["harga", "tarif", "sewa", "biaya", "rate", "permalam", "weekday", "weekend", "banyaknya", "murah"]
+  },
+  {
+    "id": "price-extra-bed",
+    "category": "prices",
+    "question": "Apakah bisa menambah Extra Bed dan berapa biayanya?",
+    "answer": "Ya, Anda bisa menyewa Extra Bed tambahan untuk kenyamanan tidur ekstra. Biaya Extra Bed di Anaira Glamping & Resort adalah Rp 150.000 per bed per malam (sudah termasuk tambahan 1 pax sarapan pagi lezat). Silakan request extra bed saat melakukan booking online atau informasikan ke staf kami sebelum kedatangan.",
+    "keywords": ["extra bed", "kasur tambahan", "tambah kasur", "tambah orang", "biaya extra", "kasur", "extrabed"]
+  },
+  {
+    "id": "package-lebaran",
+    "category": "packages",
+    "question": "Apa itu Paket Lebaran Family Escape?",
+    "answer": "Paket Lebaran Family Escape adalah paket staycation eksklusif selama bulan Juni 2026 untuk merayakan hari kemenangan bersama keluarga. Dengan tarif promo Rp 3.500.000 (dari harga normal Rp 4.500.000), Anda mendapatkan: Menginap 2 malam di Canopy Luxury Glamping / Villa, Sarapan pagi untuk 4 orang, BBQ Dinner Set spesial keluarga, gratis akses kolam renang & api unggun, serta hampers/gift Lebaran eksklusif. Gunakan kode voucher **LEBARAN10** untuk klaim paket ini!",
+    "keywords": ["lebaran", "paket lebaran", "family escape", "idul fitri", "juni", "promo lebaran", "hampers", "mudik"]
+  },
+  {
+    "id": "package-honeymoon",
+    "category": "packages",
+    "question": "Apa itu Paket Honeymoon Romantic Stay?",
+    "answer": "Paket Honeymoon Romantic Stay adalah paket bulan madu romantis bagi pasangan baru di tengah sunyinya alam pegunungan. Dengan tarif promo Rp 2.500.000 (normal Rp 3.200.000), fasilitas mencakup: Menginap 2 malam di Balcony Glass Suite Premium, sarapan terapung romantis (Floating Breakfast) di kamar, 1x Romantic Candlelight Dinner, dekorasi romantis kelopak bunga di tempat tidur & bathtub, serta cokelat & welcome drink eksklusif. Gunakan kode voucher **HONEYMOON15**!",
+    "keywords": ["honeymoon", "bulan madu", "paket romantis", "candlelight", "romantic", "floating breakfast", "pasangan", "nikah"]
+  },
+  {
+    "id": "package-weekend-bbq",
+    "category": "packages",
+    "question": "Apa itu Paket Weekend BBQ Glamping?",
+    "answer": "Paket Weekend BBQ Glamping adalah paket menginap akhir pekan yang dirancang untuk keseruan bersama teman atau keluarga dengan pesta BBQ outdoor lengkap. Dengan tarif Rp 1.800.000 (normal Rp 2.200.000), paket mencakup: Menginap 1 malam di Canopy Luxury Glamping, sarapan pagi untuk 4 orang, bahan makanan & alat panggang BBQ outdoor lengkap (daging slice, sosis, jagung manis, marshmallow), serta kayu bakar gratis untuk api unggun privat Anda. Gunakan kode voucher **WEEKEND10**!",
+    "keywords": ["bbq", "weekend bbq", "paket weekend", "api unggun", "akhir pekan", "panggang", "sate", "bakar"]
+  },
+  {
+    "id": "location-direction",
+    "category": "location",
+    "question": "Di mana lokasi Anaira Glamping & Resort dan bagaimana rutenya?",
+    "answer": "Anaira Glamping & Resort berlokasi di **Jl. Raya Curug Nangka, Ciapus, Bogor, Jawa Barat**. Dari arah Jakarta, Anda dapat berkendara ke arah Bogor Kota, kemudian mengambil rute ke arah Ciapus / Curug Nangka. Lokasinya berada dekat dengan kaki Gunung Salak, menyuguhkan udara sejuk bebas polusi dan pemandangan pegunungan yang menawan. Petunjuk arah selengkapnya bisa dilihat di Google Maps.",
+    "keywords": ["lokasi", "alamat", "rute", "jalan", "arah", "ciapus", "bogor", "gunung salak", "curug nangka", "ke sini", "dimana"]
+  },
+  {
+    "id": "location-maps",
+    "category": "location",
+    "question": "Bagaimana tautan peta atau Google Maps resmi Anaira?",
+    "answer": "Tautan resmi Google Maps Anaira Glamping & Resort adalah: [https://maps.app.goo.gl/YVSmNtEsiK9tQNRS6](https://maps.app.goo.gl/YVSmNtEsiK9tQNRS6). Anda dapat langsung membuka peta tersebut di ponsel Anda untuk navigasi berkendara yang akurat langsung sampai ke area parkir luas resort kami.",
+    "keywords": ["maps", "google maps", "peta", "link maps", "gps", "navigasi", "gmap"]
+  },
+  {
+    "id": "policy-checkin-checkout",
+    "category": "resort policies",
+    "question": "Jam berapa waktu Check-in dan Check-out di Anaira?",
+    "answer": "Waktu Check-in standar adalah mulai pukul **13.00 WIB**, sedangkan waktu Check-out standar adalah maksimal pukul **12.00 WIB**. Permintaan untuk *early check-in* atau *late check-out* dapat disesuaikan dan diajukan terlebih dahulu kepada resepsionis kami (tergantung ketersediaan kamar pada hari tersebut).",
+    "keywords": ["checkin", "checkout", "jam masuk", "jam keluar", "jam check-in", "jam check-out", "early check-in", "late check-out", "waktu", "jam"]
+  },
+  {
+    "id": "policy-cancellation",
+    "category": "resort policies",
+    "question": "Bagaimana kebijakan pembatalan (cancellation) dan reschedule?",
+    "answer": "Kebijakan resmi di Anaira Glamping & Resort adalah **Cancel DP Hangus** (Down Payment yang telah dibayarkan tidak dapat dikembalikan jika Anda melakukan pembatalan sepihak). Namun, kami memberikan fleksibilitas berupa **Bisa Reschedule** (penjadwalan ulang tanggal menginap) dengan syarat konfirmasi maksimal H-7 sebelum tanggal check-in semula.",
+    "keywords": ["batal", "cancellation", "cancel", "refund", "dp hangus", "kembalian uang", "reschedule", "atur ulang", "ganti tanggal"]
+  },
+  {
+    "id": "policy-quiet-hours",
+    "category": "resort policies",
+    "question": "Apakah ada aturan jam tenang (Quiet Hours)?",
+    "answer": "Ya, demi menjaga kenyamanan bersama seluruh tamu yang ingin menikmati keheningan dan kedamaian alam, Anaira menetapkan aturan **Jam Tenang (Quiet Hours) mulai pukul 22.00 hingga 07.00 WIB**. Pada jam tersebut, tamu diharapkan membatasi volume suara, tidak menyalakan musik keras-keras, dan menghentikan aktivitas yang berisik.",
+    "keywords": ["jam tenang", "quiet hours", "berisik", "suara", "musik", "malam", "aturan", "kebisingan"]
+  },
+  {
+    "id": "payment-methods",
+    "category": "payments",
+    "question": "Metode pembayaran apa saja yang diterima?",
+    "answer": "Kami menerima beberapa gerbang pembayaran instan demi keamanan dan kenyamanan Anda:\n1. **INDOPAY QRIS:** Scan kode QR otomatis menggunakan m-Banking atau e-wallet (GoPay, OVO, ShopeePay, DANA).\n2. **Virtual Account (VA) BCA / Transfer BCA:** Transfer langsung dengan verifikasi otomatis realtime.\n3. **Midtrans Snap / Xendit Invoice:** Mendukung Virtual Account bank lainnya (Mandiri, BNI, BRI), Kartu Kredit, serta gerbang Alfamart / Indomaret.",
+    "keywords": ["bayar", "pembayaran", "metode", "transfer", "rekening", "bca", "qris", "gopay", "ovo", "dana", "kartu kredit", "indopay", "midtrans", "xendit"]
+  },
+  {
+    "id": "payment-qris",
+    "category": "payments",
+    "question": "Bagaimana cara melakukan pembayaran instan via QRIS?",
+    "answer": "Saat melakukan pemesanan di *Interactive Booking Wizard* kami, pada Langkah 4 pilih metode **INDOPAY QRIS**. Sistem akan menampilkan kode QR dinamis khusus untuk transaksi Anda. Cukup buka aplikasi e-wallet (GoPay, OVO, DANA, ShopeePay) atau m-Banking Anda, scan kode QR tersebut, lalu konfirmasi pembayaran. Status booking akan langsung berubah menjadi 'Paid' dalam hitungan detik secara otomatis!",
+    "keywords": ["cara qris", "scan qris", "gpn", "indopay qris", "qr code", "scan qr", "bayar qr"]
+  }
+]

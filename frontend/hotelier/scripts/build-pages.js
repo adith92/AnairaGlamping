@@ -10,7 +10,17 @@ function readContent() {
 }
 
 function writePage(filename, html) {
-  fs.writeFileSync(path.join(root, filename), html, 'utf8');
+  const isSubdir = filename.includes('/') || filename.includes('\\');
+  const chatbotSrc = isSubdir ? '../scripts/anaira-chatbot.js' : 'scripts/anaira-chatbot.js';
+  const chatbotTag = `<script src="${chatbotSrc}"></script>`;
+  
+  let finalHtml = html;
+  if (html.includes('</body>')) {
+    finalHtml = html.replace('</body>', `${chatbotTag}\n</body>`);
+  } else {
+    finalHtml = html + `\n${chatbotTag}`;
+  }
+  fs.writeFileSync(path.join(root, filename), finalHtml, 'utf8');
 }
 
 function esc(value) {
@@ -1253,6 +1263,476 @@ ${content.facilities.slice(0, 3).map((item) => `<article class="card"><img src="
 </section>`);
 }
 
+function buildPromo(content) {
+  const packagesHtml = (content.packages || []).map((pkg) => {
+    const includedItemsList = (pkg.includedItems || []).slice(0, 3).map(item => `
+      <li style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #f6f1e7; margin: 4px 0;">
+        <span style="color: var(--brand); font-weight: 700; margin-right: 8px;">✓</span> ${esc(item)}
+      </li>
+    `).join('\n');
+    
+    let landingUrl = 'packages.html';
+    if (pkg.slug.includes('lebaran')) landingUrl = 'promo/lebaran';
+    else if (pkg.slug.includes('honeymoon')) landingUrl = 'promo/honeymoon';
+    else if (pkg.slug.includes('bbq')) landingUrl = 'promo/bbq';
+    else if (pkg.slug.includes('adventure')) landingUrl = 'promo/family';
+
+    return `
+    <article class="card relative overflow-hidden group" style="display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; transition: all 0.3s ease;">
+      <div style="position: absolute; top: 12px; left: 12px; background: #e11d48; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 9999px; z-index: 10; box-shadow: 0 4px 6px rgba(0,0,0,0.15);" class="animate-pulse">
+        ${esc(pkg.discountLabel)}
+      </div>
+      <div style="height: 200px; overflow: hidden; border-bottom: 1px solid var(--border);">
+        <img src="${esc(pkg.bannerImage)}" alt="${esc(pkg.title)}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" class="group-hover:scale-105">
+      </div>
+      <div class="p" style="padding: 20px; display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; gap: 12px;">
+        <div>
+          <h3 style="color: #fff; font-size: 1.25rem; margin: 0 0 6px 0;">${esc(pkg.title)}</h3>
+          
+          <div style="display: flex; gap: 8px; align-items: baseline; margin-bottom: 10px;">
+            <span style="text-decoration: line-through; opacity: 0.5; font-size: 0.85rem; color: #f6f1e7;">${rupiah(pkg.originalPrice)}</span>
+            <strong style="font-size: 1.3rem; color: #a7eed0; font-serif">${rupiah(pkg.price)}</strong>
+            <span style="font-size: 0.75rem; opacity: 0.6;">(Nett)</span>
+          </div>
+
+          <p class="muted" style="font-size: 0.85rem; line-height: 1.4; margin-bottom: 12px; height: 50px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">${esc(pkg.shortDescription)}</p>
+          
+          <ul style="list-style: none; padding: 0; margin: 0 0 12px 0;">
+            ${includedItemsList}
+          </ul>
+
+          <div style="background: rgba(255, 255, 255, 0.04); padding: 8px; border-radius: 12px; border: 1px solid var(--border); text-align: center; margin: 8px 0;">
+            <span style="font-size: 0.7rem; color: #a7eed0; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; display: block;">Gunakan Kode Voucher:</span>
+            <strong style="font-family: monospace; font-size: 1rem; color: #fff; background: rgba(27, 127, 90, 0.2); border: 1.5px dashed var(--brand); padding: 2px 8px; border-radius: 6px; display: inline-block; margin-top: 4px;">${esc(pkg.voucherCode)}</strong>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 8px; margin-top: auto;">
+          <a class="btn alt" href="${esc(landingUrl)}" style="text-align: center; font-size: 0.8rem; padding: 10px 8px; border-radius: 10px; font-weight: 600;">
+            Detail Promo
+          </a>
+          <a class="btn" href="booking.html?package=${esc(pkg.slug)}&voucher=${esc(pkg.voucherCode)}" style="text-align: center; font-size: 0.8rem; padding: 10px 8px; border-radius: 10px; font-weight: 700;">
+            Booking Paket 📅
+          </a>
+        </div>
+      </div>
+    </article>
+    `;
+  }).join('\n');
+
+  return layout(content, `${content.brand.name} | Staycation Promo Catalog`, 'Daftar paket promo staycation eksklusif di Anaira Glamping. Dapatkan potongan harga dan fasilitas premium.', `<section>
+    <h1>Katalog Promo Staycation</h1>
+    <p class="muted">Dapatkan penawaran staycation terbaik dekat Curug Nangka untuk liburan tak terlupakan Anda bersama orang terkasih.</p>
+  </section>
+  <section class="grid" style="margin-top: 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+    ${packagesHtml}
+  </section>
+  <section style="background: var(--card); border: 1px solid var(--border); padding: 32px; border-radius: 24px; text-align: center; margin-top: 40px; backdrop-filter: blur(12px);">
+    <h2 style="border: none; padding: 0; text-align: center; margin-bottom: 12px; color: #a7eed0;">Cara Mengklaim Promo Staycation</h2>
+    <p class="muted" style="max-width: 600px; margin: auto; margin-bottom: 24px;">Ikuti langkah mudah berikut untuk mengamankan paket promo Anda secara instan.</p>
+    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+      <div style="padding: 16px;">
+        <span style="font-size: 1.5rem; display: block; margin-bottom: 8px;">1. Pilih Paket</span>
+        <p class="muted" style="font-size: 0.8rem; margin: 0;">Telusuri katalog promo kami dan tentukan paket staycation impian Anda.</p>
+      </div>
+      <div style="padding: 16px;">
+        <span style="font-size: 1.5rem; display: block; margin-bottom: 8px;">2. Salin Voucher</span>
+        <p class="muted" style="font-size: 0.8rem; margin: 0;">Gunakan kode voucher eksklusif yang tertera untuk mendapatkan diskon langsung.</p>
+      </div>
+      <div style="padding: 16px;">
+        <span style="font-size: 1.5rem; display: block; margin-bottom: 8px;">3. Booking Instan</span>
+        <p class="muted" style="font-size: 0.8rem; margin: 0;">Klik booking untuk langsung mengisi paket & voucher pada halaman pemesanan otomatis.</p>
+      </div>
+    </div>
+  </section>`);
+}
+
+function buildPromoLandingPage(content, pkg) {
+  const inclusionsHtml = (pkg.includedItems || []).map(item => `
+    <li class="flex items-start gap-3 text-slate-200 text-sm sm:text-base leading-relaxed">
+      <span class="w-6 h-6 rounded-full bg-emerald-950/40 border border-emerald-500/50 flex items-center justify-center shrink-0 mt-0.5 shadow-md">
+        <svg class="w-3.5 h-3.5 text-emerald-400 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+      </span>
+      <span class="font-medium">${esc(item)}</span>
+    </li>
+  `).join('\n');
+
+  const foodHtml = (pkg.foodMenu || []).map(food => `
+    <li class="flex items-center gap-2.5 bg-brand-950/20 px-4 py-3 rounded-xl border border-white/5 backdrop-blur-sm shadow-sm transition-all hover:border-brand/35">
+      <span class="text-emerald-400 font-bold text-base shrink-0">🍽️</span>
+      <span class="text-sm font-semibold text-slate-300">${esc(food)}</span>
+    </li>
+  `).join('\n');
+
+  const durationText = pkg.includedItems.some(i => i.toLowerCase().includes('2 malam')) ? '2 Malam' : '1 Malam';
+
+  const seoTitle = `${pkg.title} | Promo Anaira Glamping`;
+  const seoDesc = `${pkg.shortDescription} Dapatkan penawaran terbatas staycation ${durationText} hanya dengan ${rupiah(pkg.price)} nett!`;
+
+  const pageBody = `
+  <section class="mt-4">
+    <a href="../promo" class="inline-flex items-center gap-2 text-brand hover:text-brand-hover text-sm font-bold transition-all hover:-translate-x-1 mb-5">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
+      Kembali ke Katalog Promo
+    </a>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div class="lg:col-span-7 space-y-6">
+        <div class="relative w-full rounded-3xl overflow-hidden shadow-2xl border border-white/10 aspect-[16/10] sm:aspect-video group">
+          <img src="../${esc(pkg.bannerImage)}" alt="${esc(pkg.title)}" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent"></div>
+          
+          <div class="absolute bottom-6 left-6 right-6 space-y-2">
+            <span class="inline-block bg-rose-600 text-white font-extrabold text-[10px] sm:text-xs px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-lg">
+              ${esc(pkg.discountLabel)} SPECIAL DEALS
+            </span>
+            <h1 class="text-2xl sm:text-4xl font-serif font-extrabold text-white tracking-tight leading-tight">${esc(pkg.title)}</h1>
+            <p class="text-slate-300 text-xs sm:text-sm font-semibold opacity-90">${durationText} Staycation Premium</p>
+          </div>
+        </div>
+        
+        <div class="bg-black/15 backdrop-blur-md border border-white/10 p-6 sm:p-8 rounded-3xl shadow-xl space-y-4">
+          <h2 class="text-xl sm:text-2xl font-bold text-white border-l-4 border-brand pl-3">Tentang Paket Ini</h2>
+          <p class="text-slate-300 text-sm sm:text-base leading-relaxed font-medium">${esc(pkg.fullDescription)}</p>
+          
+          <div class="grid grid-cols-2 gap-4 pt-4 border-t border-white/5 mt-4">
+            <div class="bg-brand-950/15 p-4 rounded-2xl border border-white/5">
+              <span class="block text-slate-400 uppercase tracking-wider text-[10px] mb-0.5">Durasi Menginap</span>
+              <strong class="text-base sm:text-lg font-bold text-brand">${durationText}</strong>
+            </div>
+            <div class="bg-brand-950/15 p-4 rounded-2xl border border-white/5">
+              <span class="block text-slate-400 uppercase tracking-wider text-[10px] mb-0.5">Periode Menginap</span>
+              <strong class="text-xs sm:text-sm font-bold text-brand">Hingga Dec 2026</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-black/15 backdrop-blur-md border border-white/10 p-6 sm:p-8 rounded-3xl shadow-xl space-y-5">
+          <h2 class="text-xl sm:text-2xl font-bold text-white border-l-4 border-brand pl-3">Apa Saja Yang Termasuk (Inclusions)?</h2>
+          <ul class="space-y-3">
+            ${inclusionsHtml}
+          </ul>
+        </div>
+
+        ${(pkg.foodMenu || []).length > 0 ? `
+        <div class="bg-black/15 backdrop-blur-md border border-white/10 p-6 sm:p-8 rounded-3xl shadow-xl space-y-5">
+          <h2 class="text-xl sm:text-2xl font-bold text-white border-l-4 border-brand pl-3">🍽️ Spesial Menu Makanan Termasuk</h2>
+          <p class="text-slate-400 text-xs sm:text-sm -mt-2">Nikmati hidangan kuliner pilihan khas Anaira Glamping secara privat.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            ${foodHtml}
+          </div>
+        </div>
+        ` : ''}
+      </div>
+
+      <div class="lg:col-span-5 sticky top-24 space-y-6">
+        <div class="bg-black/25 backdrop-blur-xl border border-white/15 p-6 sm:p-8 rounded-3xl shadow-2xl relative overflow-hidden">
+          <div class="absolute -top-12 -left-12 w-28 h-28 bg-brand/5 rounded-full blur-xl"></div>
+          
+          <div class="relative z-10 space-y-6">
+            <div>
+              <span class="text-[10px] bg-brand text-white font-extrabold px-3 py-1 rounded-full uppercase tracking-wider mb-2.5 inline-block">Best Value Guaranteed</span>
+              <h3 class="text-lg text-slate-300 font-semibold">Harga Promo Spesial</h3>
+            </div>
+
+            <div class="bg-white/5 p-5 rounded-2xl border border-white/5 space-y-1">
+              <span class="block text-slate-400 uppercase tracking-wider text-[10px] font-bold">Harga Normal Paket</span>
+              <span class="text-lg sm:text-xl text-slate-500 line-through font-bold">${rupiah(pkg.originalPrice)}</span>
+              
+              <div class="pt-3 border-t border-white/5 mt-3 space-y-0.5">
+                <span class="block text-slate-400 uppercase tracking-wider text-[10px] font-bold">Harga Promo (Nett)</span>
+                <div class="flex items-baseline gap-2">
+                  <strong class="text-3xl sm:text-4xl text-emerald-400 font-serif font-black tracking-tight">${rupiah(pkg.price)}</strong>
+                  <span class="text-xs text-slate-400 font-semibold">/ Paket</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="relative bg-gradient-to-r from-emerald-950/40 to-teal-950/40 border-2 border-dashed border-emerald-500/40 p-5 rounded-2xl text-center space-y-3 overflow-hidden shadow-inner group">
+              <div class="absolute top-1/2 -left-3.5 -translate-y-1/2 w-7 h-7 bg-[#06140e] rounded-full border-r border-white/10"></div>
+              <div class="absolute top-1/2 -right-3.5 -translate-y-1/2 w-7 h-7 bg-[#06140e] rounded-full border-l border-white/10"></div>
+              
+              <span class="block text-[10px] text-emerald-300 uppercase font-black tracking-widest">KODE VOUCHER EKSKLUSIF</span>
+              
+              <div>
+                <strong id="voucherCodeText" class="font-mono text-2xl sm:text-3xl text-white tracking-widest bg-emerald-900/40 border border-emerald-500/30 px-5 py-2 rounded-xl inline-block select-all transition-all duration-200 group-hover:border-emerald-400 group-hover:shadow-md">
+                  ${esc(pkg.voucherCode)}
+                </strong>
+              </div>
+              
+              <p class="text-[10px] text-slate-400">Gunakan kode di atas pada saat pemesanan untuk mendapatkan diskon langsung.</p>
+              
+              <button onclick="copyVoucherToClipboard()" class="text-xs text-emerald-400 hover:text-emerald-300 font-bold underline transition-colors focus:outline-none">
+                Salin Kode Voucher 📋
+              </button>
+              <div id="copyFeedback" class="hidden text-emerald-400 font-bold text-xs animate-bounce mt-1">Berhasil Disalin!</div>
+            </div>
+
+            <div class="space-y-3.5 pt-2">
+              <a href="../booking.html?package=${esc(pkg.slug)}&voucher=${esc(pkg.voucherCode)}" class="w-full py-4 bg-brand hover:bg-brand-hover active:scale-98 text-white text-center font-black rounded-xl shadow-xl transition-all duration-150 inline-flex items-center justify-center gap-2 text-base flex items-center justify-center">
+                Booking Paket Ini 📅
+              </a>
+              <a href="https://wa.me/${esc(content.contact.whatsappInternational)}?text=Halo%20Anaira%20Glamping%2C%20saya%20tertarik%20dengan%20${encodeURIComponent(pkg.title)}" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold rounded-xl text-center transition-all inline-flex items-center justify-center gap-2 text-sm backdrop-blur-sm">
+                Tanya WhatsApp Admin 🟢
+              </a>
+            </div>
+            
+            <div class="text-[10px] text-slate-500 font-medium leading-relaxed bg-black/10 p-4 rounded-xl border border-white/5">
+              <strong class="text-slate-400 uppercase tracking-wider block mb-1">Syarat & Ketentuan:</strong>
+              ${esc(pkg.terms)}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function copyVoucherToClipboard() {
+      const voucherText = "${esc(pkg.voucherCode)}";
+      navigator.clipboard.writeText(voucherText).then(() => {
+        const feedback = document.getElementById('copyFeedback');
+        feedback.classList.remove('hidden');
+        setTimeout(() => {
+          feedback.classList.add('hidden');
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+      });
+    }
+  </script>
+  `;
+
+  const relativeHead = `<title>${esc(seoTitle)}</title>
+<meta name="description" content="${esc(seoDesc)}">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="../assets/brand/favicon.ico">
+<link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png">
+
+<!-- SEO & OpenGraph Meta Tags -->
+<meta name="keywords" content="Anaira Glamping, ${esc(pkg.title)}, Staycation Bogor, Glamping Murah Bogor, Liburan Keluarga Puncak, Resort Mewah">
+<meta property="og:title" content="${esc(seoTitle)}">
+<meta property="og:description" content="${esc(seoDesc)}">
+<meta property="og:image" content="../${esc(pkg.bannerImage)}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="${esc(content.brand.name)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(seoTitle)}">
+<meta name="twitter:description" content="${esc(seoDesc)}">
+<meta name="twitter:image" content="../${esc(pkg.bannerImage)}">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
+:root {
+  --bg-gradient: linear-gradient(to bottom right, #06140e, #092218, #040a08);
+  --ink: #f6f1e7;
+  --brand: #1b7f5a;
+  --brand-hover: #146546;
+  --muted: #a7eed0;
+  --card: rgba(10, 46, 32, 0.45);
+  --dark: rgba(6, 18, 14, 0.85);
+  --border: rgba(27, 127, 90, 0.2);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', Segoe UI, sans-serif;
+  color: var(--ink);
+  background: #06140e;
+  overflow-x: hidden;
+}
+.wrap { max-width: 1120px; margin: auto; padding: 24px 16px; }
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: rgba(10, 46, 32, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  padding: 14px 24px;
+  border-radius: 20px;
+}
+.logo { height: 46px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+.menu { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.menu a {
+  text-decoration: none;
+  color: rgba(246, 241, 231, 0.85);
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+.menu a:hover {
+  background: rgba(27, 127, 90, 0.25);
+  color: #a7eed0;
+}
+.btn {
+  display: inline-block;
+  background: var(--brand);
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  box-shadow: 0 4px 12px rgba(27, 127, 90, 0.2);
+}
+.btn:hover {
+  background: var(--brand-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(27, 127, 90, 0.3);
+}
+.btn.alt {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f6f1e7;
+  border: 1px solid var(--border);
+  box-shadow: none;
+  backdrop-filter: blur(8px);
+}
+.btn.alt:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(27, 127, 90, 0.4);
+}
+section { margin: 32px 0; }
+h1, h2, h3 { margin: .2em 0; font-weight: 700; }
+h2 { font-size: 1.8rem; border-left: 4px solid var(--brand); padding-left: 12px; margin-bottom: 20px; }
+.muted { color: rgba(246, 241, 231, 0.65); font-size: 0.95rem; line-height: 1.5; }
+footer {
+  margin-top: 40px;
+  background: var(--dark);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  color: rgba(246, 241, 231, 0.85);
+  border-radius: 24px;
+  padding: 32px 24px;
+}
+.footer-top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.logo-white { height: 40px; }
+
+@keyframes blob {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+.animate-blob {
+  animation: blob 16s infinite alternate ease-in-out;
+}
+@keyframes float-sparkle {
+  0% { transform: translateY(105vh) scale(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.7; }
+  90% { opacity: 0.7; }
+  100% { transform: translateY(-5vh) scale(1) rotate(360deg); opacity: 0; }
+}
+.animate-float-sparkle {
+  animation: float-sparkle 22s infinite linear;
+}
+.animation-delay-2000 { animation-delay: 2s; }
+.animation-delay-4000 { animation-delay: 4s; }
+
+@media (max-width: 768px) {
+  .logo { height: 40px; }
+  .nav { padding: 12px 16px; }
+}
+</style>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: '#1b7f5a',
+          'brand-hover': '#146546',
+          'brand-950': '#051810',
+          darkbg: '#06140e'
+        }
+      }
+    }
+  }
+</script>
+<!-- Shared Data Library -->
+<script src="../scripts/anaira-data-lib.js"></script>
+`;
+
+  const relativeNav = `<header class="wrap">
+  <nav class="nav">
+    <a href="../index.html"><img class="logo" src="../${esc(content.brand.logoWhite)}" alt="${esc(content.brand.name)}"></a>
+    <div class="menu">
+      <a href="../index.html">Home</a>
+      <a href="../rooms.html">Rooms</a>
+      <a href="../gallery.html">Gallery</a>
+      <a href="../packages.html">Packages</a>
+      <a href="../contact.html">Contact</a>
+      <a href="../booking.html" style="color: #a7eed0; font-weight: 600; border: 1.5px dashed rgba(27,127,90,0.5); background: rgba(27,127,90,0.15); border-radius: 12px; margin: 0 4px;">Book Online 📅</a>
+      <a href="../login.html" style="font-size: 0.8rem; opacity: 0.5; margin: 0 4px;" class="hover:opacity-100">Manage Booking 🔐</a>
+      <a class="btn" href="../contact.html">Hubungi Kami 📞</a>
+      <div style="display: flex; gap: 4px; align-items: center; margin-left: 8px; border-left: 1px solid rgba(27,127,90,0.3); padding-left: 8px;">
+        <button onclick="setAnairaLanguage('id')" id="lang-id" style="background: none; border: none; color: #a7eed0; font-size: 0.8rem; font-weight: 700; cursor: pointer; opacity: 1; padding: 2px 4px; font-family: inherit; transition: opacity 0.2s;">ID</button>
+        <span style="opacity: 0.3; font-size: 0.8rem;">|</span>
+        <button onclick="setAnairaLanguage('en')" id="lang-en" style="background: none; border: none; color: #a7eed0; font-size: 0.8rem; font-weight: 400; cursor: pointer; opacity: 0.4; padding: 2px 4px; font-family: inherit; transition: opacity 0.2s;">EN</button>
+      </div>
+    </div>
+  </nav>
+</header>`;
+
+  const relativeFooter = `<footer class="wrap">
+  <div class="footer-top">
+    <img class="logo-white" src="../${esc(content.brand.logoWhite)}" alt="Anaira logo white">
+    <strong>${esc(content.brand.name)}</strong>
+  </div>
+  <p>${esc(content.contact.address)}</p>
+  <p>Check-in ${esc(content.policies.checkIn)} - Check-out ${esc(content.policies.checkOut)} - ${esc(content.policies.earlyLate)} - ${esc(content.policies.cancelRefund)}</p>
+  <p>Fasilitas: ${esc(content.facilities.map((item) => item.name).join(', '))}.</p>
+</footer>`;
+
+  return `<!doctype html>
+<html lang="id">
+<head>
+${relativeHead}
+</head>
+<body class="min-h-screen text-[#f6f1e7] font-sans antialiased overflow-x-hidden relative font-sans">
+
+  <!-- Premium Luxurious Background Overlay -->
+  <div class="fixed inset-0 -z-50 overflow-hidden bg-gradient-to-br from-[#06140e] via-[#092218] to-[#040a08] pointer-events-none">
+    <!-- Radial mesh / grid overlay -->
+    <div class="absolute inset-0 bg-[radial-gradient(#1b7f5a_0.8px,transparent_0.8px)] [background-size:24px_24px] opacity-[0.08] mix-blend-overlay"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#040a08_80%)] opacity-80"></div>
+    
+    <!-- Shifting animated glowing blobs -->
+    <div class="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[#1b7f5a]/20 filter blur-[80px] md:blur-[120px] animate-blob"></div>
+    <div class="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-teal-800/15 filter blur-[80px] md:blur-[120px] animate-blob animation-delay-2000"></div>
+    <div class="absolute top-[40%] left-[30%] w-[40%] h-[40%] rounded-full bg-emerald-900/10 filter blur-[100px] md:blur-[150px] animate-blob animation-delay-4000"></div>
+    
+    <!-- Floating Starry Sparkles -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute w-1.5 h-1.5 bg-amber-400 rounded-full blur-[1px] animate-float-sparkle" style="left: 5%; animation-delay: 0s; animation-duration: 20s;"></div>
+      <div class="absolute w-2 h-2 bg-emerald-300 rounded-full blur-[1px] animate-float-sparkle" style="left: 25%; animation-delay: 5s; animation-duration: 27s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-white rounded-full animate-float-sparkle" style="left: 45%; animation-delay: 9s; animation-duration: 22s;"></div>
+      <div class="absolute w-2 h-2 bg-yellow-200 rounded-full blur-[1px] animate-float-sparkle" style="left: 65%; animation-delay: 3s; animation-duration: 30s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-emerald-400 rounded-full blur-[1.5px] animate-float-sparkle" style="left: 85%; animation-delay: 7s; animation-duration: 24s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-white rounded-full animate-float-sparkle" style="left: 15%; animation-delay: 13s; animation-duration: 21s;"></div>
+      <div class="absolute w-2 h-2 bg-amber-300 rounded-full blur-[1px] animate-float-sparkle" style="left: 38%; animation-delay: 11s; animation-duration: 29s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-white rounded-full blur-[1px] animate-float-sparkle" style="left: 58%; animation-delay: 15s; animation-duration: 23s;"></div>
+      <div class="absolute w-1.5 h-1.5 bg-emerald-300 rounded-full animate-float-sparkle" style="left: 75%; animation-delay: 17s; animation-duration: 26s;"></div>
+    </div>
+  </div>
+
+  ${relativeNav}
+  <main class="wrap">
+  ${pageBody}
+  </main>
+  ${relativeFooter}
+</body>
+</html>`;
+}
+
 function buildAll() {
   const content = readContent();
   writePage('index.html', buildIndex(content));
@@ -1260,6 +1740,7 @@ function buildAll() {
   writePage('gallery.html', buildGallery(content));
   writePage('packages.html', buildPackages(content));
   writePage('contact.html', buildContact(content));
+  writePage('promo.html', buildPromo(content));
   
   // Dynamic generation of independent room pages
   const roomsDir = path.join(root, 'rooms');
@@ -1275,6 +1756,29 @@ function buildAll() {
     generatedRoomPages.push(filename);
   });
 
+  // Dynamic generation of independent promo landing pages
+  const promoDir = path.join(root, 'promo');
+  if (!fs.existsSync(promoDir)) {
+    fs.mkdirSync(promoDir, { recursive: true });
+  }
+
+  const generatedPromoPages = [];
+  const promoPagesConfig = [
+    { type: 'lebaran', slug: 'paket-lebaran-family-escape', file: 'promo/lebaran.html' },
+    { type: 'honeymoon', slug: 'paket-honeymoon-romantic-stay', file: 'promo/honeymoon.html' },
+    { type: 'bbq', slug: 'paket-weekend-bbq-glamping', file: 'promo/bbq.html' },
+    { type: 'family', slug: 'paket-family-adventure-glamping', file: 'promo/family.html' }
+  ];
+
+  promoPagesConfig.forEach(cfg => {
+    const pkg = content.packages.find(p => p.slug === cfg.slug);
+    if (pkg) {
+      const html = buildPromoLandingPage(content, pkg);
+      writePage(cfg.file, html);
+      generatedPromoPages.push(cfg.file);
+    }
+  });
+
   return { 
     ok: true, 
     pages: [
@@ -1283,7 +1787,9 @@ function buildAll() {
       'gallery.html', 
       'packages.html', 
       'contact.html',
-      ...generatedRoomPages
+      'promo.html',
+      ...generatedRoomPages,
+      ...generatedPromoPages
     ] 
   };
 }

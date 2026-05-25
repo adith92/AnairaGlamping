@@ -1,37 +1,26 @@
 # 🧾 CHANGELOG
 
-## [Final Feature Wave] - 2026-05-26
+## [Priority 1-4 Expansion] - 2026-05-26
 
 ### Added
-- **Packages staycation / Paket Promo**: Dynamic stay packages system fully implemented and linked seamlessly to booking online with auto-appended voucher parameters.
-- **PMS Packages Editor**: Complete CRUD interface integrated in the admin panel (`pms.html`) with advanced fields support, custom type mapping, and automated static page rebuilder triggers.
-- **Featured Deals**: Specialized discount offers section displayed on the homepage with high-attention badges and auto-filled voucher links.
-- **Voucher PMS System**: Dynamic voucher code generator interface added to `pms.html` with promo source categorization (IG, Threads, Influencer, Partner, Manual, Website) and dynamic Influencer Name inputs.
-- **Voucher Booking/Payment Integration**: Asynchronous voucher code validation and automatic stay discount calculation integrated in `booking.html` via the shared `AnairaDB.validateVoucher()` engine, protecting total payments from double claims or expired vouchers.
-- **Contact Map Auto-Load**: Lazy-loaded, zero-click interactive Google Map embed correctly displayed in `contact.html` with a direct maps fallback launcher.
-- **Gallery Slideshow Lightbox**: Stunning fullscreen lightbox built in `gallery.html` with fade + scale animations, backdrop blur, keyboard arrow keys navigation, esc-key termination, image loading states, and automatic slideshow controls (Play/Pause).
+- **Visual Occupancy Calendar Grid:** Visually rich monthly visual grid showing daily occupancy rates (Green/Available, Yellow/Partial, Red/Full, Gray/Blocked) and check-in/out lists.
+- **Maintenance date range blocking:** Admins can block single dates or range blocks for a room type (or all rooms) directly via the Calendar panel in PMS. Toggled blocks automatically decrease checkout quantities.
+- **Staycation Packages Promo Landing Pages:** Compiled statically under `promo/` catalog (Lebaran, Honeymoon, BBQ, Family Adventure) with clean clean Vercel URL mappings.
+- **Add-on Upsells:** A collection of optional checkout add-ons (floating breakfast, BBQ ingredients, romantic deck decor, extra bed, late checkout, private bonfire, bluetooth karaoke) dynamically integrated into Step 3 to maximize Average Order Value.
+- **Excel-Friendly CSV Exports:** UTF-8 BOM (`\uFEFF`) encoded exports for bookings, revenues, vouchers, guests, and payments list for professional cPanel backup compatibility.
+- **Dynamic Success Receipt (`booking-success.html`):** Renders invoice codes, totals, and stay lists dynamically with window.print tailored @media print sheets.
+- **Pre-Arrival Handbook (`pre-arrival.html`):** High-converting instructions guide detailing maps directions, bonfire rules, cancel/reschedule policies.
+- **FAQ offline Chatbot widget (`anaira-chatbot.js` & `faq.json`):** rule-based keywords matcher widget on all pages with zero OpenAI/Claude tokens cost. Include configuration stubs for future AI LLM integrations.
 
 ### Changed
-- **WhatsApp Buttons Cleanup**: WhatsApp Visual spam restricted exclusively to the Contacts page and dynamic post-booking invoice. All sidepages WA calls redirected elegantly to `contact.html`.
-- **Booking Flow Query Params**: Updated checkout flow to detect `?voucher=CODE` and `?package=SLUG` query parameters on load to auto-apply package stay values and apply voucher savings automatically.
-- **Professional Website Polish**: Consistently aligned typography (Google Font Plus Jakarta Sans), glassmorphism panel enhancements, dynamic empty state tables, skeleton loader animations, and trust badges added to homepage.
-- **README Documentation**: Comprehensive operational handbook updated with Dual-mode database setup, Live Mode environment overrides, sitemap index, and PMS CRUD instructions.
-- **Build Pages Compilation**: Updated static generator compiler (`build-pages.js`) to support dynamic package catalogs and render all 8 premium static pages correctly.
+- **Availability Scheduler Checks:** Integrated dynamic quantity overlap checks on date selection and before step transitions in `booking.html`. Guests cannot overbook Balcony (6), Porch (6), or Villa (1) units.
+- **WhatsApp spam sanitization:** Spams of floating WhatsApp buttons removed from all stay pages and restricted exclusively to the Contact and Invoice confirmation screens.
+- **PMS payment verification desk:** Approval desk lists all bookings in a waiting payment status, shows transfer proofs in a fullscreen viewer, and saves Verification Logs to `anaira_payment_logs`.
+- **Dynamic site CMS builder:** Updated `build-pages.js` compiler to automatically inject the chatbot script tag at correct relative subdirectory levels.
 
 ### Fixed
-- **Contact Map Loading**: Contact map no longer requires click to load and displays fully upon entry.
-- **Gallery Modal Close & Navigation**: Gallery modal has a clear, always-visible Close (✕) button and keyboard navigation trap.
-- **JSON Configuration Parsing**: Resolved double brackets and quote issues in `site-content.json` configuration blocks.
+- **Clean Vercel Routes:** Configured clean URL rewrites in `vercel.json` for all promo catalogs, pre-arrival guides, and receipts.
+- **Indexed Sitemap:** Included all new staycation and info routes in `sitemap.xml` for optimum SEO.
 
 ### Removed
-- Removed temporary backup files:
-  - `pms.html.bak-202605260200`
-  - `booking.html.bak-202605260200`
-  - `site-content.json.bak-202605260200`
-  - `anaira-data-lib.js.bak-202605260200`
-  - `build-pages.js.bak-202605260200`
-
-### Validation
-- `node --check` syntax check results: Passed flawlessly.
-- `build-pages` static compilation result: 100% Successful (Built 8 pages).
-- Local server route verification: Fully functional.
+- Cleaned all temporary `.bak` files from the repository after validation successfully passed.

@@ -167,6 +167,39 @@
       "terms": "Hanya berlaku untuk check-in pada hari Jumat atau Sabtu. Reservasi H-2.",
       "voucherCode": "WEEKEND10",
       "bookingUrl": "booking.html?package=paket-weekend-bbq-glamping&voucher=WEEKEND10"
+    },
+    {
+      "id": "paket-family-adventure",
+      "slug": "paket-family-adventure-glamping",
+      "title": "Paket Family Adventure Glamping",
+      "status": "active",
+      "featured": true,
+      "packageType": "family",
+      "startDate": "2026-05-01",
+      "endDate": "2026-12-31",
+      "eventDate": "",
+      "price": 2200000,
+      "originalPrice": 2800000,
+      "discountLabel": "Diskon 21%",
+      "bannerImage": "assets/images/facilities/garden-cabin-overview.webp",
+      "shortDescription": "Petualangan seru dan edukasi bersama keluarga besar di tengah rindangnya alam pegunungan sejuk.",
+      "fullDescription": "Ciptakan petualangan tak terlupakan untuk buah hati Anda dengan Paket Family Adventure. Dilengkapi aktivitas outdoor seru, api unggun bersama, kolam renang alami, dan tenda dome mini tambahan.",
+      "includedItems": [
+        "Menginap 1 malam di Balcony / Porch Suite (atau Extra Bed)",
+        "Sarapan pagi bergizi untuk 4 pax",
+        "Fun Outdoor Activity & Mini Playground Access",
+        "Gratis Smores Kit & Api Unggun Keluarga",
+        "Free Gift / Souvenir Anak Eksklusif"
+      ],
+      "foodMenu": [
+        "Nasi Timbel Komplit Khas Sunda",
+        "Chicken Wings, Jagung Manis, dan Sosis Bakar",
+        "Jus Buah Segar untuk Anak-anak",
+        "Wedang Ronde / Sekoteng Hangat"
+      ],
+      "terms": "Berlaku sepanjang tahun kecuali libur high-season. Reservasi minimal H-2.",
+      "voucherCode": "FAMILYGETAWAY",
+      "bookingUrl": "booking.html?package=paket-family-adventure-glamping&voucher=FAMILYGETAWAY"
     }
   ],
   "deals": [

@@ -181,6 +181,39 @@ const DEFAULT_PACKAGES = [
     terms: 'Hanya berlaku untuk check-in pada hari Jumat atau Sabtu. Reservasi H-2.',
     voucherCode: 'WEEKEND10',
     bookingUrl: 'booking.html?package=paket-weekend-bbq-glamping&voucher=WEEKEND10'
+  },
+  {
+    id: 'paket-family-adventure',
+    slug: 'paket-family-adventure-glamping',
+    title: 'Paket Family Adventure Glamping',
+    status: 'active',
+    featured: true,
+    packageType: 'family',
+    startDate: '2026-05-01',
+    endDate: '2026-12-31',
+    eventDate: '',
+    price: 2200000,
+    originalPrice: 2800000,
+    discountLabel: 'Diskon 21%',
+    bannerImage: 'assets/images/facilities/garden-cabin-overview.webp',
+    shortDescription: 'Petualangan seru dan edukasi bersama keluarga besar di tengah rindangnya alam pegunungan sejuk.',
+    fullDescription: 'Ciptakan petualangan tak terlupakan untuk buah hati Anda dengan Paket Family Adventure. Dilengkapi aktivitas outdoor seru, api unggun bersama, kolam renang alami, dan tenda dome mini tambahan.',
+    includedItems: [
+      'Menginap 1 malam di Balcony / Porch Suite (atau Extra Bed)',
+      'Sarapan pagi bergizi untuk 4 pax',
+      'Fun Outdoor Activity & Mini Playground Access',
+      'Gratis Smores Kit & Api Unggun Keluarga',
+      'Free Gift / Souvenir Anak Eksklusif'
+    ],
+    foodMenu: [
+      'Nasi Timbel Komplit Khas Sunda',
+      'Chicken Wings, Jagung Manis, dan Sosis Bakar',
+      'Jus Buah Segar untuk Anak-anak',
+      'Wedang Ronde / Sekoteng Hangat'
+    ],
+    terms: 'Berlaku sepanjang tahun kecuali libur high-season. Reservasi minimal H-2.',
+    voucherCode: 'FAMILYGETAWAY',
+    bookingUrl: 'booking.html?package=paket-family-adventure-glamping&voucher=FAMILYGETAWAY'
   }
 ];
 
@@ -713,6 +746,25 @@ const DEFAULT_VOUCHERS = [
     applicablePackageSlugs: [],
     createdAt: '2026-05-26T00:00:00Z',
     updatedAt: '2026-05-26T00:00:00Z'
+  },
+  {
+    code: 'FAMILYGETAWAY',
+    status: 'active',
+    source: 'Website',
+    influencerName: '',
+    description: 'Diskon Family Getaway Seru 21%',
+    discountType: 'percentage',
+    discountValue: 21,
+    minBookingAmount: 1800000,
+    maxDiscount: 600000,
+    startDate: '2026-05-01',
+    endDate: '2026-12-31',
+    usageLimit: 100,
+    usedCount: 0,
+    applicableRoomSlugs: ['balcony', 'porch', 'villa'],
+    applicablePackageSlugs: ['paket-family-adventure-glamping'],
+    createdAt: '2026-05-26T00:00:00Z',
+    updatedAt: '2026-05-26T00:00:00Z'
   }
 ];
 
@@ -1153,6 +1205,190 @@ const AnairaDB = {
       return true;
     }
     return false;
+  },
+
+  // === BLOCKED DATES OPERATIONS ===
+  async getBlockedDates() {
+    return await this.get(ANAIRA_KEYS.BLOCKED_DATES, []);
+  },
+  async saveBlockedDates(dates) {
+    await this.set(ANAIRA_KEYS.BLOCKED_DATES, dates);
+  },
+  async createBlockedDate(block) {
+    const dates = await this.getBlockedDates();
+    block.id = generateId('BLK');
+    block.createdAt = new Date().toISOString();
+    dates.push(block);
+    await this.saveBlockedDates(dates);
+    return block;
+  },
+  async deleteBlockedDate(id) {
+    const dates = await this.getBlockedDates();
+    const filtered = dates.filter(d => d.id !== id);
+    await this.saveBlockedDates(filtered);
+    return true;
+  },
+
+  // === ADDONS OPERATIONS ===
+  async getAddons() {
+    const DEFAULT_ADDONS = [
+      { id: 'breakfast', name: 'Sarapan Pagi (Breakfast)', price: 50000, description: 'Sarapan lezat khas Bogor per orang per malam', perNight: true, perPax: true },
+      { id: 'bbq', name: 'Alat & Bahan BBQ Set', price: 250000, description: 'Paket memanggang lengkap untuk keluarga/rombongan', perNight: false },
+      { id: 'decor', name: 'Dekorasi Romantis (Honeymoon)', price: 350000, description: 'Dekorasi bunga & lilin di ranjang & bathtub', perNight: false },
+      { id: 'extrabed', name: 'Kasur Tambahan (Extra Bed)', price: 150000, description: 'Kasur tambahan lengkap dengan bantal & selimut', perNight: true },
+      { id: 'latecheckout', name: 'Late Check-out (s/d 16:00)', price: 150000, description: 'Perpanjang waktu tinggal sampai sore hari', perNight: false },
+      { id: 'apiunggun', name: 'Api Unggun Privat', price: 100000, description: 'Penyediaan kayu bakar & setup api unggun privat', perNight: false },
+      { id: 'karaoke', name: 'Karaoke / Family Set', price: 200000, description: 'Setup speaker & mic bluetooth untuk bernyanyi bersama', perNight: false }
+    ];
+    return await this.get('anaira_addons', DEFAULT_ADDONS);
+  },
+  async saveAddons(addons) {
+    await this.set('anaira_addons', addons);
+  },
+
+  // === PAYMENT LOGS OPERATIONS ===
+  async getPaymentLogs() {
+    return await this.get(ANAIRA_KEYS.PAYMENT_LOGS, []);
+  },
+  async savePaymentLogs(logs) {
+    await this.set(ANAIRA_KEYS.PAYMENT_LOGS, logs);
+  },
+  async createPaymentLog(bookingId, action, prevStatus, newStatus, notes) {
+    const logs = await this.getPaymentLogs();
+    const logEntry = {
+      id: generateId('LOG'),
+      bookingId,
+      action,
+      prevStatus,
+      newStatus,
+      notes,
+      timestamp: new Date().toISOString()
+    };
+    logs.unshift(logEntry);
+    await this.savePaymentLogs(logs);
+    return logEntry;
+  },
+
+  // === VOUCHER & PROMO ANALYTICS ===
+  async getVoucherAnalytics() {
+    const bookings = await AnairaDB.get(ANAIRA_KEYS.BOOKINGS, []);
+    const vouchers = await this.getVouchers();
+    
+    let totalUsage = 0;
+    let totalRevenue = 0;
+    let totalRevenueAfterDiscount = 0;
+    
+    const statsMap = {};
+    vouchers.forEach(v => {
+      statsMap[v.code.toUpperCase()] = {
+        code: v.code,
+        source: v.source || 'Manual',
+        influencerName: v.influencerName || '',
+        usedCount: 0,
+        totalRevenue: 0,
+        totalDiscount: 0,
+        usageLimit: v.usageLimit || 0
+      };
+    });
+
+    bookings.forEach(b => {
+      const nb = normalizeBooking(b);
+      const code = (nb.voucherCode || '').toUpperCase();
+      const rawTotal = nb.totalAmount || nb.total || 0;
+      const discount = nb.discountAmount || 0;
+      
+      if (nb.status !== 'cancelled' && nb.status !== 'no-show') {
+        if (code) {
+          totalUsage++;
+          if (!statsMap[code]) {
+            statsMap[code] = {
+              code: nb.voucherCode,
+              source: nb.voucherSource || 'Manual',
+              influencerName: nb.influencerName || '',
+              usedCount: 0,
+              totalRevenue: 0,
+              totalDiscount: 0,
+              usageLimit: 0
+            };
+          }
+          statsMap[code].usedCount++;
+          statsMap[code].totalDiscount += discount;
+          statsMap[code].totalRevenue += rawTotal;
+        }
+        totalRevenueAfterDiscount += rawTotal;
+        totalRevenue += (rawTotal + discount);
+      }
+    });
+
+    const items = Object.values(statsMap);
+    items.sort((a, b) => b.usedCount - a.usedCount);
+
+    return {
+      totalUsage,
+      totalRevenue,
+      totalRevenueAfterDiscount,
+      topVoucher: items[0] ? items[0].code : '-',
+      topInfluencer: items.find(v => v.influencerName) ? items.find(v => v.influencerName).influencerName : '-',
+      items
+    };
+  },
+
+  // === DYNAMIC AVAILABILITY & INVENTORY OVERLAP CHECK ===
+  async getAvailability(checkIn, checkOut) {
+    const rooms = loadData(ANAIRA_KEYS.ROOMS, DEFAULT_ROOMS);
+    const result = {};
+    for (let r of rooms) {
+      const avail = await this.getAvailableUnits(r.id, checkIn, checkOut);
+      result[r.id] = avail;
+    }
+    return result;
+  },
+
+  async getAvailableUnits(roomType, checkIn, checkOut, excludeBookingId = null) {
+    const rooms = loadData(ANAIRA_KEYS.ROOMS, DEFAULT_ROOMS);
+    const room = rooms.find(r => r.id === roomType);
+    if (!room) return 0;
+
+    const bookings = await AnairaDB.get(ANAIRA_KEYS.BOOKINGS, []);
+    const blocked = await this.getBlockedDates();
+
+    // 1. Calculate booked overlapping units
+    const overlapBookings = bookings.filter(b => {
+      if (excludeBookingId && b.id === excludeBookingId) return false;
+      if (b.roomType !== roomType && b.roomId !== roomType) return false;
+      if (b.status === 'cancelled' || b.status === 'no-show') return false;
+      const bCheckIn = b.checkIn || b.checkInDate;
+      const bCheckOut = b.checkOut || b.checkOutDate;
+      if (!bCheckIn || !bCheckOut) return false;
+      return isDateOverlap(checkIn, checkOut, bCheckIn, bCheckOut);
+    });
+
+    // 2. Calculate blocked overlapping units (if dates are blocked for maintenance)
+    let isBlocked = false;
+    blocked.forEach(block => {
+      if (block.roomType === roomType || block.room === roomType || block.roomType === 'all') {
+        let blockIn = block.startDate || block.date;
+        let blockOut = block.endDate || block.date;
+        if (blockIn === blockOut) {
+          const d = new Date(blockIn);
+          d.setDate(d.getDate() + 1);
+          blockOut = d.toISOString().slice(0, 10);
+        }
+        if (isDateOverlap(checkIn, checkOut, blockIn, blockOut)) {
+          isBlocked = true; // Blocks ALL units
+        }
+      }
+    });
+
+    if (isBlocked) return 0;
+
+    const unitsLeft = room.quantity - overlapBookings.length;
+    return Math.max(0, unitsLeft);
+  },
+
+  async isRoomAvailable(roomType, checkIn, checkOut, excludeBookingId = null) {
+    const left = await this.getAvailableUnits(roomType, checkIn, checkOut, excludeBookingId);
+    return left > 0;
   }
 };
 

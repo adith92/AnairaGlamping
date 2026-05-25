@@ -613,14 +613,77 @@
         </div>
         <!-- Calendar Legend -->
         <div class="flex flex-wrap gap-4 mb-4 text-xs text-[#f6f1e7]/60">
-          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded cal-available border"></span> Available</span>
-          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded cal-partial border"></span> Partial</span>
-          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded cal-full border"></span> Full</span>
-          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded cal-blocked border"></span> Blocked</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-emerald-950/20 border border-emerald-500/30"></span> Available</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-amber-950/20 border border-amber-500/30"></span> Partial</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-red-950/20 border border-red-500/30"></span> Full</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-slate-900/50 border border-slate-700/30"></span> Blocked</span>
         </div>
-        <div class="glass-panel rounded-3xl p-4 md:p-6 glow-effect overflow-x-auto">
+        <div class="glass-panel rounded-3xl p-4 md:p-6 glow-effect overflow-x-auto mb-6">
           <div id="calendar-grid" class="min-w-[700px]">
             <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Blocked Dates Management Panel -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+          <!-- Block Date Form -->
+          <div class="glass-panel rounded-3xl p-6 glow-effect lg:col-span-1">
+            <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+              <i data-lucide="ban" class="w-4 h-4 text-red-400"></i> Block Maintenance Tanggal
+            </h4>
+            <form onsubmit="handleBlockDate(event, 'main')" class="space-y-4">
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Dari Tanggal</label>
+                  <input required id="block-start-main" type="date" class="w-full px-3 py-2 rounded-lg glass-input text-xs">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Sampai Tanggal</label>
+                  <input required id="block-end-main" type="date" class="w-full px-3 py-2 rounded-lg glass-input text-xs">
+                </div>
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Tipe Kamar</label>
+                <select id="block-room-main" class="w-full px-3 py-2 rounded-lg glass-input text-xs appearance-none">
+                  <option value="all">Semua Kamar</option>
+                  <option value="Balcony">Balcony</option>
+                  <option value="Porch">Porch</option>
+                  <option value="Villa">Villa</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-[#f6f1e7]/60 uppercase mb-1">Alasan / Catatan</label>
+                <input id="block-reason-main" type="text" class="w-full px-3 py-2 rounded-lg glass-input text-xs" placeholder="Maintenance pipa air, dll">
+              </div>
+              <button type="submit" class="w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-red-950/20">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i> Block Range
+              </button>
+            </form>
+          </div>
+          
+          <!-- Blocked Dates List Sub-table -->
+          <div class="glass-panel rounded-3xl p-6 glow-effect lg:col-span-2">
+            <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+              <i data-lucide="list" class="w-4 h-4 text-brand-200"></i> Daftar Tanggal Diblokir (Blocked Dates)
+            </h4>
+            <div class="overflow-x-auto max-h-60 overflow-y-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-[#1b7f5a]/10 text-[#f6f1e7]/40 uppercase tracking-wider text-[10px] font-bold">
+                    <th class="py-2 px-3">Tanggal Block</th>
+                    <th class="py-2 px-3">Kamar</th>
+                    <th class="py-2 px-3">Alasan</th>
+                    <th class="py-2 px-3 text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="blocked-dates-table-body" class="divide-y divide-[#1b7f5a]/5 text-xs text-[#f6f1e7]/90">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+              <div id="blocked-dates-table-empty" class="hidden text-center py-6 text-[#f6f1e7]/40 text-xs">
+                Tidak ada data tanggal diblokir.
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -669,6 +732,19 @@
           <div>
             <p class="text-sm font-bold text-amber-300">Frontend Demo Only</p>
             <p class="text-xs text-[#f6f1e7]/60">Secret API keys untuk payment gateways (Midtrans, Xendit) harus disimpan di backend. Konfigurasi di bawah hanya untuk placeholder & UI demo.</p>
+          </div>
+        </div>
+
+        <!-- Manual Proof-of-Payment Verification Panel (Approval Desk) -->
+        <div class="glass-panel rounded-3xl p-6 glow-effect mb-6">
+          <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i> Desk Verifikasi Pembayaran (Manual Verification Desk)
+          </h4>
+          <div id="payment-approval-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Rendered dynamically -->
+          </div>
+          <div id="payment-approval-empty" class="hidden text-center py-8 text-xs text-[#f6f1e7]/40">
+            Tidak ada booking dengan status menunggu pembayaran ("waiting_payment").
           </div>
         </div>
 
@@ -1052,6 +1128,29 @@
           </div>
 
           <!-- G. Data Management -->
+          <!-- Reports / Export Section -->
+          <div class="glass-panel-dark rounded-2xl p-5 glow-effect">
+            <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="file-spreadsheet" class="w-4 h-4 text-brand-200"></i> Laporan & Ekspor (Excel Friendly CSV)</h4>
+            <p class="text-xs text-[#f6f1e7]/60 mb-4">Unduh laporan operasional hotel langsung dalam format CSV Excel-friendly (UTF-8 BOM).</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+              <button onclick="exportBookingsReport()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-900/30 text-brand-200 border border-brand-500/20 hover:bg-brand-800/40 transition-all text-xs font-bold justify-start">
+                <i data-lucide="calendar" class="w-4 h-4"></i> Ekspor Bookings List
+              </button>
+              <button onclick="exportRevenueReport()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-900/30 text-brand-200 border border-brand-500/20 hover:bg-brand-800/40 transition-all text-xs font-bold justify-start">
+                <i data-lucide="trending-up" class="w-4 h-4"></i> Ekspor Revenue Logs
+              </button>
+              <button onclick="exportVouchersReport()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-900/30 text-brand-200 border border-brand-500/20 hover:bg-brand-800/40 transition-all text-xs font-bold justify-start">
+                <i data-lucide="ticket" class="w-4 h-4"></i> Ekspor Voucher Performance
+              </button>
+              <button onclick="exportGuestsReport()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-900/30 text-brand-200 border border-brand-500/20 hover:bg-brand-800/40 transition-all text-xs font-bold justify-start">
+                <i data-lucide="users" class="w-4 h-4"></i> Ekspor Guest Records
+              </button>
+              <button onclick="exportPaymentsReport()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-900/30 text-brand-200 border border-brand-500/20 hover:bg-brand-800/40 transition-all text-xs font-bold justify-start sm:col-span-2">
+                <i data-lucide="credit-card" class="w-4 h-4"></i> Ekspor Payments List (Manual Proofs & Logs)
+              </button>
+            </div>
+          </div>
+
           <div class="glass-panel-dark rounded-2xl p-5 glow-effect">
             <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="database" class="w-4 h-4 text-brand-200"></i> Manajemen Data</h4>
             <div class="space-y-3">
@@ -1722,6 +1821,42 @@
       <div class="mt-6 border-t border-[#1b7f5a]/20 pt-4">
         <h4 class="text-xs font-bold text-[#f6f1e7]/50 uppercase mb-3">Tanggal Diblokir</h4>
         <div id="blocked-dates-list" class="space-y-2 max-h-40 overflow-y-auto text-xs">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL: DATE GUESTS ===================== -->
+  <div id="modal-date-guests" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="glass-modal w-full max-w-lg rounded-3xl p-6 md:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-[#1b7f5a]/20 pb-4 mb-6">
+        <h3 class="text-xl font-extrabold text-white flex items-center gap-2">
+          <i data-lucide="calendar" class="w-5 h-5 text-brand-200"></i> Tamu pada <span id="modal-date-title" class="font-mono text-brand-200">--</span>
+        </h3>
+        <button onclick="closeDateGuestsModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-all">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+      
+      <div class="space-y-6">
+        <!-- Check-ins -->
+        <div>
+          <h4 class="text-sm font-bold text-emerald-400 mb-3 flex items-center gap-2">
+            <i data-lucide="log-in" class="w-4 h-4"></i> Check-In pada Tanggal Ini
+          </h4>
+          <div id="modal-date-checkins" class="space-y-3">
+            <!-- Dynamic -->
+          </div>
+        </div>
+
+        <!-- Check-outs -->
+        <div>
+          <h4 class="text-sm font-bold text-red-400 mb-3 flex items-center gap-2">
+            <i data-lucide="log-out" class="w-4 h-4"></i> Check-Out pada Tanggal Ini
+          </h4>
+          <div id="modal-date-checkouts" class="space-y-3">
+            <!-- Dynamic -->
+          </div>
         </div>
       </div>
     </div>
@@ -3214,60 +3349,120 @@
       renderCalendar();
     }
 
-    function renderCalendar() {
+    async function renderCalendar() {
       document.getElementById('cal-month-label').textContent = `${monthNames[calMonth]} ${calYear}`;
-      const rooms = getRooms().filter(r => r.active !== false);
-      const bookings = getBookings().filter(b => ['Paid','Pending','Checked-in'].includes(b.status));
-      const blockedDates = getBlockedDates();
+      const bookings = getBookings();
+      const blockedDates = await AnairaDB.getBlockedDates();
       const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+      const firstDayIndex = new Date(calYear, calMonth, 1).getDay();
 
-      // Build header
-      let html = '<table class="w-full border-collapse text-[10px]"><thead><tr>';
-      html += '<th class="py-2 px-2 text-left text-[#f6f1e7]/50 font-bold text-xs sticky left-0 bg-[#0a2e20]/80 z-10 min-w-[80px]">Tipe</th>';
-      for (let d = 1; d <= daysInMonth; d++) {
-        const dt = new Date(calYear, calMonth, d);
-        const dayName = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'][dt.getDay()];
-        const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
-        html += `<th class="py-2 px-1 text-center min-w-[38px] ${isWeekend ? 'text-amber-400/70' : 'text-[#f6f1e7]/40'}">
-          <div>${d}</div><div class="text-[8px]">${dayName}</div>
-        </th>`;
-      }
-      html += '</tr></thead><tbody>';
-
-      rooms.forEach(r => {
-        html += `<tr><td class="py-2 px-2 font-bold text-white text-xs sticky left-0 bg-[#0a2e20]/80 z-10 border-r border-[#1b7f5a]/10">${r.name} <span class="text-[#f6f1e7]/30 font-normal">(${r.quantity})</span></td>`;
-        for (let d = 1; d <= daysInMonth; d++) {
-          const ds = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-
-          // Check blocked
-          const isBlocked = blockedDates.some(bd => {
-            if (bd.room && bd.room !== r.name && bd.room !== '') return false;
-            return ds >= bd.start && ds <= bd.end;
-          });
-
-          if (isBlocked) {
-            html += `<td class="py-1 px-0.5 text-center"><div class="cal-blocked rounded px-1 py-1 border text-gray-400">✕</div></td>`;
-            continue;
-          }
-
-          // Count bookings overlapping this date for this room type
-          const bookedCount = bookings.filter(b => {
-            return b.room === r.name && ds >= b.checkIn && ds < b.checkOut;
-          }).length;
-
-          const avail = r.quantity - bookedCount;
-          let cellClass = 'cal-available';
-          let textColor = 'text-emerald-400';
-          if (avail <= 0) { cellClass = 'cal-full'; textColor = 'text-red-400'; }
-          else if (bookedCount > 0) { cellClass = 'cal-partial'; textColor = 'text-amber-400'; }
-
-          html += `<td class="py-1 px-0.5 text-center"><div class="${cellClass} rounded px-1 py-1 border ${textColor} font-bold">${Math.max(0,avail)}</div></td>`;
-        }
-        html += '</tr>';
+      const daysOfWeek = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+      let html = `<div class="grid grid-cols-7 gap-2 mb-2 font-bold text-center text-xs text-[#f6f1e7]/40 uppercase tracking-wider">`;
+      daysOfWeek.forEach((day, idx) => {
+        const color = (idx === 0) ? 'text-red-400' : (idx === 6) ? 'text-amber-400' : '';
+        html += `<div class="py-1 ${color}">${day}</div>`;
       });
+      html += `</div>`;
 
-      html += '</tbody></table>';
+      html += `<div class="grid grid-cols-7 gap-2.5">`;
+
+      for (let i = 0; i < firstDayIndex; i++) {
+        html += `<div class="glass-panel opacity-10 min-h-[90px] rounded-xl p-1.5 border border-brand-500/10"></div>`;
+      }
+
+      const activeStatuses = ['Paid', 'Pending', 'Checked-in'];
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const ds = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+
+        const blockedForRoom = {};
+        let dateHasAnyBlock = false;
+        let dateHasAllBlocked = false;
+        blockedDates.forEach(bd => {
+          const blockStart = bd.startDate || bd.start || bd.date;
+          const blockEnd = bd.endDate || bd.end || bd.date;
+          if (ds >= blockStart && ds <= blockEnd) {
+            dateHasAnyBlock = true;
+            const rType = bd.roomType || bd.room || 'all';
+            if (rType === 'all' || rType === '') {
+              blockedForRoom['Balcony'] = bd.reason || 'Blocked';
+              blockedForRoom['Porch'] = bd.reason || 'Blocked';
+              blockedForRoom['Villa'] = bd.reason || 'Blocked';
+              dateHasAllBlocked = true;
+            } else {
+              blockedForRoom[rType] = bd.reason || 'Blocked';
+            }
+          }
+        });
+
+        if (blockedForRoom['Balcony'] && blockedForRoom['Porch'] && blockedForRoom['Villa']) {
+          dateHasAllBlocked = true;
+        }
+
+        const bookingsOnDate = bookings.filter(b => {
+          const bIn = b.checkIn || b.checkInDate;
+          const bOut = b.checkOut || b.checkOutDate;
+          return activeStatuses.includes(b.status) && ds >= bIn && ds < bOut;
+        });
+
+        const balconyBooked = bookingsOnDate.filter(b => b.room === 'Balcony' || b.roomType === 'Balcony').length;
+        const porchBooked = bookingsOnDate.filter(b => b.room === 'Porch' || b.roomType === 'Porch').length;
+        const villaBooked = bookingsOnDate.filter(b => b.room === 'Villa' || b.roomType === 'Villa').length;
+
+        let cellClass = 'glass-panel rounded-xl p-2 border transition-all hover:bg-white/5 cursor-pointer relative min-h-[95px] flex flex-col justify-between';
+        let badgeColor = '';
+        let dateBadge = '';
+
+        const totalBooked = balconyBooked + porchBooked + villaBooked;
+        const totalUnits = 13; 
+
+        if (dateHasAllBlocked) {
+          cellClass += ' border-slate-700/40 bg-slate-900/50 hover:border-slate-500/40';
+          badgeColor = 'bg-slate-800 text-slate-400';
+          dateBadge = 'Blocked';
+        } else if (totalBooked >= totalUnits) {
+          cellClass += ' border-red-500/40 bg-red-950/20 hover:border-red-500/60';
+          badgeColor = 'bg-red-900/40 text-red-400';
+          dateBadge = 'Full';
+        } else if (totalBooked > 0 || dateHasAnyBlock) {
+          cellClass += ' border-amber-500/40 bg-amber-950/20 hover:border-amber-500/60';
+          badgeColor = 'bg-amber-900/40 text-amber-300';
+          dateBadge = 'Partial';
+        } else {
+          cellClass += ' border-emerald-500/30 bg-emerald-950/15 hover:border-emerald-500/50';
+          badgeColor = 'bg-emerald-900/40 text-emerald-300';
+          dateBadge = 'Available';
+        }
+
+        const balconyText = blockedForRoom['Balcony'] ? '<span class="text-slate-400">Balcony: Blocked</span>' : (balconyBooked === 6 ? '<span class="text-red-400">Balcony: Full</span>' : `Balcony: ${balconyBooked}/6`);
+        const porchText = blockedForRoom['Porch'] ? '<span class="text-slate-400">Porch: Blocked</span>' : (porchBooked === 6 ? '<span class="text-red-400">Porch: Full</span>' : `Porch: ${porchBooked}/6`);
+        const villaText = blockedForRoom['Villa'] ? '<span class="text-slate-400">Villa: Blocked</span>' : (villaBooked === 1 ? '<span class="text-red-400 font-bold">Villa: Full</span>' : `Villa: 0/1`);
+
+        html += `
+          <div class="${cellClass}" onclick="viewGuestsOnDate('${ds}')">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-white">${d}</span>
+              <span class="px-1.5 py-0.5 rounded-[4px] text-[8px] font-bold uppercase tracking-wider ${badgeColor}">${dateBadge}</span>
+            </div>
+            <div class="text-[9px] text-[#f6f1e7]/80 space-y-0.5 mt-2">
+              <div>${balconyText}</div>
+              <div>${porchText}</div>
+              <div>${villaText}</div>
+            </div>
+          </div>
+        `;
+      }
+
+      const totalCells = firstDayIndex + daysInMonth;
+      const trailingCells = (7 - (totalCells % 7)) % 7;
+      for (let i = 0; i < trailingCells; i++) {
+        html += `<div class="glass-panel opacity-10 min-h-[90px] rounded-xl p-1.5 border border-brand-500/10"></div>`;
+      }
+
+      html += `</div>`;
+
       document.getElementById('calendar-grid').innerHTML = html;
+      await renderBlockedDatesList();
     }
 
     function openBlockDateModal() {
@@ -3282,46 +3477,155 @@
       document.getElementById('modal-block-date').classList.remove('flex');
     }
 
-    function handleBlockDate(e) {
+    async function handleBlockDate(e, source = 'modal') {
       e.preventDefault();
-      const bd = getBlockedDates();
-      bd.push({
-        id: 'bd-' + Date.now(),
-        start: document.getElementById('block-start').value,
-        end: document.getElementById('block-end').value,
-        room: document.getElementById('block-room').value,
-        reason: document.getElementById('block-reason').value.trim()
-      });
-      saveBlockedDates(bd);
-      renderBlockedDatesList();
-      renderCalendar();
-    }
+      const prefix = source === 'main' ? '-main' : '';
+      const start = document.getElementById('block-start' + prefix).value;
+      const end = document.getElementById('block-end' + prefix).value;
+      const room = document.getElementById('block-room' + prefix).value;
+      const reason = document.getElementById('block-reason' + prefix).value.trim();
 
-    function removeBlockedDate(bdId) {
-      let bd = getBlockedDates();
-      bd = bd.filter(b => b.id !== bdId);
-      saveBlockedDates(bd);
-      renderBlockedDatesList();
-      renderCalendar();
-    }
+      const block = {
+        startDate: start,
+        endDate: end,
+        start: start,
+        end: end,
+        roomType: room || 'all',
+        room: room || 'all',
+        reason: reason
+      };
 
-    function renderBlockedDatesList() {
-      const bd = getBlockedDates();
-      const container = document.getElementById('blocked-dates-list');
-      if (bd.length === 0) {
-        container.innerHTML = '<p class="text-[#f6f1e7]/40">Tidak ada tanggal diblokir.</p>';
-        return;
+      await AnairaDB.createBlockedDate(block);
+      
+      const bd = await AnairaDB.getBlockedDates();
+      saveBlockedDates(bd);
+
+      document.getElementById('block-reason' + prefix).value = '';
+      
+      if (source === 'modal') {
+        closeBlockDateModal();
       }
-      container.innerHTML = bd.map(b => `
-        <div class="flex items-center justify-between glass-panel rounded-lg px-3 py-2">
-          <div>
-            <span class="font-mono">${b.start} → ${b.end}</span>
-            <span class="text-[#f6f1e7]/40 ml-2">${b.room || 'Semua'}</span>
-            ${b.reason ? `<span class="text-[#f6f1e7]/30 ml-1">- ${b.reason}</span>` : ''}
+      
+      await renderBlockedDatesList();
+      await renderCalendar();
+    }
+
+    async function removeBlockedDate(bdId) {
+      if (!confirm('Hapus blokir tanggal ini?')) return;
+      await AnairaDB.deleteBlockedDate(bdId);
+
+      const bd = await AnairaDB.getBlockedDates();
+      saveBlockedDates(bd);
+
+      await renderBlockedDatesList();
+      await renderCalendar();
+    }
+
+    async function renderBlockedDatesList() {
+      const bd = await AnairaDB.getBlockedDates();
+      
+      const container = document.getElementById('blocked-dates-list');
+      if (container) {
+        if (bd.length === 0) {
+          container.innerHTML = '<p class="text-[#f6f1e7]/40 text-center py-2">Tidak ada tanggal diblokir.</p>';
+        } else {
+          container.innerHTML = bd.map(b => {
+            const start = b.startDate || b.start;
+            const end = b.endDate || b.end;
+            const rType = b.roomType || b.room || 'Semua';
+            return `
+              <div class="flex items-center justify-between glass-panel rounded-lg px-3 py-2 mb-2">
+                <div>
+                  <span class="font-mono text-[#a7eed0]">${start} → ${end}</span>
+                  <span class="text-[#f6f1e7]/60 ml-2 font-bold">${rType}</span>
+                  ${b.reason ? `<span class="text-[#f6f1e7]/40 ml-1">(${b.reason})</span>` : ''}
+                </div>
+                <button type="button" onclick="removeBlockedDate('${b.id}')" class="text-red-400 hover:text-red-300 text-xs px-2 py-1">✕</button>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      const tbody = document.getElementById('blocked-dates-table-body');
+      const emptyDiv = document.getElementById('blocked-dates-table-empty');
+      if (tbody) {
+        tbody.innerHTML = '';
+        if (bd.length === 0) {
+          if (emptyDiv) emptyDiv.classList.remove('hidden');
+        } else {
+          if (emptyDiv) emptyDiv.classList.add('hidden');
+          bd.forEach(b => {
+            const start = b.startDate || b.start;
+            const end = b.endDate || b.end;
+            const rType = b.roomType || b.room || 'Semua';
+            tbody.innerHTML += `
+              <tr class="hover:bg-white/5 transition-all">
+                <td class="py-2.5 px-3 font-mono text-white">${start} s/d ${end}</td>
+                <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-brand-900/30 text-brand-200 border border-brand-500/10">${rType}</span></td>
+                <td class="py-2.5 px-3 text-[#f6f1e7]/70">${b.reason || '-'}</td>
+                <td class="py-2.5 px-3 text-center">
+                  <button type="button" onclick="removeBlockedDate('${b.id}')" class="p-1 hover:bg-red-950/30 text-red-400 hover:text-red-300 rounded transition-all border border-red-500/10" title="Hapus">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  </button>
+                </td>
+              </tr>
+            `;
+          });
+        }
+        lucide.createIcons();
+      }
+    }
+
+    function viewGuestsOnDate(dateStr) {
+      document.getElementById('modal-date-title').textContent = dateStr;
+      const bookings = getBookings();
+      const checkins = bookings.filter(b => (b.checkIn === dateStr || b.checkInDate === dateStr) && b.status !== 'Cancelled' && b.status !== 'Refunded');
+      const checkouts = bookings.filter(b => (b.checkOut === dateStr || b.checkOutDate === dateStr) && b.status !== 'Cancelled' && b.status !== 'Refunded');
+
+      const checkinsContainer = document.getElementById('modal-date-checkins');
+      const checkoutsContainer = document.getElementById('modal-date-checkouts');
+
+      if (checkins.length === 0) {
+        checkinsContainer.innerHTML = `<p class="text-xs text-[#f6f1e7]/40 italic">Tidak ada tamu check-in.</p>`;
+      } else {
+        checkinsContainer.innerHTML = checkins.map(b => `
+          <div class="glass-panel p-3 rounded-xl flex items-center justify-between">
+            <div>
+              <div class="font-bold text-white text-sm">${b.guest || b.guestName}</div>
+              <div class="text-xs text-[#f6f1e7]/60">Kamar: ${b.room || b.roomType} (${getNightsCount(b.checkIn, b.checkOut)} malam)</div>
+              <div class="text-[10px] text-[#f6f1e7]/40">${b.email} | ${b.phone}</div>
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${STATUS_COLORS[b.status] || ''}">${b.status}</span>
           </div>
-          <button onclick="removeBlockedDate('${b.id}')" class="text-red-400 hover:text-red-300 text-xs">✕</button>
-        </div>
-      `).join('');
+        `).join('');
+      }
+
+      if (checkouts.length === 0) {
+        checkoutsContainer.innerHTML = `<p class="text-xs text-[#f6f1e7]/40 italic">Tidak ada tamu check-out.</p>`;
+      } else {
+        checkoutsContainer.innerHTML = checkouts.map(b => `
+          <div class="glass-panel p-3 rounded-xl flex items-center justify-between">
+            <div>
+              <div class="font-bold text-white text-sm">${b.guest || b.guestName}</div>
+              <div class="text-xs text-[#f6f1e7]/60">Kamar: ${b.room || b.roomType}</div>
+              <div class="text-[10px] text-[#f6f1e7]/40">${b.email} | ${b.phone}</div>
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${STATUS_COLORS[b.status] || ''}">${b.status}</span>
+          </div>
+        `).join('');
+      }
+
+      const modal = document.getElementById('modal-date-guests');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      lucide.createIcons();
+    }
+
+    function closeDateGuestsModal() {
+      const modal = document.getElementById('modal-date-guests');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
     }
 
     // ==================== GUESTS ====================
@@ -3436,30 +3740,211 @@
     }
 
     // ==================== PAYMENTS ====================
-    function renderPayments() {
-      const logs = getPaymentLogs();
+    async function renderPaymentApprovalDesk() {
+      const bookings = getBookings();
+      const approvalList = document.getElementById('payment-approval-list');
+      const approvalEmpty = document.getElementById('payment-approval-empty');
+      
+      if (!approvalList) return;
+
+      const pendingBookings = bookings.filter(b => b.status === 'Pending' || b.paymentStatus === 'waiting_payment');
+      
+      approvalList.innerHTML = '';
+      
+      if (pendingBookings.length === 0) {
+        approvalEmpty.classList.remove('hidden');
+        approvalList.classList.add('hidden');
+        return;
+      }
+      
+      approvalEmpty.classList.add('hidden');
+      approvalList.classList.remove('hidden');
+      approvalList.classList.add('grid');
+      
+      pendingBookings.forEach(b => {
+        const proofImg = b.paymentProof || b.proofOfPayment || b.paymentProofImg || '';
+        const nights = getNightsCount(b.checkIn, b.checkOut);
+        
+        let proofHtml = '';
+        if (proofImg) {
+          proofHtml = `
+            <div class="relative group cursor-pointer overflow-hidden rounded-xl border border-brand-500/20 max-w-[200px] aspect-[3/4]" onclick="viewProofFullscreen('${proofImg}', '${b.id}')">
+              <img src="${proofImg}" alt="Bukti Transfer" class="w-full h-full object-cover transition-transform group-hover:scale-105">
+              <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <i data-lucide="maximize-2" class="w-6 h-6 text-white"></i>
+              </div>
+            </div>
+          `;
+        } else {
+          proofHtml = `
+            <div class="flex flex-col items-center justify-center rounded-xl border border-dashed border-[#1b7f5a]/30 p-4 text-center max-w-[200px] h-[150px] bg-brand-900/10">
+              <i data-lucide="image-off" class="w-8 h-8 text-[#f6f1e7]/30 mb-2"></i>
+              <span class="text-[10px] text-[#f6f1e7]/40 mb-2">Belum ada bukti transfer</span>
+              <button onclick="promptUploadProof('${b.id}')" class="px-2 py-1 rounded bg-brand-700/50 hover:bg-brand-600/50 text-[#f6f1e7] text-[9px] font-bold transition-all">Upload Bukti</button>
+            </div>
+          `;
+        }
+        
+        approvalList.innerHTML += `
+          <div class="glass-panel-dark rounded-2xl p-5 border border-brand-500/20 flex flex-col md:flex-row gap-5">
+            <div class="flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <span class="text-[10px] bg-brand-900/80 px-2 py-0.5 rounded border border-brand-500/20 font-mono tracking-wider text-brand-200">${b.id}</span>
+                  <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-950/50 text-amber-400 border border-amber-500/20 uppercase tracking-widest">Waiting Payment</span>
+                </div>
+                <h5 class="text-sm font-bold text-white mb-1">${b.guest}</h5>
+                <p class="text-xs text-[#f6f1e7]/60 mb-2">${b.email} | ${b.phone}</p>
+                <div class="space-y-1 text-xs text-[#f6f1e7]/80">
+                  <div class="flex items-center gap-1"><i data-lucide="home" class="w-3.5 h-3.5 text-brand-200"></i> ${b.room}</div>
+                  <div class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5 text-brand-200"></i> ${b.checkIn} s/d ${b.checkOut} (${nights} malam)</div>
+                  <div class="flex items-center gap-1 font-bold text-white mt-2">
+                    <i data-lucide="banknote" class="w-3.5 h-3.5 text-emerald-400"></i> ${formatIDR(b.amount)}
+                  </div>
+                  <div class="text-[10px] text-[#f6f1e7]/40 mt-1">Metode: ${b.method || 'Transfer Bank'}</div>
+                </div>
+              </div>
+              
+              <div class="flex flex-wrap items-center gap-2 mt-4 pt-3 border-t border-[#1b7f5a]/10">
+                <button onclick="approveBookingPayment('${b.id}')" class="px-3 py-1.5 rounded-lg bg-brand-500 hover:bg-brand-600 text-[#07130f] font-bold text-xs transition-all flex items-center gap-1 shadow-lg shadow-brand-950/20">
+                  <i data-lucide="check" class="w-3.5 h-3.5"></i> Approve
+                </button>
+                <button onclick="rejectBookingPayment('${b.id}')" class="px-3 py-1.5 rounded-lg bg-red-950/40 hover:bg-red-900/40 text-red-400 hover:text-red-300 font-bold text-xs transition-all flex items-center gap-1 border border-red-500/20">
+                  <i data-lucide="x" class="w-3.5 h-3.5"></i> Reject
+                </button>
+                <button onclick="refundBookingPayment('${b.id}')" class="px-3 py-1.5 rounded-lg bg-purple-950/40 hover:bg-purple-900/40 text-purple-400 hover:text-purple-300 font-bold text-xs transition-all flex items-center gap-1 border border-purple-500/20">
+                  <i data-lucide="undo-2" class="w-3.5 h-3.5"></i> Mark Refunded
+                </button>
+              </div>
+            </div>
+            
+            <div class="shrink-0 flex flex-col justify-center">
+              <span class="text-[9px] font-bold text-[#f6f1e7]/40 uppercase tracking-widest mb-1 text-center md:text-left">Bukti Pembayaran:</span>
+              ${proofHtml}
+            </div>
+          </div>
+        `;
+      });
+      lucide.createIcons();
+    }
+
+    async function approveBookingPayment(bookingId) {
+      if (!confirm(`Setujui pembayaran untuk booking ${bookingId}?`)) return;
+      const bookings = getBookings();
+      const idx = bookings.findIndex(b => b.id === bookingId);
+      if (idx !== -1) {
+        const prevStatus = bookings[idx].status || 'Pending';
+        bookings[idx].status = 'Paid';
+        bookings[idx].paymentStatus = 'Paid';
+        bookings[idx].updatedAt = nowISO();
+        saveBookings(bookings);
+        
+        await AnairaDB.createPaymentLog(bookingId, 'Approve', prevStatus, 'Paid', 'Manual approval by admin');
+        
+        alert(`Booking ${bookingId} berhasil disetujui sebagai LUNAS/PAID!`);
+        await renderPayments();
+      }
+    }
+
+    async function rejectBookingPayment(bookingId) {
+      const reason = prompt('Masukkan alasan penolakan pembayaran:');
+      if (reason === null) return; 
+      
+      const bookings = getBookings();
+      const idx = bookings.findIndex(b => b.id === bookingId);
+      if (idx !== -1) {
+        const prevStatus = bookings[idx].status || 'Pending';
+        bookings[idx].status = 'Cancelled';
+        bookings[idx].paymentStatus = 'Rejected/Unpaid';
+        bookings[idx].updatedAt = nowISO();
+        saveBookings(bookings);
+        
+        await AnairaDB.createPaymentLog(bookingId, 'Reject', prevStatus, 'Rejected/Unpaid', reason || 'Ditolak admin tanpa alasan spesifik');
+        
+        alert(`Pembayaran booking ${bookingId} ditolak!`);
+        await renderPayments();
+      }
+    }
+
+    async function refundBookingPayment(bookingId) {
+      if (!confirm(`Tandai booking ${bookingId} sebagai Refunded?`)) return;
+      const bookings = getBookings();
+      const idx = bookings.findIndex(b => b.id === bookingId);
+      if (idx !== -1) {
+        const prevStatus = bookings[idx].status || 'Paid';
+        bookings[idx].status = 'Refunded';
+        bookings[idx].paymentStatus = 'Refunded';
+        bookings[idx].updatedAt = nowISO();
+        saveBookings(bookings);
+        
+        await AnairaDB.createPaymentLog(bookingId, 'Refund', prevStatus, 'Refunded', 'Marked as refunded by admin');
+        
+        alert(`Booking ${bookingId} berhasil ditandai sebagai Refunded!`);
+        await renderPayments();
+      }
+    }
+
+    function promptUploadProof(bookingId) {
+      const proofUrl = prompt('Masukkan URL gambar bukti transfer (atau path file lokal):', '../assets/images/proofs/proof1.png');
+      if (!proofUrl) return;
+      const bookings = getBookings();
+      const idx = bookings.findIndex(b => b.id === bookingId);
+      if (idx !== -1) {
+        bookings[idx].paymentProof = proofUrl;
+        bookings[idx].proofOfPayment = proofUrl;
+        bookings[idx].paymentProofImg = proofUrl;
+        saveBookings(bookings);
+        alert('Bukti transfer berhasil diperbarui!');
+        renderPayments();
+      }
+    }
+
+    function viewProofFullscreen(imgUrl, bookingId) {
+      let overlay = document.getElementById('proof-lightbox-overlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'proof-lightbox-overlay';
+        overlay.className = 'fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/90 backdrop-blur-md cursor-pointer';
+        overlay.onclick = () => overlay.classList.replace('flex', 'hidden');
+        overlay.innerHTML = `
+          <div class="relative max-w-xl w-full flex flex-col items-center justify-center cursor-default" onclick="event.stopPropagation()">
+            <button onclick="document.getElementById('proof-lightbox-overlay').classList.replace('flex', 'hidden')" class="absolute -top-12 right-0 text-slate-400 hover:text-white p-2 rounded-lg bg-white/10 transition-all">
+              <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <img id="lightbox-img" src="" alt="Proof" class="max-h-[80vh] object-contain rounded-2xl border border-brand-500/20 shadow-2xl">
+            <p id="lightbox-caption" class="text-sm font-mono text-[#a7eed0] mt-4 tracking-wider"></p>
+          </div>
+        `;
+        document.body.appendChild(overlay);
+      }
+      document.getElementById('lightbox-img').src = imgUrl;
+      document.getElementById('lightbox-caption').textContent = `Bukti Transfer Booking: ${bookingId}`;
+      overlay.classList.replace('hidden', 'flex');
+      lucide.createIcons();
+    }
+
+    async function renderPayments() {
+      await renderPaymentApprovalDesk();
+
+      let logs = await AnairaDB.getPaymentLogs();
       const tbody = document.getElementById('payment-logs-body');
       const emptyEl = document.getElementById('payment-logs-empty');
       tbody.innerHTML = '';
 
-      // Auto-generate payment logs from bookings if empty
       if (logs.length === 0) {
         const bookings = getBookings().filter(b => ['Paid','Refunded'].includes(b.status));
         const generated = bookings.map(b => ({
-          paymentId: 'PAY-' + Math.floor(10000 + Math.random() * 90000),
+          id: 'LOG-' + Math.floor(10000 + Math.random() * 90000),
           bookingId: b.id,
-          provider: 'Manual',
-          method: b.method,
-          amount: b.amount,
-          status: b.status === 'Paid' ? 'Success' : 'Refunded',
-          reference: '-',
-          createdAt: b.createdAt || nowISO(),
-          notes: ''
+          action: b.status === 'Paid' ? 'Approve' : 'Refund',
+          prevStatus: 'Pending',
+          newStatus: b.status,
+          notes: 'Auto-migrated from existing booking data',
+          timestamp: b.createdAt || nowISO()
         }));
         if (generated.length > 0) {
-          localStorage.setItem('anaira_payment_logs', JSON.stringify(generated));
-          renderPayments();
-          return;
+          await AnairaDB.savePaymentLogs(generated);
+          logs = generated;
         }
       }
 
@@ -3467,22 +3952,30 @@
         emptyEl.classList.remove('hidden');
       } else {
         emptyEl.classList.add('hidden');
+        const bookings = getBookings();
         logs.forEach(p => {
-          const statusCls = p.status === 'Success' ? 'text-emerald-400' : p.status === 'Refunded' ? 'text-purple-400' : 'text-amber-400';
+          const action = p.action || 'Log';
+          const newStatus = p.newStatus || p.status || 'Success';
+          const statusCls = newStatus === 'Paid' || newStatus === 'Success' ? 'text-emerald-400' : newStatus === 'Refunded' ? 'text-purple-400' : 'text-amber-400';
+          const dateStr = p.timestamp ? p.timestamp.split('T')[0] : (p.createdAt ? p.createdAt.split('T')[0] : '-');
+          
+          const bk = bookings.find(b => b.id === p.bookingId);
+          const method = bk ? bk.method : 'Manual / System';
+          const amount = bk ? bk.amount : 0;
+          
           tbody.innerHTML += `
-            <tr class="hover:bg-white/5 transition-all">
-              <td class="py-3 px-4 font-mono text-[10px]">${p.paymentId}</td>
+            <tr class="hover:bg-white/5 transition-all text-xs">
+              <td class="py-3 px-4 font-mono text-[10px]">${p.id || p.paymentId || 'LOG-N/A'}</td>
               <td class="py-3 px-4 font-mono text-[10px] text-brand-200">${p.bookingId}</td>
-              <td class="py-3 px-4 text-xs">${p.method}</td>
-              <td class="py-3 px-4 text-right font-mono text-xs font-bold">${formatIDR(p.amount)}</td>
-              <td class="py-3 px-4 text-center text-xs font-bold ${statusCls}">${p.status}</td>
-              <td class="py-3 px-4 text-[10px] font-mono text-[#f6f1e7]/50">${p.createdAt ? p.createdAt.split('T')[0] : '-'}</td>
-              <td class="py-3 px-4 text-xs text-[#f6f1e7]/50">${p.notes || '-'}</td>
+              <td class="py-3 px-4 text-xs font-bold text-[#f6f1e7]/80">${method} (${action})</td>
+              <td class="py-3 px-4 text-right font-mono text-xs font-bold">${formatIDR(amount)}</td>
+              <td class="py-3 px-4 text-center text-xs font-bold ${statusCls}">${newStatus}</td>
+              <td class="py-3 px-4 text-[10px] font-mono text-[#f6f1e7]/50">${dateStr}</td>
+              <td class="py-3 px-4 text-xs text-[#f6f1e7]/60">${p.notes || '-'}</td>
             </tr>`;
         });
       }
 
-      // Load payment settings
       const ps = getPaymentSettings();
       if (ps.qrisToggle !== undefined) document.getElementById('pay-qris-toggle').checked = ps.qrisToggle;
       if (ps.qrisInstruction) document.getElementById('pay-qris-instruction').value = ps.qrisInstruction;
@@ -3498,6 +3991,144 @@
       if (ps.depositPct !== undefined) document.getElementById('pay-deposit-pct').value = ps.depositPct;
 
       lucide.createIcons();
+    }
+
+    // ==================== CSV REPORT EXPORTS (UTF-8 BOM) ====================
+    function downloadCSV(filename, headers, rows) {
+      const csvContent = [
+        headers.join(','),
+        ...rows.map(r => r.join(','))
+      ].join('\r\n');
+      
+      const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `${filename}-${new Date().toISOString().slice(0, 10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    function exportBookingsReport() {
+      const bookings = getBookings();
+      if (bookings.length === 0) return alert('Tidak ada data booking untuk di-ekspor.');
+      
+      const headers = ['Booking ID', 'Guest Name', 'Room Type', 'Check-In', 'Check-Out', 'Amount', 'Status'];
+      const rows = bookings.map(b => [
+        b.id || b.bookingId,
+        `"${(b.guest || b.guestName || '').replace(/"/g, '""')}"`,
+        b.room || b.roomType,
+        b.checkIn || b.checkInDate,
+        b.checkOut || b.checkOutDate,
+        Math.round(b.amount || 0),
+        b.status
+      ]);
+      
+      downloadCSV('anaira-bookings-report', headers, rows);
+    }
+
+    function exportRevenueReport() {
+      const bookings = getBookings().filter(b => b.status === 'Paid');
+      if (bookings.length === 0) return alert('Tidak ada data revenue untuk di-ekspor.');
+      
+      const headers = ['Booking ID', 'Booking Date', 'Check-In', 'Subtotal', 'Discount Given', 'Final Total'];
+      const rows = bookings.map(b => {
+        const finalTotal = Math.round(b.amount || 0);
+        const discount = Math.round(b.discountAmount || 0);
+        const subtotal = finalTotal + discount;
+        const bookingDate = b.createdAt ? b.createdAt.split('T')[0] : '-';
+        return [
+          b.id,
+          bookingDate,
+          b.checkIn,
+          subtotal,
+          discount,
+          finalTotal
+        ];
+      });
+      
+      downloadCSV('anaira-revenue-report', headers, rows);
+    }
+
+    async function exportVouchersReport() {
+      const analytics = await AnairaDB.getVoucherAnalytics();
+      const items = analytics.items || [];
+      if (items.length === 0) return alert('Tidak ada data voucher untuk di-ekspor.');
+      
+      const headers = ['Promo Code', 'Usage Count', 'Total Discount Given', 'Generated Revenue'];
+      const rows = items.map(v => [
+        v.code,
+        v.usedCount || 0,
+        Math.round(v.totalDiscount || 0),
+        Math.round(v.totalRevenue || 0)
+      ]);
+      
+      downloadCSV('anaira-vouchers-report', headers, rows);
+    }
+
+    function exportGuestsReport() {
+      const bookings = getBookings();
+      if (bookings.length === 0) return alert('Tidak ada data tamu untuk di-ekspor.');
+      
+      const guestMap = {};
+      bookings.forEach(b => {
+        const email = (b.email || '').toLowerCase().trim();
+        if (!email) return;
+        if (!guestMap[email]) {
+          guestMap[email] = {
+            name: b.guest || b.guestName || '',
+            email: email,
+            phone: b.phone || '',
+            totalVisits: 0,
+            lifetimeSpend: 0
+          };
+        }
+        if (['Paid', 'Checked-in', 'Checked-out'].includes(b.status)) {
+          guestMap[email].totalVisits++;
+          guestMap[email].lifetimeSpend += Number(b.amount || 0);
+        }
+        if (!guestMap[email].phone && b.phone) {
+          guestMap[email].phone = b.phone;
+        }
+      });
+      
+      const guests = Object.values(guestMap);
+      if (guests.length === 0) return alert('Tidak ada data tamu unik untuk di-ekspor.');
+      
+      const headers = ['Guest Name', 'Email', 'Phone', 'Total Visits', 'Lifetime Spend'];
+      const rows = guests.map(g => [
+        `"${g.name.replace(/"/g, '""')}"`,
+        g.email,
+        g.phone,
+        g.totalVisits,
+        Math.round(g.lifetimeSpend)
+      ]);
+      
+      downloadCSV('anaira-guests-report', headers, rows);
+    }
+
+    async function exportPaymentsReport() {
+      const logs = await AnairaDB.getPaymentLogs();
+      if (logs.length === 0) return alert('Tidak ada data pembayaran untuk di-ekspor.');
+      
+      const bookings = getBookings();
+      const headers = ['Payment Log ID', 'Booking ID', 'Action', 'Method', 'Verification Timestamp', 'Admin Notes'];
+      const rows = logs.map(l => {
+        const bk = bookings.find(b => b.id === l.bookingId);
+        const method = bk ? bk.method : 'Manual';
+        return [
+          l.id || l.paymentId,
+          l.bookingId,
+          l.action,
+          method,
+          l.timestamp || l.createdAt,
+          `"${(l.notes || '').replace(/"/g, '""')}"`
+        ];
+      });
+      
+      downloadCSV('anaira-payments-report', headers, rows);
     }
 
     function savePaymentSettings() {

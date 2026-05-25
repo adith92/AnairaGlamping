@@ -5,13 +5,13 @@
 <h1 align="center">🏕️ Anaira Glamping PMS & Booking Center</h1>
 
 <p align="center">
-  <strong>Sistem reservasi glamping, booking online, PMS dashboard, manajemen voucher & paket staycation, galeri slideshow, dan payment gateway scaffold untuk Anaira Glamping & Resort.</strong>
+  <strong>Sistem reservasi staycation, booking online, visual calendar scheduler, PMS dashboard, chatbot FAQ cerdas, add-ons upsell, proof-of-payment verification desk, dan ekspor laporan CSV akurat.</strong>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Frontend-Static_HTML-1b7f5a?style=flat-square" alt="Frontend">
-  <img src="https://img.shields.io/badge/PMS-LocalStorage_Demo-f59e0b?style=flat-square" alt="PMS">
-  <img src="https://img.shields.io/badge/Backend-QloApps_PHP-blue?style=flat-square" alt="Backend">
+  <img src="https://img.shields.io/badge/PMS-Interactive_Dashboard-f59e0b?style=flat-square" alt="PMS">
+  <img src="https://img.shields.io/badge/Chatbot-Rule--Based_Local-blue?style=flat-square" alt="Chatbot">
   <img src="https://img.shields.io/badge/Deploy-Vercel_Ready-black?style=flat-square" alt="Deploy">
   <img src="https://img.shields.io/badge/License-OSL--3.0_/_AFL--3.0-lightgrey?style=flat-square" alt="License">
 </p>
@@ -24,7 +24,7 @@
 |---|---|---|
 | 🚀 **Vercel Production** | [hotelier-adith92.vercel.app](https://hotelier-adith92.vercel.app) | Deployed production-ready application |
 | 🖥️ **Local Frontend** | `http://localhost:4173` | Via local static preview server |
-| 🔐 **Admin PMS** | `http://localhost:4173/admin/pms` | Full PMS dashboard (Vouchers, Packages, Settings) |
+| 🔐 **Admin PMS** | `http://localhost:4173/admin/pms` | Full PMS dashboard (Calendar, Bookings, Vouchers, Settings) |
 | 🛡️ **Manage Booking Door** | `http://localhost:4173/login` | Disguised gateway login for Guests & Admins |
 
 ---
@@ -34,20 +34,19 @@
 | Emoji | Feature | Description |
 |---|---|---|
 | 🛏️ | **Room/Villa Management** | 3 types: Balcony Suite (6), Porch Cabin (6), Presidential Villa (1) |
-| 📅 | **4-Step Booking Wizard** | Wizard with room selection, scheduling, guest details (Indonesia WhatsApp validated) |
-| 🎟️ | **Staycation Packages** | Curated packages (Lebaran Family Escape, Romantic Honeymoon, Weekend BBQ) |
-| 💸 | **Voucher Code Engine** | Asynchronous redemption checks against usage limits, dates, and room limits |
-| 🧾 | **PMS Dashboard** | Premium CRUD booking dashboard with occupancy stats, calendar, guests list |
-| 🎟️ | **PMS Voucher CRUD** | Create and track vouchers from IG, Threads, Influencer, Partner, and Manual |
-| 📦 | **PMS Packages CRUD** | Visual stay promo packages manager with title, price, inclusions, terms |
-| 🗺️ | **Direct Map Load** | lazy-loaded responsive maps widget in contacts page with Google Maps link fallback |
-| 🖼️ | **Stunning Lightbox** | SwipeableFullscreen gallery modal with scale animations and Play/Pause slideshow |
-| 📲 | **WhatsApp Cleanup** | Visual WA spam cleanup; official WhatsApp calls limited strictly to Contact page |
-| 🎨 | **Premium Visuals** | Glassmorphism grids, starry sparkle effects, Tailwind CSS, Plus Jakarta Sans |
+| 📅 | **Interactive Calendar** | Real-time date availability, quantity constraints, weekend prices, maintenance blocking |
+| 🎟 | **Promo Staycation Pages** | Dynamic stays pages (Lebaran Family, Honeymoon Romantic, Weekend BBQ, Family Adventure) |
+| 💸 | **Voucher Engine** | Asynchronous redemption validations with influencer metrics and conversion logs |
+| 🧾 | **PMS Admin Panel** | Premium CRUD booking dashboard, daily occupancy rates, visual monthly blocking grids |
+| 💳 | **Verification Desk** | Proof-of-payment approval desk (Approve, Reject, Refund) with full lightbox preview |
+| 📊 | **BOM CSV Exports** | UTF-8 BOM Excel-friendly direct CSV reports downloads for bookings, revenue, and guests |
+| 💬 | **FAQ Chatbot Concierge** | Offline-first, Rule-based keyword matching chatbot widget with zero API costs |
+| 📲 | **WhatsApp Sanitized** | Clean WhatsApp visual spam; calls limited strictly to Contact and successful Invoices |
+| 🎨 | **Premium Visuals** | Glassmorphism panels, starry sparkle effects, Tailwind CSS, Plus Jakarta Sans |
 
 ---
 
-## 🛏️ Room & Rate Matrix
+## 🛏 Room & Rate Matrix
 
 | Unit | Qty | Capacity | Weekday | Weekend | Facilities |
 |---|---:|---:|---:|---:|---|
@@ -57,12 +56,13 @@
 
 ---
 
-## 🎟️ Staycation Promo Packages
+## 🎟 Staycation Promo Packages
 
-Tersedia pilihan paket staycation hemat pegunungan yang sudah mencakup sewa kamar, santap sarapan, party BBQ outdoor, dekorasi room, dan api unggun:
+Pilihan paket staycation sejuk pegunungan Bogor curasi khusus untuk keluarga, pasangan, dan petualangan:
 *   **Paket Lebaran Family Escape 📅** (Rp 3.500.000 nett) - Menginap 2 malam di Villa mewah + BBQ set + Hampers spesial.
-*   **Paket Honeymoon Romantic Stay 💖** (Rp 2.500.000 nett) - Stay 2 malam di Balcony Suite + romantic candle-light dinner + floating breakfast.
+*   **Paket Honeymoon Romantic Stay 💖** (Rp 2.500.000 nett) - Stay 2 malam di Balcony Suite + candlelight dinner + floating breakfast.
 *   **Paket Weekend BBQ Glamping 🪵** (Rp 1.800.000 nett) - Stay 1 malam di Porch Cabin akhir pekan + outdoor grill BBQ set lengkap.
+*   **Paket Family Adventure Glamping 🎒** (Rp 2.200.000 nett) - Stay 1 malam di Balcony/Porch + fun outdoor activity + smores kit + souvenirs.
 
 ---
 
@@ -73,19 +73,23 @@ WebProject/
 ├── frontend/hotelier/                 # 🌐 Static frontend (Vercel root)
 │   ├── index.html                     #   Homepage (Featured deals, trust section)
 │   ├── rooms.html                     #   Room listings
-│   ├── booking.html                   #   4-step booking wizard with package params
+│   ├── booking.html                   #   4-step booking wizard with package params & addons
+│   ├── booking-success.html           #   Success receipt invoice with print styles
+│   ├── pre-arrival.html               #   Pre-arrival guide & guest guidelines handbook
 │   ├── gallery.html                   #   Photo gallery with lightbox slideshow
 │   ├── packages.html                  #   Staycation packages catalog
 │   ├── contact.html                   #   Contact page with lazy maps embed
 │   ├── login.html                     #   Manage Booking disguised login portal
 │   ├── admin/                         #   🔐 Admin panel
-│   │   └── pms.html                   #     PMS dashboard (Packages & Vouchers CRUD)
+│   │   └── pms.html                   #     PMS dashboard (Calendar & Vouchers Approval Desk)
 │   ├── assets/                        #   🖼️ Visual assets (brand, images, video)
 │   ├── data/
-│   │   └── site-content.json          #   📝 Dynamic CMS data source
+│   │   ├── site-content.json          #   📝 Dynamic CMS data source
+│   │   └── faq.json                   #   💬 Localized FAQ database
 │   ├── scripts/                       #   🧰 Dev and rebuilder tools
 │   │   ├── static-server.js           #     Local static file server
 │   │   ├── admin-server.js            #     Admin API server
+│   │   ├── anaira-chatbot.js          #     FAQ Chatbot widget logic script
 │   │   └── build-pages.js             #     Static pages compiler script
 │   ├── vercel.json                    #   ☁️ Vercel rewrite rules
 │   └── package.json                   #   📦 Node package config
@@ -115,6 +119,12 @@ node scripts/admin-server.js
 # Open http://localhost:4173/admin/pms
 ```
 
+### Compile Static Pages
+
+```bash
+node frontend/hotelier/scripts/build-pages.js
+```
+
 ---
 
 ## 🔐 Admin Access
@@ -124,6 +134,13 @@ node scripts/admin-server.js
 | 👤 Portal Gate | Ketikkan kata `admin` di kolom input Booking ID di `/login.html` |
 | 🔑 Password | `221221` (kolom input kata sandi rahasia muncul otomatis) |
 | 🌐 URL | `http://localhost:4173/login` |
+
+---
+
+## 💬 Anaira FAQ Chatbot widget
+Widget asisten obrolan dipasang di seluruh halaman publik.
+- **Biaya Nol Rupiah:** Menggunakan rule-based engine di `anaira-chatbot.js` yang memetakan masukan kata kunci dari `data/faq.json` seketika secara luring/offline, bebas biaya token API.
+- **AI Concierge Stub:** Tersedia konfigurasi `anaira_ai_settings` di script chatbot (default nonaktif: `enabled: false`) untuk sambungan kecerdasan buatan (LLM) di masa depan.
 
 ---
 
@@ -142,17 +159,6 @@ Semua data transaksi dan pengaturan disimpan di dalam `localStorage` browser. Me
 Sistem terhubung langsung ke basis data relasional SQL secara real-time:
 *   **Supabase (PostgreSQL):** Komunikasi langsung berbasis REST API dari client-side ke database Supabase yang super cepat.
 *   **Shared Hosting (MySQL/PDO):** Terkoneksi menggunakan skrip jembatan ultra-aman `api.php` yang menyimpan kredensial sensitif di sisi server cPanel menggunakan `getenv()`.
-
----
-
-## 🎟️ PMS Voucher Code Setup
-
-Dari dasbor PMS menu **"Vouchers"**, pengelola dapat:
-1.  Mengklik **Gen** untuk mengenerate kode promo teratur secara otomatis (contoh: `INFJ4B57`, `THR72V90`, dll.).
-2.  Memilih **Promo Source** (IG, Threads, Influencer, Partner, Manual, Website).
-3.  Mengisi nama influencer jika source yang dipilih adalah `Promo Influencer` (field ini wajib diisi).
-4.  Menentukan diskon persen/fixed, kuota batas limit, minimal transaksi, dan masa berlaku.
-5.  Melihat `usedCount` secara live dari pemesanan yang sukses menempelkan voucher.
 
 ---
 
