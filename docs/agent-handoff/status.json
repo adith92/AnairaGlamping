@@ -1,0 +1,12 @@
+{
+  "project": "AnairaGlamping",
+  "status": "ready-for-handoff",
+  "last_updated": "2026-05-26T03:34:12+07:00",
+  "branch": "develop",
+  "deployment": {
+    "platform": "Vercel",
+    "root": "frontend/hotelier",
+    "url": "https://anairaglamp.vercel.app"
+  },
+  "docs_path": "docs/agent-handoff"
+}

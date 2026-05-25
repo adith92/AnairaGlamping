@@ -89,6 +89,12 @@
 - Fixed Vercel deployment where browser downloaded HTML files instead of rendering them. 
 - `vercel.json` now forces `text/html` headers and correct rewrites.
 
+## 10. Agent Handoff / Cross-Device Sync
+This project is configured for seamless transition between AI agents across different devices (e.g., Windows to Mac).
+All agent context, decisions, rules, and status are stored in `docs/agent-handoff/`. 
+**When starting on a new device, agents MUST start by reading:**
+👉 [docs/agent-handoff/MAC_START_HERE.md](docs/agent-handoff/MAC_START_HERE.md)
+
 ---
 
 ## ✨ Feature List
