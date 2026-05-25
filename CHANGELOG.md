@@ -1,5 +1,18 @@
 # 🧾 CHANGELOG
 
+## [Final Polish Before Audit] - 2026-05-26
+
+### Added
+- Added booking review modal before confirmation
+- Added inline validation for guest data
+- Added UTM tracking to booking records
+- Added WhatsApp templates for admin actions
+- Replaced browser confirm with custom admin confirmation modal
+- Added audit logs panel and CSV export
+- Added trust badges and testimonials
+- Added LodgingBusiness JSON-LD schema
+- Improved mobile layout and PMS quick actions
+
 ## [Priority 1-4 Expansion] - 2026-05-26
 
 ### Added

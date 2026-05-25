@@ -265,6 +265,10 @@
 
         <div class="text-[9px] uppercase tracking-widest text-[#f6f1e7]/30 font-bold px-4 pt-4 pb-2">Sistem</div>
         
+        <a href="#" id="nav-audit" onclick="switchSection('audit');return false;" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-300 hover:bg-brand-900/30 hover:text-brand-200 font-medium transition-all text-sm">
+          <i data-lucide="scroll-text" class="w-4 h-4"></i>
+          Audit Log
+        </a>
         <a href="#" id="nav-settings" onclick="switchSection('settings');return false;" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-300 hover:bg-brand-900/30 hover:text-brand-200 font-medium transition-all text-sm">
           <i data-lucide="settings" class="w-4 h-4"></i>
           Settings
@@ -946,6 +950,48 @@
               <tbody id="vouchers-table-body" class="divide-y divide-[#1b7f5a]/5 text-sm text-[#f6f1e7]/95">
               </tbody>
             </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== SECTION: AUDIT LOG ===================== -->
+      <div id="section-audit" class="section-content hidden max-w-7xl mx-auto">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xl font-bold text-white flex items-center gap-2">
+            <i data-lucide="scroll-text" class="w-5 h-5 text-brand-200"></i> Audit Log
+          </h3>
+          <div class="flex items-center gap-3">
+            <button onclick="clearAuditLogs()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-red-500/20 text-red-400 hover:bg-red-950/20 transition-all text-xs font-bold">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+              Hapus Semua Log
+            </button>
+            <button onclick="exportAuditLogsCSV()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-brand-500/30 text-brand-200 hover:bg-brand-700/20 transition-all text-xs font-bold">
+              <i data-lucide="download" class="w-4 h-4"></i>
+              Export CSV
+            </button>
+          </div>
+        </div>
+        <div class="glass-panel rounded-3xl p-6 md:p-8 glow-effect">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-[#1b7f5a]/10 text-[#f6f1e7]/40 uppercase tracking-wider text-[11px] font-bold">
+                  <th class="py-4 px-4">Timestamp</th>
+                  <th class="py-4 px-4">Tipe Aksi</th>
+                  <th class="py-4 px-4">Deskripsi</th>
+                  <th class="py-4 px-4 text-center">Dilakukan Oleh</th>
+                </tr>
+              </thead>
+              <tbody id="audit-table-body" class="divide-y divide-[#1b7f5a]/5 text-sm text-[#f6f1e7]/95">
+              </tbody>
+            </table>
+          </div>
+          <div id="audit-empty" class="hidden text-center py-12">
+            <div class="w-16 h-16 rounded-full bg-[#1b7f5a]/10 flex items-center justify-center text-brand-500 mb-4 border border-[#1b7f5a]/20 mx-auto">
+              <i data-lucide="scroll-text" class="w-8 h-8"></i>
+            </div>
+            <h4 class="text-lg font-bold text-white mb-1">Belum Ada Log Aktivitas</h4>
+            <p class="text-[#f6f1e7]/50 text-sm max-w-sm mx-auto">Log akan otomatis tercatat saat Anda melakukan aksi seperti membuat booking, mengubah status, atau mengedit kamar.</p>
           </div>
         </div>
       </div>
@@ -1878,6 +1924,25 @@
   </div>
 
 
+  <!-- ===================== MODAL: ADMIN CONFIRM ===================== -->
+  <div id="modal-admin-confirm" class="fixed inset-0 z-[60] hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm transition-opacity duration-200">
+    <div class="glass-modal w-full max-w-md rounded-3xl p-6 md:p-8 transform transition-all duration-200 shadow-2xl relative scale-95 opacity-0" id="admin-confirm-inner">
+      <div class="text-center">
+        <div id="admin-confirm-icon" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"></div>
+        <h3 id="admin-confirm-title" class="text-xl font-bold text-white mb-2"></h3>
+        <p id="admin-confirm-message" class="text-[#f6f1e7]/70 text-sm mb-6 leading-relaxed"></p>
+        <div class="flex items-center justify-center gap-3">
+          <button id="admin-confirm-cancel" type="button" class="w-1/2 px-5 py-2.5 rounded-xl border border-[#f6f1e7]/20 text-[#f6f1e7]/80 hover:text-white hover:bg-white/5 transition-all text-sm font-semibold">
+            Batal
+          </button>
+          <button id="admin-confirm-ok" type="button" class="w-1/2 px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 active:scale-95 text-[#07130f] transition-all text-sm font-bold shadow-lg shadow-brand-950/40">
+            Konfirmasi
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ===================== JAVASCRIPT LOGIC ===================== -->
   <script>
     // ==================== ROUTE GUARD ====================
@@ -2100,6 +2165,7 @@
       if (currentSection === 'packages') renderPackagesTable();
       if (currentSection === 'gallery') renderGalleryGrid();
       if (currentSection === 'vouchers') renderVouchersTable();
+      if (currentSection === 'audit') renderAuditTable();
       if (currentSection === 'settings') loadSettings();
     }
 
@@ -2386,6 +2452,7 @@
       const bookings = getBookings();
       bookings.unshift(newBooking);
       saveBookings(bookings);
+      logAuditAction('booking_created', `Booking baru ${bookingId} untuk ${guestVal} (${roomVal}, ${checkInVal} s/d ${checkOutVal})`);
       closeAddModal();
     }
 
@@ -2441,6 +2508,7 @@
       const sr = document.getElementById('edit-source').value;
       const nt = document.getElementById('edit-notes').value.trim();
 
+      const prevStatus = bookings[index].status;
       Object.assign(bookings[index], {
         guest: g, guestName: g, email: em, guestEmail: em, phone: ph, guestCount: gc,
         room: rm, roomType: rm, checkIn: ci, checkin: ci, checkOut: co, checkout: co,
@@ -2449,6 +2517,11 @@
       });
 
       saveBookings(bookings);
+      if (prevStatus !== st) {
+        logAuditAction('status_changed', `Status booking ${id} diubah dari ${prevStatus} ke ${st}`);
+      } else {
+        logAuditAction('booking_edited', `Booking ${id} (${g}) diperbarui`);
+      }
       closeEditModal();
     }
 
@@ -2473,8 +2546,10 @@
     function handleDeleteBooking() {
       const id = document.getElementById('delete-id-tracker').value;
       let bookings = getBookings();
+      const deleted = bookings.find(b => b.id === id || b.bookingId === id);
       bookings = bookings.filter(b => b.id !== id && b.bookingId !== id);
       saveBookings(bookings);
+      logAuditAction('booking_deleted', `Booking ${id} (${deleted ? deleted.guest : 'unknown'}) dihapus`);
       closeDeleteModal();
     }
 
@@ -2649,9 +2724,11 @@
           roomData.id = editId;
           rooms[idx] = roomData;
         }
+        logAuditAction('room_edited', `Kamar "${roomData.name}" diperbarui`);
       } else {
         roomData.id = 'room-' + Date.now();
         rooms.push(roomData);
+        logAuditAction('room_edited', `Kamar baru "${roomData.name}" ditambahkan`);
       }
 
       saveRooms(rooms);
@@ -2672,12 +2749,15 @@
     }
 
     function deleteRoom(roomId) {
-      if (!confirm('Hapus tipe kamar ini?')) return;
-      let rooms = getRooms();
-      rooms = rooms.filter(r => r.id !== roomId);
-      saveRooms(rooms);
-      renderRoomsTable();
-      syncSiteContent();
+      showAdminConfirm('Hapus Kamar', 'Apakah Anda yakin ingin menghapus tipe kamar ini? Tindakan ini tidak dapat dibatalkan.', () => {
+        let rooms = getRooms();
+        const deletedRoom = rooms.find(r => r.id === roomId);
+        rooms = rooms.filter(r => r.id !== roomId);
+        saveRooms(rooms);
+        logAuditAction('room_edited', `Kamar "${deletedRoom ? deletedRoom.name : roomId}" dihapus`);
+        renderRoomsTable();
+        syncSiteContent();
+      }, null, 'danger');
     }
 
     // ==================== GOOGLE MAPS PREVIEW ====================
@@ -2860,12 +2940,13 @@
     }
 
     function deletePackage(packageId) {
-      if (!confirm('Hapus paket ini?')) return;
-      let packages = getPackages();
-      packages = packages.filter(p => p.id !== packageId && p.slug !== packageId);
-      savePackages(packages);
-      renderPackagesTable();
-      syncSiteContent();
+      showAdminConfirm('Hapus Paket', 'Apakah Anda yakin ingin menghapus paket promo ini?', () => {
+        let packages = getPackages();
+        packages = packages.filter(p => p.id !== packageId && p.slug !== packageId);
+        savePackages(packages);
+        renderPackagesTable();
+        syncSiteContent();
+      }, null, 'danger');
     }
 
     // ==================== GALLERY CRUD ====================
@@ -2940,12 +3021,13 @@
     }
 
     function deleteGalleryImage(index) {
-      if (!confirm('Hapus foto ini dari galeri?')) return;
-      const gallery = getGallery();
-      gallery.splice(index, 1);
-      saveGalleryData(gallery);
-      renderGalleryGrid();
-      syncSiteContent();
+      showAdminConfirm('Hapus Foto', 'Apakah Anda yakin ingin menghapus foto ini dari galeri?', () => {
+        const gallery = getGallery();
+        gallery.splice(index, 1);
+        saveGalleryData(gallery);
+        renderGalleryGrid();
+        syncSiteContent();
+      }, null, 'danger');
     }
 
     // ==================== SYNC TO SERVER API & STATIC BUILD ====================
@@ -3324,12 +3406,13 @@
     }
 
     function deleteVoucher(voucherCode) {
-      if (!confirm('Hapus voucher ini?')) return;
-      let vouchers = getVouchers();
-      vouchers = vouchers.filter(v => v.code !== voucherCode);
-      saveVouchers(vouchers);
-      renderVouchersTable();
-      syncSiteContent();
+      showAdminConfirm('Hapus Voucher', `Apakah Anda yakin ingin menghapus voucher <strong class="text-brand-200">${voucherCode}</strong>?`, () => {
+        let vouchers = getVouchers();
+        vouchers = vouchers.filter(v => v.code !== voucherCode);
+        saveVouchers(vouchers);
+        renderVouchersTable();
+        syncSiteContent();
+      }, null, 'danger');
     }
 
     // ==================== CALENDAR ====================
@@ -3499,6 +3582,7 @@
       
       const bd = await AnairaDB.getBlockedDates();
       saveBlockedDates(bd);
+      logAuditAction('date_blocked', `Tanggal ${start} s/d ${end} diblokir untuk ${room || 'semua'} kamar${reason ? ' (' + reason + ')' : ''}`);
 
       document.getElementById('block-reason' + prefix).value = '';
       
@@ -3511,14 +3595,14 @@
     }
 
     async function removeBlockedDate(bdId) {
-      if (!confirm('Hapus blokir tanggal ini?')) return;
-      await AnairaDB.deleteBlockedDate(bdId);
-
-      const bd = await AnairaDB.getBlockedDates();
-      saveBlockedDates(bd);
-
-      await renderBlockedDatesList();
-      await renderCalendar();
+      showAdminConfirm('Hapus Blokir Tanggal', 'Apakah Anda yakin ingin menghapus blokir tanggal ini?', async () => {
+        await AnairaDB.deleteBlockedDate(bdId);
+        const bd = await AnairaDB.getBlockedDates();
+        saveBlockedDates(bd);
+        logAuditAction('date_unblocked', `Blokir tanggal ID ${bdId} dihapus`);
+        await renderBlockedDatesList();
+        await renderCalendar();
+      }, null, 'warning');
     }
 
     async function renderBlockedDatesList() {
@@ -3816,6 +3900,19 @@
                   <i data-lucide="undo-2" class="w-3.5 h-3.5"></i> Mark Refunded
                 </button>
               </div>
+              
+              <div class="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-[#1b7f5a]/10">
+                <span class="text-[9px] font-bold text-[#f6f1e7]/30 uppercase tracking-widest mr-1">WhatsApp:</span>
+                <a href="${buildWaLink(b, 'reminder')}" target="_blank" class="px-2.5 py-1 rounded-lg bg-emerald-950/40 hover:bg-emerald-900/50 text-emerald-400 hover:text-emerald-300 font-bold text-[10px] transition-all flex items-center gap-1 border border-emerald-500/20">
+                  <i data-lucide="bell" class="w-3 h-3"></i> Reminder Pembayaran
+                </a>
+                <a href="${buildWaLink(b, 'confirm')}" target="_blank" class="px-2.5 py-1 rounded-lg bg-blue-950/40 hover:bg-blue-900/50 text-blue-400 hover:text-blue-300 font-bold text-[10px] transition-all flex items-center gap-1 border border-blue-500/20">
+                  <i data-lucide="check-circle" class="w-3 h-3"></i> Konfirmasi Pembayaran
+                </a>
+                <a href="${buildWaLink(b, 'checkin')}" target="_blank" class="px-2.5 py-1 rounded-lg bg-purple-950/40 hover:bg-purple-900/50 text-purple-400 hover:text-purple-300 font-bold text-[10px] transition-all flex items-center gap-1 border border-purple-500/20">
+                  <i data-lucide="map-pin" class="w-3 h-3"></i> Panduan Check-in
+                </a>
+              </div>
             </div>
             
             <div class="shrink-0 flex flex-col justify-center">
@@ -3829,21 +3926,29 @@
     }
 
     async function approveBookingPayment(bookingId) {
-      if (!confirm(`Setujui pembayaran untuk booking ${bookingId}?`)) return;
-      const bookings = getBookings();
-      const idx = bookings.findIndex(b => b.id === bookingId);
-      if (idx !== -1) {
-        const prevStatus = bookings[idx].status || 'Pending';
-        bookings[idx].status = 'Paid';
-        bookings[idx].paymentStatus = 'Paid';
-        bookings[idx].updatedAt = nowISO();
-        saveBookings(bookings);
-        
-        await AnairaDB.createPaymentLog(bookingId, 'Approve', prevStatus, 'Paid', 'Manual approval by admin');
-        
-        alert(`Booking ${bookingId} berhasil disetujui sebagai LUNAS/PAID!`);
-        await renderPayments();
-      }
+      showAdminConfirm(
+        'Setujui Pembayaran',
+        `Setujui pembayaran untuk booking <strong class="text-brand-200">${bookingId}</strong>?`,
+        async () => {
+          const bookings = getBookings();
+          const idx = bookings.findIndex(b => b.id === bookingId);
+          if (idx !== -1) {
+            const prevStatus = bookings[idx].status || 'Pending';
+            bookings[idx].status = 'Paid';
+            bookings[idx].paymentStatus = 'Paid';
+            bookings[idx].updatedAt = nowISO();
+            saveBookings(bookings);
+            
+            await AnairaDB.createPaymentLog(bookingId, 'Approve', prevStatus, 'Paid', 'Manual approval by admin');
+            logAuditAction('payment_verified', `Pembayaran booking ${bookingId} disetujui (Paid)`);
+            
+            alert(`Booking ${bookingId} berhasil disetujui sebagai LUNAS/PAID!`);
+            await renderPayments();
+          }
+        },
+        null,
+        'success'
+      );
     }
 
     async function rejectBookingPayment(bookingId) {
@@ -3867,21 +3972,29 @@
     }
 
     async function refundBookingPayment(bookingId) {
-      if (!confirm(`Tandai booking ${bookingId} sebagai Refunded?`)) return;
-      const bookings = getBookings();
-      const idx = bookings.findIndex(b => b.id === bookingId);
-      if (idx !== -1) {
-        const prevStatus = bookings[idx].status || 'Paid';
-        bookings[idx].status = 'Refunded';
-        bookings[idx].paymentStatus = 'Refunded';
-        bookings[idx].updatedAt = nowISO();
-        saveBookings(bookings);
-        
-        await AnairaDB.createPaymentLog(bookingId, 'Refund', prevStatus, 'Refunded', 'Marked as refunded by admin');
-        
-        alert(`Booking ${bookingId} berhasil ditandai sebagai Refunded!`);
-        await renderPayments();
-      }
+      showAdminConfirm(
+        'Tandai Refund',
+        `Tandai booking <strong class="text-brand-200">${bookingId}</strong> sebagai Refunded?`,
+        async () => {
+          const bookings = getBookings();
+          const idx = bookings.findIndex(b => b.id === bookingId);
+          if (idx !== -1) {
+            const prevStatus = bookings[idx].status || 'Paid';
+            bookings[idx].status = 'Refunded';
+            bookings[idx].paymentStatus = 'Refunded';
+            bookings[idx].updatedAt = nowISO();
+            saveBookings(bookings);
+            
+            await AnairaDB.createPaymentLog(bookingId, 'Refund', prevStatus, 'Refunded', 'Marked as refunded by admin');
+            logAuditAction('payment_verified', `Booking ${bookingId} ditandai sebagai Refunded`);
+            
+            alert(`Booking ${bookingId} berhasil ditandai sebagai Refunded!`);
+            await renderPayments();
+          }
+        },
+        null,
+        'warning'
+      );
     }
 
     function promptUploadProof(bookingId) {
@@ -4234,40 +4347,249 @@
     function restoreAllData(event) {
       const file = event.target.files[0];
       if (!file) return;
-      if (!confirm('Ini akan menimpa semua data yang ada. Lanjutkan?')) {
+      showAdminConfirm('Restore Data', 'Ini akan menimpa <strong class="text-red-300">semua data yang ada</strong>. Lanjutkan?', () => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          try {
+            const data = JSON.parse(e.target.result);
+            Object.keys(data).forEach(k => {
+              localStorage.setItem(k, JSON.stringify(data[k]));
+            });
+            logAuditAction('data_restored', 'Semua data di-restore dari file backup JSON');
+            alert('Data berhasil di-restore! Halaman akan dimuat ulang.');
+            window.location.reload();
+          } catch(err) {
+            alert('Gagal membaca file backup: ' + err.message);
+          }
+        };
+        reader.readAsText(file);
+      }, () => {
         event.target.value = '';
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const data = JSON.parse(e.target.result);
-          Object.keys(data).forEach(k => {
-            localStorage.setItem(k, JSON.stringify(data[k]));
-          });
-          alert('Data berhasil di-restore! Halaman akan dimuat ulang.');
-          window.location.reload();
-        } catch(err) {
-          alert('Gagal membaca file backup: ' + err.message);
-        }
-      };
-      reader.readAsText(file);
+      }, 'warning');
     }
 
     function clearDemoData() {
-      if (!confirm('PERINGATAN: Ini akan menghapus SEMUA data PMS dari LocalStorage. Apakah Anda yakin?')) return;
-      if (!confirm('Konfirmasi kedua: Semua data booking, kamar, dan pengaturan akan dihapus secara permanen.')) return;
-      const keys = ['anaira_bookings','anaira_rooms','anaira_blocked_dates','anaira_payment_logs','anaira_payment_settings','anaira_settings','anaira_guests'];
-      keys.forEach(k => localStorage.removeItem(k));
-      alert('Demo data berhasil dihapus. Halaman akan dimuat ulang.');
-      window.location.reload();
+      showAdminConfirm('Hapus SEMUA Data', 'PERINGATAN: Ini akan menghapus <strong class="text-red-300">SEMUA data PMS</strong> dari LocalStorage secara permanen. Semua data booking, kamar, dan pengaturan akan hilang.', () => {
+        const keys = ['anaira_bookings','anaira_rooms','anaira_blocked_dates','anaira_payment_logs','anaira_payment_settings','anaira_settings','anaira_guests','anaira_audit_logs'];
+        keys.forEach(k => localStorage.removeItem(k));
+        alert('Demo data berhasil dihapus. Halaman akan dimuat ulang.');
+        window.location.reload();
+      }, null, 'danger');
     }
 
     // ==================== LOGOUT ====================
     function handleLogout() {
+      logAuditAction('admin_logout', 'Admin logout dari PMS');
       sessionStorage.removeItem('isAdmin');
       window.location.href = '../login.html';
     }
+
+    // ==================== ADMIN CONFIRM MODAL ====================
+    function showAdminConfirm(title, message, onConfirm, onCancel, type) {
+      const modal = document.getElementById('modal-admin-confirm');
+      const inner = document.getElementById('admin-confirm-inner');
+      const iconEl = document.getElementById('admin-confirm-icon');
+      const titleEl = document.getElementById('admin-confirm-title');
+      const msgEl = document.getElementById('admin-confirm-message');
+      const okBtn = document.getElementById('admin-confirm-ok');
+      const cancelBtn = document.getElementById('admin-confirm-cancel');
+
+      titleEl.textContent = title;
+      msgEl.innerHTML = message;
+
+      // Icon & color based on type
+      if (type === 'danger') {
+        iconEl.className = 'w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-red-950/40 border border-red-500/30';
+        iconEl.innerHTML = '<i data-lucide="alert-triangle" class="w-8 h-8 text-red-500"></i>';
+        okBtn.className = 'w-1/2 px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 active:scale-95 text-white transition-all text-sm font-bold shadow-lg shadow-red-950/40 border border-red-400/20';
+      } else if (type === 'warning') {
+        iconEl.className = 'w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-amber-950/40 border border-amber-500/30';
+        iconEl.innerHTML = '<i data-lucide="alert-circle" class="w-8 h-8 text-amber-400"></i>';
+        okBtn.className = 'w-1/2 px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 active:scale-95 text-white transition-all text-sm font-bold shadow-lg shadow-amber-950/40';
+      } else {
+        iconEl.className = 'w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-brand-950/40 border border-brand-500/30';
+        iconEl.innerHTML = '<i data-lucide="check-circle" class="w-8 h-8 text-brand-500"></i>';
+        okBtn.className = 'w-1/2 px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 active:scale-95 text-[#07130f] transition-all text-sm font-bold shadow-lg shadow-brand-950/40';
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      requestAnimationFrame(() => {
+        inner.classList.remove('scale-95', 'opacity-0');
+        inner.classList.add('scale-100', 'opacity-100');
+      });
+      lucide.createIcons();
+
+      // Cleanup old listeners
+      const newOk = okBtn.cloneNode(true);
+      okBtn.parentNode.replaceChild(newOk, okBtn);
+      const newCancel = cancelBtn.cloneNode(true);
+      cancelBtn.parentNode.replaceChild(newCancel, cancelBtn);
+
+      function closeModal() {
+        inner.classList.remove('scale-100', 'opacity-100');
+        inner.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }, 150);
+      }
+
+      newOk.addEventListener('click', () => {
+        closeModal();
+        if (typeof onConfirm === 'function') onConfirm();
+      });
+
+      newCancel.addEventListener('click', () => {
+        closeModal();
+        if (typeof onCancel === 'function') onCancel();
+      });
+    }
+
+    // ==================== AUDIT LOG SYSTEM ====================
+    function getAuditLogs() {
+      try { return JSON.parse(localStorage.getItem('anaira_audit_logs') || '[]'); }
+      catch(e) { return []; }
+    }
+
+    function saveAuditLogs(logs) {
+      localStorage.setItem('anaira_audit_logs', JSON.stringify(logs));
+    }
+
+    function logAuditAction(action, description) {
+      const logs = getAuditLogs();
+      logs.unshift({
+        id: 'AUD-' + Date.now(),
+        timestamp: new Date().toISOString(),
+        action: action,
+        description: description,
+        performedBy: 'Admin'
+      });
+      // Keep only last 500 logs
+      if (logs.length > 500) logs.length = 500;
+      saveAuditLogs(logs);
+    }
+
+    function renderAuditTable() {
+      const logs = getAuditLogs();
+      const tbody = document.getElementById('audit-table-body');
+      const emptyEl = document.getElementById('audit-empty');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      if (logs.length === 0) {
+        emptyEl.classList.remove('hidden');
+        return;
+      }
+      emptyEl.classList.add('hidden');
+
+      const actionColors = {
+        'booking_created': 'bg-emerald-950/50 text-emerald-400 border border-emerald-500/20',
+        'booking_edited': 'bg-blue-950/50 text-blue-400 border border-blue-500/20',
+        'booking_deleted': 'bg-red-950/50 text-red-400 border border-red-500/20',
+        'status_changed': 'bg-amber-950/50 text-amber-400 border border-amber-500/20',
+        'payment_verified': 'bg-brand-900/50 text-brand-200 border border-brand-500/20',
+        'room_edited': 'bg-purple-950/50 text-purple-400 border border-purple-500/20',
+        'date_blocked': 'bg-slate-800/50 text-slate-300 border border-slate-500/20',
+        'date_unblocked': 'bg-cyan-950/50 text-cyan-400 border border-cyan-500/20',
+        'data_restored': 'bg-blue-950/50 text-blue-400 border border-blue-500/20',
+        'admin_logout': 'bg-red-950/50 text-red-400 border border-red-500/20',
+      };
+
+      logs.forEach(log => {
+        const ts = log.timestamp ? new Date(log.timestamp) : new Date();
+        const tsStr = `${ts.getFullYear()}-${String(ts.getMonth()+1).padStart(2,'0')}-${String(ts.getDate()).padStart(2,'0')} ${String(ts.getHours()).padStart(2,'0')}:${String(ts.getMinutes()).padStart(2,'0')}:${String(ts.getSeconds()).padStart(2,'0')}`;
+        const badgeCls = actionColors[log.action] || 'bg-gray-800/50 text-gray-300 border border-gray-600/20';
+        
+        tbody.innerHTML += `
+          <tr class="hover:bg-white/5 transition-all">
+            <td class="py-3 px-4 font-mono text-xs text-[#f6f1e7]/60 whitespace-nowrap">${tsStr}</td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${badgeCls}">${log.action}</span>
+            </td>
+            <td class="py-3 px-4 text-xs text-[#f6f1e7]/80">${log.description}</td>
+            <td class="py-3 px-4 text-center">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-brand-900/30 text-brand-200 border border-brand-500/10">${log.performedBy}</span>
+            </td>
+          </tr>`;
+      });
+      lucide.createIcons();
+    }
+
+    function clearAuditLogs() {
+      showAdminConfirm('Hapus Audit Log', 'Apakah Anda yakin ingin menghapus <strong class="text-red-300">semua log audit</strong>? Tindakan ini tidak dapat dibatalkan.', () => {
+        saveAuditLogs([]);
+        renderAuditTable();
+      }, null, 'danger');
+    }
+
+    function exportAuditLogsCSV() {
+      const logs = getAuditLogs();
+      if (logs.length === 0) return alert('Tidak ada log audit untuk di-export.');
+      const headers = ['Timestamp','Action','Description','Performed By'];
+      const rows = logs.map(l => [
+        l.timestamp,
+        l.action,
+        `"${(l.description || '').replace(/"/g, '""')}"`,
+        l.performedBy
+      ]);
+      downloadCSV('anaira-audit-log', headers, rows);
+    }
+
+    // ==================== WHATSAPP TEMPLATE BUILDER ====================
+    function buildWaLink(booking, templateType) {
+      const phone = (booking.phone || '').replace(/[^0-9]/g, '');
+      const waPhone = phone.startsWith('0') ? '62' + phone.substring(1) : phone;
+      const settings = getSettings();
+      const checkinTime = settings.checkinTime || '14:00';
+
+      let message = '';
+      if (templateType === 'reminder') {
+        message = `Halo ${booking.guest},\n\n` +
+          `Ini adalah pengingat pembayaran untuk reservasi Anda di Anaira Glamping:\n\n` +
+          `📋 Booking ID: ${booking.id}\n` +
+          `🏠 Kamar: ${booking.room}\n` +
+          `📅 Check-in: ${booking.checkIn}\n` +
+          `📅 Check-out: ${booking.checkOut}\n` +
+          `💰 Total: ${formatIDR(booking.amount)}\n\n` +
+          `Mohon segera lakukan pembayaran dan kirim bukti transfer ke nomor ini.\n\n` +
+          `Terima kasih 🙏\nAnaira Glamping Ciwidey`;
+      } else if (templateType === 'confirm') {
+        message = `Halo ${booking.guest},\n\n` +
+          `Pembayaran Anda untuk reservasi berikut telah kami terima dan dikonfirmasi ✅\n\n` +
+          `📋 Booking ID: ${booking.id}\n` +
+          `🏠 Kamar: ${booking.room}\n` +
+          `📅 Check-in: ${booking.checkIn}\n` +
+          `📅 Check-out: ${booking.checkOut}\n` +
+          `💰 Total Dibayar: ${formatIDR(booking.amount)}\n\n` +
+          `Kami menantikan kedatangan Anda!\n\n` +
+          `Salam hangat,\nAnaira Glamping Ciwidey`;
+      } else if (templateType === 'checkin') {
+        message = `Halo ${booking.guest},\n\n` +
+          `Berikut panduan check-in untuk reservasi Anda di Anaira Glamping:\n\n` +
+          `📋 Booking ID: ${booking.id}\n` +
+          `🏠 Kamar: ${booking.room}\n` +
+          `📅 Tanggal Check-in: ${booking.checkIn}\n` +
+          `🕐 Waktu Check-in: ${checkinTime} WIB\n\n` +
+          `📍 Lokasi: Jl. Raya Ciwidey - Patenggang, Ciwidey, Bandung\n\n` +
+          `📌 Panduan:\n` +
+          `1. Tiba di lokasi sesuai waktu check-in\n` +
+          `2. Lapor ke resepsionis dengan menyebutkan Booking ID\n` +
+          `3. Siapkan KTP/identitas untuk verifikasi\n` +
+          `4. Nikmati pengalaman glamping Anda! 🏕️\n\n` +
+          `Hubungi kami jika ada pertanyaan.\n\n` +
+          `Salam hangat,\nAnaira Glamping Ciwidey`;
+      }
+
+      return `https://wa.me/${waPhone}?text=${encodeURIComponent(message)}`;
+    }
+
+    // ==================== REFRESH ALL DATA ====================
+    function refreshAllData() {
+      refreshCurrentSection();
+      alert('Data berhasil di-refresh!');
+    }
+
   </script>
 </body>
 </html>

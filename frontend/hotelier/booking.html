@@ -141,6 +141,25 @@
     .animation-delay-4000 {
       animation-delay: 4s;
     }
+
+    /* Shake animation for invalid form fields */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+      20%, 40%, 60%, 80% { transform: translateX(4px); }
+    }
+    .animate-shake {
+      animation: shake 0.5s ease-in-out;
+    }
+
+    /* Review modal slide-up animation */
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-up {
+      animation: slideUp 0.35s ease-out;
+    }
   </style>
 </head>
 <body class="font-sans antialiased text-ink min-h-screen flex flex-col relative">
@@ -565,29 +584,43 @@
               <!-- Input Forms -->
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                 <!-- Name -->
-                <div class="space-y-1.5 relative">
+                <div class="space-y-1.5 relative" id="fieldGroup-name">
                   <label for="inputName" class="block font-bold text-darkbg text-sm">Nama Lengkap Sesuai KTP</label>
                   <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
                       <i data-lucide="user" class="w-4.5 h-4.5"></i>
                     </div>
-                    <input type="text" id="inputName" oninput="updateGuestDetail()" placeholder="Contoh: Rian Hidayat" class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand bg-white text-sm transition-all duration-150">
+                    <input type="text" id="inputName" oninput="updateGuestDetail(); validateFieldInline('name')" placeholder="Contoh: Rian Hidayat" class="w-full pl-10 pr-10 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand bg-white text-sm transition-all duration-150">
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none hidden" id="nameCheckIcon">
+                      <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 fill-emerald-100"></i>
+                    </div>
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none hidden" id="nameXIcon">
+                      <i data-lucide="alert-circle" class="w-5 h-5 text-rose-500 fill-rose-100"></i>
+                    </div>
                   </div>
+                  <div id="nameFeedback" class="text-xs font-semibold mt-1 transition-all duration-150 hidden"></div>
                 </div>
 
                 <!-- Email -->
-                <div class="space-y-1.5 relative">
+                <div class="space-y-1.5 relative" id="fieldGroup-email">
                   <label for="inputEmail" class="block font-bold text-darkbg text-sm">Alamat Email Aktif</label>
                   <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
                       <i data-lucide="mail" class="w-4.5 h-4.5"></i>
                     </div>
-                    <input type="email" id="inputEmail" oninput="updateGuestDetail()" placeholder="Contoh: rian.hidayat@email.com" class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand bg-white text-sm transition-all duration-150">
+                    <input type="email" id="inputEmail" oninput="updateGuestDetail(); validateFieldInline('email')" placeholder="Contoh: rian.hidayat@email.com" class="w-full pl-10 pr-10 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand bg-white text-sm transition-all duration-150">
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none hidden" id="emailCheckIcon">
+                      <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 fill-emerald-100"></i>
+                    </div>
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none hidden" id="emailXIcon">
+                      <i data-lucide="alert-circle" class="w-5 h-5 text-rose-500 fill-rose-100"></i>
+                    </div>
                   </div>
+                  <div id="emailFeedback" class="text-xs font-semibold mt-1 transition-all duration-150 hidden"></div>
                 </div>
 
                 <!-- WhatsApp Validation Block -->
-                <div class="space-y-1.5 md:col-span-2">
+                <div class="space-y-1.5 md:col-span-2" id="fieldGroup-whatsapp">
                   <label for="inputWhatsapp" class="block font-bold text-darkbg text-sm">Nomor WhatsApp (Aktif &amp; Terhubung)</label>
                   <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
@@ -990,6 +1023,119 @@
     </div>
 
 
+
+  <!-- BOOKING REVIEW MODAL (Task 2) -->
+  <div id="modalReviewBooking" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-4">
+    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="closeReviewModal()"></div>
+    
+    <div class="relative glass-card rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden border border-brand/20 animate-slide-up max-h-[90vh] flex flex-col">
+      <!-- Header -->
+      <div class="bg-gradient-to-r from-brand to-brand-dark text-white px-6 py-4 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2">
+          <i data-lucide="clipboard-check" class="w-5 h-5"></i>
+          <span class="font-bold text-base">Review Reservasi Anda</span>
+        </div>
+        <button onclick="closeReviewModal()" class="p-1 rounded-full hover:bg-white/20 text-white/70 hover:text-white transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="p-6 space-y-4 overflow-y-auto flex-grow text-sm text-gray-700">
+        <!-- Guest Info -->
+        <div class="bg-white rounded-2xl border border-gray-150 p-4 space-y-2 shadow-sm">
+          <h4 class="font-bold text-darkbg text-xs uppercase tracking-wider flex items-center gap-1.5">
+            <i data-lucide="user" class="w-4 h-4 text-brand"></i> Informasi Tamu
+          </h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <div>
+              <span class="text-gray-400">Nama Lengkap</span>
+              <p id="reviewGuestName" class="font-semibold text-darkbg">-</p>
+            </div>
+            <div>
+              <span class="text-gray-400">WhatsApp</span>
+              <p id="reviewGuestPhone" class="font-semibold text-darkbg">-</p>
+            </div>
+            <div class="sm:col-span-2">
+              <span class="text-gray-400">Email</span>
+              <p id="reviewGuestEmail" class="font-semibold text-darkbg">-</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stay Info -->
+        <div class="bg-white rounded-2xl border border-gray-150 p-4 space-y-2 shadow-sm">
+          <h4 class="font-bold text-darkbg text-xs uppercase tracking-wider flex items-center gap-1.5">
+            <i data-lucide="home" class="w-4 h-4 text-brand"></i> Detail Menginap
+          </h4>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div>
+              <span class="text-gray-400">Tipe Unit</span>
+              <p id="reviewRoomType" class="font-semibold text-brand font-serif">-</p>
+            </div>
+            <div>
+              <span class="text-gray-400">Jumlah Malam</span>
+              <p id="reviewNights" class="font-semibold text-darkbg">-</p>
+            </div>
+            <div>
+              <span class="text-gray-400">Check-In</span>
+              <p id="reviewCheckIn" class="font-semibold text-darkbg">-</p>
+            </div>
+            <div>
+              <span class="text-gray-400">Check-Out</span>
+              <p id="reviewCheckOut" class="font-semibold text-darkbg">-</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Package -->
+        <div id="reviewPackageRow" class="hidden bg-emerald-50/50 rounded-2xl border border-emerald-100 p-4 shadow-sm">
+          <h4 class="font-bold text-darkbg text-xs uppercase tracking-wider flex items-center gap-1.5 mb-1">
+            <i data-lucide="package" class="w-4 h-4 text-brand"></i> Paket Promo
+          </h4>
+          <p id="reviewPackageName" class="text-xs font-semibold text-brand">-</p>
+        </div>
+
+        <!-- Add-ons -->
+        <div id="reviewAddonsRow" class="hidden bg-white rounded-2xl border border-gray-150 p-4 shadow-sm">
+          <h4 class="font-bold text-darkbg text-xs uppercase tracking-wider flex items-center gap-1.5 mb-1">
+            <i data-lucide="sparkles" class="w-4 h-4 text-brand"></i> Layanan Ekstra
+          </h4>
+          <div id="reviewAddonsList" class="text-xs text-gray-600 space-y-0.5"></div>
+        </div>
+
+        <!-- Voucher -->
+        <div id="reviewVoucherRow" class="hidden bg-rose-50/50 rounded-2xl border border-rose-100 p-4 shadow-sm">
+          <h4 class="font-bold text-darkbg text-xs uppercase tracking-wider flex items-center gap-1.5 mb-1">
+            <i data-lucide="ticket" class="w-4 h-4 text-rose-600"></i> Voucher Diskon
+          </h4>
+          <p id="reviewVoucherCode" class="text-xs font-semibold text-rose-600">-</p>
+        </div>
+
+        <!-- Payment & Total -->
+        <div class="bg-brand/5 border border-brand/20 rounded-2xl p-4 space-y-3">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-gray-500">Metode Pembayaran</span>
+            <span id="reviewPaymentMethod" class="font-bold text-darkbg">-</span>
+          </div>
+          <div class="border-t border-dashed border-brand/20 pt-3 flex justify-between items-center">
+            <span class="font-bold text-darkbg text-sm">Total Pembayaran</span>
+            <span id="reviewTotalAmount" class="text-brand text-xl font-serif font-bold">Rp 0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="bg-gray-50/80 backdrop-blur-sm border-t border-gray-100 px-6 py-4 flex flex-col sm:flex-row gap-3 shrink-0">
+        <button onclick="closeReviewModal()" class="flex-1 py-3 border border-brand/20 bg-white hover:bg-gray-50 text-brand font-bold rounded-xl transition-all duration-150 inline-flex items-center justify-center gap-2">
+          <i data-lucide="pencil" class="w-4 h-4"></i> Edit Reservasi
+        </button>
+        <button onclick="closeReviewModal(); payNow();" class="flex-1 py-3 bg-brand hover:bg-brand-hover text-white font-bold rounded-xl shadow-md transition-all duration-150 inline-flex items-center justify-center gap-2">
+          <i data-lucide="shield-check" class="w-4.5 h-4.5"></i> Konfirmasi & Bayar
+        </button>
+      </div>
+    </div>
+  </div>
 
   </main>
 
@@ -1415,6 +1561,7 @@
     let countdownTimer = null;
     let activeVoucher = null; // To hold applied discount voucher
     let selectedPackage = null; // Stay package object
+    let utmParams = {}; // UTM tracking parameters (Task 4)
 
     async function loadPackageFromParam(slug) {
       if (!slug) return;
@@ -1485,6 +1632,12 @@
         // Check query parameters (Guest selected room, dates, or packages)
         const urlParams = new URLSearchParams(window.location.search);
         
+        // Task 4: Capture UTM parameters from URL
+        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(key => {
+          const val = urlParams.get(key);
+          if (val) utmParams[key] = val;
+        });
+
         const roomParam = urlParams.get('room');
         const checkinParam = urlParams.get('checkin');
         const checkoutParam = urlParams.get('checkout');
@@ -1781,8 +1934,8 @@
       }
 
       if (currentStep === 4) {
-        // Trigger simulated payment gateways
-        payNow();
+        // Task 2: Show review modal before payment
+        showReviewModal();
         return;
       }
 
@@ -1901,16 +2054,31 @@
           return false;
         }
       } else if (stepNum === 3) {
-        if (!guestName.trim()) {
-          showNotification("Peringatan", "Nama lengkap sesuai KTP wajib diisi.", "user", "text-rose-600 bg-rose-50");
-          return false;
+        // Task 3: Enhanced inline validation with shake animation
+        let step3Valid = true;
+        const nameVal = guestName.trim();
+        const nameHasNumbers = /\d/.test(nameVal);
+        if (!nameVal || nameVal.length < 3 || nameHasNumbers) {
+          setFieldInlineError('name', !nameVal ? 'Nama lengkap wajib diisi.' : (nameVal.length < 3 ? 'Nama minimal 3 karakter.' : 'Nama tidak boleh mengandung angka.'));
+          shakeField('name');
+          step3Valid = false;
+        } else {
+          setFieldInlineValid('name');
         }
         if (!validateEmail(guestEmail)) {
-          showNotification("Peringatan", "Masukkan alamat email aktif yang valid.", "mail", "text-rose-600 bg-rose-50");
-          return false;
+          setFieldInlineError('email', !guestEmail ? 'Email wajib diisi.' : 'Format email tidak valid. Contoh: nama@email.com');
+          shakeField('email');
+          step3Valid = false;
+        } else {
+          setFieldInlineValid('email');
         }
         if (!validateWhatsapp(guestWhatsapp)) {
-          showNotification("Peringatan", "Masukkan nomor WhatsApp dengan format Indonesia yang valid.", "phone", "text-rose-600 bg-rose-50");
+          setFieldInlineError('whatsapp', !guestWhatsapp ? 'Nomor WhatsApp wajib diisi.' : 'Format nomor tidak valid. Contoh: 08123456789');
+          shakeField('whatsapp');
+          step3Valid = false;
+        }
+        if (!step3Valid) {
+          showNotification("Data Tidak Lengkap", "Mohon periksa dan lengkapi formulir detail tamu.", "alert-triangle", "text-rose-600 bg-rose-50");
           return false;
         }
       } else if (stepNum === 4) {
@@ -1920,6 +2088,90 @@
         }
       }
       return true;
+    }
+
+    // Task 3: Inline field validation helpers
+    function validateFieldInline(fieldName) {
+      if (fieldName === 'name') {
+        const val = document.getElementById('inputName').value.trim();
+        const hasNumbers = /\d/.test(val);
+        if (!val) { clearFieldInline('name'); return; }
+        if (val.length < 3) {
+          setFieldInlineError('name', 'Nama minimal 3 karakter.');
+        } else if (hasNumbers) {
+          setFieldInlineError('name', 'Nama tidak boleh mengandung angka.');
+        } else {
+          setFieldInlineValid('name');
+        }
+      } else if (fieldName === 'email') {
+        const val = document.getElementById('inputEmail').value.trim();
+        if (!val) { clearFieldInline('email'); return; }
+        if (!validateEmail(val)) {
+          setFieldInlineError('email', 'Format email tidak valid.');
+        } else {
+          setFieldInlineValid('email');
+        }
+      }
+      lucide.createIcons();
+    }
+
+    function setFieldInlineError(fieldName, message) {
+      const inputMap = { name: 'inputName', email: 'inputEmail', whatsapp: 'inputWhatsapp' };
+      const input = document.getElementById(inputMap[fieldName]);
+      const feedback = document.getElementById(fieldName + 'Feedback');
+      const checkIcon = document.getElementById(fieldName + 'CheckIcon');
+      const xIcon = document.getElementById(fieldName + 'XIcon');
+
+      if (input) input.className = input.className.replace(/border-gray-200|border-2 border-emerald-500|border-2 border-rose-500/g, '') + ' border-2 border-rose-500';
+      if (feedback) {
+        feedback.className = 'text-xs font-semibold mt-1 text-rose-600 transition-all duration-150';
+        feedback.innerHTML = '<i data-lucide="alert-circle" class="w-3.5 h-3.5 inline text-rose-600 mr-0.5"></i> ' + message;
+        feedback.classList.remove('hidden');
+      }
+      if (checkIcon) checkIcon.classList.add('hidden');
+      if (xIcon) xIcon.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function setFieldInlineValid(fieldName) {
+      const inputMap = { name: 'inputName', email: 'inputEmail', whatsapp: 'inputWhatsapp' };
+      const input = document.getElementById(inputMap[fieldName]);
+      const feedback = document.getElementById(fieldName + 'Feedback');
+      const checkIcon = document.getElementById(fieldName + 'CheckIcon');
+      const xIcon = document.getElementById(fieldName + 'XIcon');
+
+      if (input) input.className = input.className.replace(/border-gray-200|border-2 border-emerald-500|border-2 border-rose-500/g, '') + ' border-2 border-emerald-500';
+      if (feedback) {
+        feedback.className = 'text-xs font-semibold mt-1 text-emerald-600 transition-all duration-150';
+        feedback.innerHTML = '<i data-lucide="check-circle" class="w-3.5 h-3.5 inline text-emerald-600 mr-0.5"></i> Valid!';
+        feedback.classList.remove('hidden');
+      }
+      if (checkIcon) checkIcon.classList.remove('hidden');
+      if (xIcon) xIcon.classList.add('hidden');
+      lucide.createIcons();
+    }
+
+    function clearFieldInline(fieldName) {
+      const inputMap = { name: 'inputName', email: 'inputEmail', whatsapp: 'inputWhatsapp' };
+      const input = document.getElementById(inputMap[fieldName]);
+      const feedback = document.getElementById(fieldName + 'Feedback');
+      const checkIcon = document.getElementById(fieldName + 'CheckIcon');
+      const xIcon = document.getElementById(fieldName + 'XIcon');
+
+      if (input) input.className = input.className.replace(/border-2 border-emerald-500|border-2 border-rose-500/g, 'border border-gray-200');
+      if (feedback) feedback.classList.add('hidden');
+      if (checkIcon) checkIcon.classList.add('hidden');
+      if (xIcon) xIcon.classList.add('hidden');
+    }
+
+    function shakeField(fieldName) {
+      const group = document.getElementById('fieldGroup-' + fieldName);
+      if (group) {
+        group.classList.remove('animate-shake');
+        void group.offsetWidth; // force reflow for re-trigger
+        group.classList.add('animate-shake');
+        setTimeout(() => group.classList.remove('animate-shake'), 600);
+      }
     }
 
     // --- STEP 1: ROOM SELECTION ---
@@ -2295,6 +2547,76 @@
       }
     }
 
+    // Task 2: Show booking review modal
+    function showReviewModal() {
+      const nights = getNightsCount() || (selectedPackage ? (selectedPackage.slug.includes('weekend') ? 1 : 2) : 0);
+      const totalAmount = calculateTotalPaidAmount();
+
+      // Populate guest info
+      document.getElementById('reviewGuestName').innerText = guestName || '-';
+      document.getElementById('reviewGuestPhone').innerText = guestWhatsapp || '-';
+      document.getElementById('reviewGuestEmail').innerText = guestEmail || '-';
+
+      // Populate stay info
+      document.getElementById('reviewRoomType').innerText = selectedRoom ? ROOM_RATES[selectedRoom].name : '-';
+      document.getElementById('reviewNights').innerText = nights > 0 ? nights + ' Malam' : '-';
+      document.getElementById('reviewCheckIn').innerText = checkInDate ? formatIndoDate(checkInDate) : '-';
+      document.getElementById('reviewCheckOut').innerText = checkOutDate ? formatIndoDate(checkOutDate) : '-';
+
+      // Package
+      const pkgRow = document.getElementById('reviewPackageRow');
+      if (selectedPackage) {
+        pkgRow.classList.remove('hidden');
+        document.getElementById('reviewPackageName').innerText = selectedPackage.title;
+      } else {
+        pkgRow.classList.add('hidden');
+      }
+
+      // Add-ons
+      const addonsRow = document.getElementById('reviewAddonsRow');
+      const addonsList = document.getElementById('reviewAddonsList');
+      const actNights = getNightsCount() || 1;
+      let addonsHTML = '';
+      let hasAddons = false;
+      Object.keys(selectedAddons).forEach(id => {
+        const qty = selectedAddons[id];
+        if (qty > 0) {
+          hasAddons = true;
+          const def = ADDON_DEFS[id];
+          const itemTotal = def.perNight ? (qty * actNights * def.price) : (qty * def.price);
+          addonsHTML += '<div>• ' + def.name + ' (x' + qty + '): Rp ' + formatRupiah(itemTotal) + '</div>';
+        }
+      });
+      if (hasAddons) {
+        addonsRow.classList.remove('hidden');
+        addonsList.innerHTML = addonsHTML;
+      } else {
+        addonsRow.classList.add('hidden');
+      }
+
+      // Voucher
+      const voucherRow = document.getElementById('reviewVoucherRow');
+      if (activeVoucher) {
+        voucherRow.classList.remove('hidden');
+        const basePrice = calculateBasePriceOnly();
+        const discountAmt = calculateVoucherDiscount(basePrice);
+        document.getElementById('reviewVoucherCode').innerText = activeVoucher.code + ' (-Rp ' + formatRupiah(discountAmt) + ')';
+      } else {
+        voucherRow.classList.add('hidden');
+      }
+
+      // Payment & total
+      document.getElementById('reviewPaymentMethod').innerText = selectedPayment || '-';
+      document.getElementById('reviewTotalAmount').innerText = 'Rp ' + formatRupiah(totalAmount);
+
+      // Show modal
+      document.getElementById('modalReviewBooking').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeReviewModal() {
+      document.getElementById('modalReviewBooking').classList.add('hidden');
+    }
 
 
     function closePaymentModal(type) {
@@ -2407,7 +2729,8 @@
           status: 'Paid',
           notes: guestNotes,
           packageSlug: selectedPackage ? selectedPackage.slug : '',
-          packageName: selectedPackage ? selectedPackage.title : ''
+          packageName: selectedPackage ? selectedPackage.title : '',
+          utm: Object.keys(utmParams).length > 0 ? Object.assign({}, utmParams) : undefined
         };
 
         // Construct Add-ons Array
