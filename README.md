@@ -19,28 +19,75 @@
 ---
 
 ## 🌐 Preview URLs
+## 1. Live Demo
+- **Production**: [https://anairaglamp.vercel.app](https://anairaglamp.vercel.app)
+- **Booking**: [/booking](https://anairaglamp.vercel.app/booking)
+- **Promo**: [/promo](https://anairaglamp.vercel.app/promo)
+- **Admin PMS**: [/admin/pms](https://anairaglamp.vercel.app/admin/pms)
+- **Login**: [/login](https://anairaglamp.vercel.app/login)
 
-| Environment | URL | Notes |
-|---|---|---|
-| 🚀 **Vercel Production** | [hotelier-adith92.vercel.app](https://hotelier-adith92.vercel.app) | Deployed production-ready application |
-| 🖥️ **Local Frontend** | `http://localhost:4173` | Via local static preview server |
-| 🔐 **Admin PMS** | `http://localhost:4173/admin/pms` | Full PMS dashboard (Calendar, Bookings, Vouchers, Settings) |
-| 🛡️ **Manage Booking Door** | `http://localhost:4173/login` | Disguised gateway login for Guests & Admins |
+## 2. What Works Now
+- Homepage
+- Booking wizard
+- Booking review modal
+- Booking success invoice
+- Pre-arrival guide
+- Promo landing pages
+- Voucher engine
+- Packages
+- Add-ons upsell
+- Gallery slideshow
+- Contact/maps
+- FAQ chatbot offline
+- Admin PMS
+- Occupancy calendar
+- Payment verification UI
+- Audit logs
+- CSV export
+- WhatsApp templates
+- Mobile polish
+- SEO JSON-LD
+- Vercel deployment
 
----
+## 3. Admin Access
+- Demo access note: The Admin PMS login is disguised under "Manage Booking". Use `221221` as the Demo Admin Password.
+- Do not claim production auth unless backend auth exists.
 
-## ✨ Final Polish Features
+## 4. Data Mode
+- **Demo/client preview uses LocalStorage fallback** for fast local demonstrations without needing a database.
+- **Live production** can use `api.php` + MySQL/shared hosting or future backend.
+- `api.config.php` is ignored by Git.
+- `api.config.example.php` is a safe template.
 
-- 📝 **Booking Review Step**: Booking review modal before confirmation
-- 🛡️ **Strong Form Validation**: Inline validation for guest data
-- 🔗 **UTM Tracking**: UTM tracking to booking records
-- 💬 **WhatsApp Admin Templates**: WhatsApp templates for admin actions
-- ⚙️ **Admin Confirmation Modal**: Custom admin confirmation modal
-- 📊 **Audit Logs**: Audit logs panel and CSV export
-- ⭐ **Trust Badges & Testimonials**: Trust badges and testimonials
-- 🌐 **Local SEO JSON-LD**: LodgingBusiness JSON-LD schema
-- 📱 **Mobile Polish**: Improved mobile layout
-- ⚡ **PMS Quick Actions**: PMS quick actions grid
+## 5. Payment Gateway Status
+- Manual QRIS/transfer verification UI ready
+- Midtrans/Xendit/DOKU/Indopay are injection-ready
+- Real payment requires backend secret config and webhook
+- Never store payment secrets in frontend
+
+## 6. Deployment
+- Vercel root must be `frontend/hotelier`
+- Do not deploy repo root
+- Vercel project: `anairaglamp`
+
+## 7. Client Demo Checklist
+- [x] homepage
+- [x] booking
+- [x] promo
+- [x] chatbot
+- [x] gallery
+- [x] admin PMS
+- [x] payment verification
+
+## 8. Status Badges
+✅ Ready for Client Demo  
+🟡 Payment Gateway Injection Ready  
+🟡 Production DB Pending  
+⚠️ Do Not Store Secrets in Frontend  
+
+## 9. Changelog summary
+- Fixed Vercel deployment where browser downloaded HTML files instead of rendering them. 
+- `vercel.json` now forces `text/html` headers and correct rewrites.
 
 ---
 

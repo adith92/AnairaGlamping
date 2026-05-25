@@ -9,25 +9,34 @@
     { "source": "/packages", "destination": "/packages.html" },
     { "source": "/contact", "destination": "/contact.html" },
     { "source": "/booking", "destination": "/booking.html" },
+    { "source": "/booking-success", "destination": "/booking-success.html" },
+    { "source": "/pre-arrival", "destination": "/pre-arrival.html" },
     { "source": "/login", "destination": "/login.html" },
+    { "source": "/admin", "destination": "/admin/pms.html" },
+    { "source": "/admin/", "destination": "/admin/pms.html" },
+    { "source": "/admin/pms", "destination": "/admin/pms.html" },
+    { "source": "/admin/pms/", "destination": "/admin/pms.html" },
     { "source": "/promo", "destination": "/promo.html" },
     { "source": "/promo/lebaran", "destination": "/promo/lebaran.html" },
     { "source": "/promo/honeymoon", "destination": "/promo/honeymoon.html" },
     { "source": "/promo/bbq", "destination": "/promo/bbq.html" },
     { "source": "/promo/family", "destination": "/promo/family.html" },
-    { "source": "/pre-arrival", "destination": "/pre-arrival.html" },
-    { "source": "/booking-success", "destination": "/booking-success.html" },
-    { "source": "/admin", "destination": "/admin/pms.html" },
-    { "source": "/admin/", "destination": "/admin/pms.html" },
-    { "source": "/admin/pms", "destination": "/admin/pms.html" },
-    { "source": "/admin/pms/", "destination": "/admin/pms.html" }
+    { "source": "/rooms/balcony", "destination": "/rooms/balcony.html" },
+    { "source": "/rooms/porch", "destination": "/rooms/porch.html" },
+    { "source": "/rooms/villa", "destination": "/rooms/villa.html" }
   ],
   "headers": [
     {
-      "source": "/(.*)",
+      "source": "/(.*).html",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+        { "key": "Content-Type", "value": "text/html; charset=utf-8" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
+    },
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        { "key": "Content-Type", "value": "application/xml; charset=utf-8" }
       ]
     }
   ]
