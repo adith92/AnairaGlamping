@@ -9,5 +9,8 @@
     "build:pages": "node scripts/build-pages.js",
     "start": "node scripts/static-server.js",
     "preview": "node scripts/static-server.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.60.0"
   }
 }

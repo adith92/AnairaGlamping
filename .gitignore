@@ -258,3 +258,4 @@ admin/themes/default/css/screen.css
 robots.txt
 # Anaira API Bridge local credentials config file
 frontend/hotelier/api.config.php
+.vercel
