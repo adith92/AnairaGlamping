@@ -1,225 +1,385 @@
 # AGENTS.md
+## Anaira Glamping & Resort — AI Agent Guide
 
-## Project Overview
-
-QloApps is an open-source hotel reservation and property management platform. It enables hotels to manage rooms, bookings, guests, and payments through a web-based system.
-
-## Purpose of this File
-
-This document provides guidance for AI coding agents contributing to the QloApps project. It defines conventions, safety rules, and workflows to ensure consistent and secure code generation.
-
-## Technology Stack
-
-- **Language:** PHP 8.1–8.4 (backend), Smarty 3.x (templates), JavaScript/jQuery (frontend)
-- **Database:** MySQL 5.7, 8.0+; MariaDB 10.5, 10.6, 10.11, 11.0, 11.2, 11.4
-- **Architecture:** MVC with hook-based module system
-- **License:** OSL-3.0 (core), AFL-3.0 (modules)
-- **Required PHP Extensions:** PDO_MySQL, cURL, OpenSSL, SOAP, GD, SimpleXML, DOM, Zip, Phar
-
-## Environment Setup
-
-Install dependencies:
-```bash
-composer install
-```
-
-Clear caches:
-```bash
-rm -rf cache/smarty/compile/* cache/smarty/cache/*
-rm -f cache/class_index.php
-```
-
-Clear class cache after adding or modifying overrides.
-
-## Project Structure
-
-```
-.
-├── classes/              # Core models extending ObjectModel
-├── controllers/          # Front and admin controllers
-│   ├── admin/
-│   └── front/
-├── modules/              # Feature modules with isolated functionality
-├── override/             # Core class and controller overrides
-├── themes/               # Smarty templates (.tpl files)
-├── config/               # Configuration files (settings.inc.php contains secrets)
-├── cache/                # Generated cache files
-├── tests/                # PHPUnit test suite
-```
-
-**QloApps Agent Skills:** Install reusable development skills using:
-```bash
-npx skills add Qloapps/agent-skills
-```
-Available skills: module-development, payment-module-development, stats-module-development. Check installed skills before implementing new functionality.
-
-## Architecture Overview
-
-**MVC Pattern**
-- Models: classes/ extending ObjectModel
-- Controllers: FrontController or AdminController
-- Views: Smarty templates (.tpl)
-
-**Modules**
-- Located in modules/<modulename>/
-- Provide isolated functionality
-- Integrate using hooks
-
-**Overrides**
-- Located in override/
-- Extend core classes using the Core suffix
-- Clear class cache after creating overrides
-
-**Context**
-- Access runtime objects using Context::getContext()
-
-## Core vs Module Development Rules
-
-**When working on a module:**
-1. Never modify core files directly
-2. Use **hooks** to integrate module functionality into core features
-3. If no suitable hook exists, create a **custom hook** — but only if the hook placement is generic and useful for other modules too
-4. Use **overrides** only as a last resort — overrides can conflict with other module override files and require manual resolution
-
-**When working on a core feature:**
-- Make changes directly in core files
-- Do not use hooks or overrides for core-to-core changes
-
-## Coding Conventions
-
-**Classes:** PascalCase — `HotelBookingData`
-**Methods:** camelCase — `getBookingDetails()`
-**Variables:** camelCase — `$hotelId`
-**Constants:** UPPER_SNAKE_CASE — `BOOKING_STATUS_CONFIRMED`
-**Database Tables:** _DB_PREFIX_ + lowercase_snake — `qlo_hotel_booking`
-**Config Keys:** MODULENAME_SETTING — `HOTELRESERVATION_ENABLED`
-**Files:** One class per file, filename matches class name
-**Templates:** lowercase-hyphens.tpl — `booking-form.tpl`
-
-Add PHPDoc blocks to all classes and methods.
-
-## Translation
-
-Never hardcode user-facing English strings — always wrap them in the appropriate translation method.
-
-| Context | Method |
-|---------|--------|
-| Module main file | `$this->l('string')` |
-| Module admin controller | `$this->l('string')` |
-| Module front controller | `$this->module->l('string', 'controllerName')` |
-| Module classes | `$objModule->l('string', 'ClassName')` |
-| Core admin controller | `$this->l('string')` |
-| Core front controller | `Tools::displayError('string')` |
-| Smarty template (core) | `{l s='string'}` |
-| Smarty template (module) | `{l s='string' mod='modulename'}` |
-
-## Multi-language
-
-- Always include `id_lang` in queries that return translatable content
-- Use `Context::getContext()->language->id` for the current language
-
-## Module Development Guidelines
-
-**Module Location:** modules/<modulename>/
-
-**Required Files:**
-- <modulename>.php — Main class extending Module
-- config.xml — Module metadata
-
-**Optional Directories:**
-- classes/ — Module-specific models
-- controllers/ — Module controllers
-- views/templates/ — Smarty templates
-- upgrade/ — Version migration scripts
-
-**Hook Integration:**
-- Register hooks in install() method
-- Unregister hooks in uninstall() method
-- Keep hook handlers lightweight
-
-**Configuration:**
-- Store settings using Configuration::updateValue()
-- Retrieve settings using Configuration::get()
-- Prefix config keys with module name
-
-## Database Rules
-
-**Table Prefix:** Always use _DB_PREFIX_ constant instead of hardcoding the table prefix
-
-**Escaping:**
-- Strings: pSQL($value)
-- Integers: (int)$value
-- Table/column names: bqSQL($name)
-
-**Preferred Access:** Use ObjectModel for CRUD operations instead of raw SQL queries
-
-**Prohibited:** Never concatenate raw user input into SQL queries.
-
-## Security Guidelines
-
-**Input Handling**
-- Use Tools::getValue() for request parameters
-- Cast numeric values to (int)
-- Escape strings using pSQL()
-- Validate input using Validate class methods
-
-**Output Escaping**
-- Use Tools::safeOutput() in PHP
-- Use Smarty escape modifiers in templates
-
-**Sensitive Data**
-- Never expose config/settings.inc.php
-- Never commit API keys, passwords, or tokens
-
-**Authorization**
-- Verify permissions before performing admin operations
-
-## Testing
-
-Testing infrastructure is being configured. Check tests/ directory for available tests before running.
-
-## AI Agent Workflow
-
-1. Check installed agent skills before implementing new functionality
-2. Search codebase for similar implementations before creating new code
-3. Extend existing classes rather than duplicating functionality
-4. Follow patterns established in surrounding code
-5. Reuse existing utilities: Tools, Validate, Db, Configuration classes
-6. Prioritize consistency with existing codebase over new approaches
-
-After making changes:
-- Clear caches if modifying templates or overrides
-- Add PHPDoc to new methods
-
-## Safety Rules
-
-**Agents must not:**
-- Delete files unless explicitly instructed
-- Run git commands automatically
-- Modify composer.json without approval
-- Modify config/settings.inc.php
-- Execute DROP, TRUNCATE, or destructive SQL
-- Modify core files directly when working on a module (use hooks or override system)
-
-**Agents must:**
-- Use pSQL() for strings and (int) for IDs in SQL
-- Use Tools::getValue() for request parameters
-- Escape all output
-- Check installed agent skills before implementing new functionality
-- Follow project naming conventions
-- Validate inputs before processing
-
-**Agents should ask before:**
-- Deleting any files
-- Running git commands
-- Changing dependencies
-- Modifying database schema
-- Altering payment or booking logic
+> **Repo:** `adith92/AnairaGlamping`  
+> **Active branch:** `develop`  
+> **Main frontend root:** `frontend/hotelier`  
+> **Deployment rule:** Vercel root must be `frontend/hotelier`, never repo root.
 
 ---
 
-**Resources:**
-- Documentation: https://docs.qloapps.com
-- Forum: https://forums.qloapps.com
-- GitHub: https://github.com/Qloapps/QloApps
-- Security Issues: support@qloapps.com
+# 1. Project Overview
+
+This repository is the Anaira Glamping & Resort booking website and PMS demo foundation.
+
+The current app is a static Hotelier-style frontend with:
+
+- public website,
+- booking wizard,
+- booking success invoice,
+- pre-arrival guide,
+- promo pages,
+- voucher engine,
+- packages,
+- gallery,
+- contact/maps,
+- offline FAQ chatbot,
+- Admin PMS,
+- occupancy calendar,
+- payment verification UI,
+- audit logs,
+- CSV export,
+- WhatsApp templates,
+- mobile polish,
+- SEO JSON-LD,
+- Vercel deployment.
+
+The repo is being upgraded toward **Anaira Booking OS v3.0**: a production-ready booking, PMS, guest CRM, payment, notification, analytics, and staff workflow platform.
+
+---
+
+# 2. Source of Truth
+
+Agents must read these before making major changes:
+
+```text
+README.md
+docs/MASTERPLAN_ANAIRA_BIG_UPGRADE.md
+docs/MASTERPROMPT_ANAIRA_BIG_UPGRADE.md
+docs/IMPLEMENTATION_PLAN_ANAIRA_BIG_UPGRADE.md
+docs/agent-handoff/MAC_START_HERE.md
+docs/agent-handoff/PROJECT_STATUS.md
+docs/agent-handoff/NEXT_STEPS.md
+frontend/hotelier/package.json
+frontend/hotelier/vercel.json
+frontend/hotelier/scripts/anaira-data-lib.js
+frontend/hotelier/booking.html
+frontend/hotelier/admin/pms.html
+```
+
+If any of the master docs are missing, Phase 0 is not complete.
+
+---
+
+# 3. Actual Stack
+
+```text
+Frontend:
+- Static HTML
+- Tailwind CDN
+- Vanilla JavaScript
+- LocalStorage demo data engine
+
+Admin PMS:
+- frontend/hotelier/admin/pms.html
+- Shared data via frontend/hotelier/scripts/anaira-data-lib.js
+
+Developer scripts:
+- node scripts/static-server.js
+- node scripts/admin-server.js
+- node scripts/build-pages.js
+
+Deployment:
+- Vercel static deploy from frontend/hotelier
+
+Optional backend bridge:
+- frontend/hotelier/api.php
+- frontend/hotelier/api.config.example.php
+- api.config.php must remain ignored and must not be committed
+```
+
+This is **not** a QloApps/Smarty module workflow for Anaira frontend work. Do not follow PHP/Smarty/QloApps module rules unless the task explicitly targets legacy QloApps files.
+
+---
+
+# 4. Local Commands
+
+From repo root:
+
+```bash
+cd frontend/hotelier
+npm install
+npm run dev
+```
+
+Admin server:
+
+```bash
+cd frontend/hotelier
+npm run admin
+# open /admin/pms
+```
+
+Build static pages:
+
+```bash
+cd frontend/hotelier
+npm run build:pages
+```
+
+---
+
+# 5. Deployment Rules
+
+```text
+DO:
+- Use frontend/hotelier as Vercel root.
+- Keep clean URLs and rewrites in frontend/hotelier/vercel.json.
+- Preserve existing public routes.
+
+DO NOT:
+- Deploy repo root.
+- Move deploy root without explicit approval.
+- Change Vercel settings during Phase 0.
+- Deploy before documentation and QA checklist are complete.
+```
+
+Critical current routes:
+
+```text
+/
+/rooms
+/rooms/balcony
+/rooms/porch
+/rooms/villa
+/gallery
+/packages
+/contact
+/booking
+/booking-success
+/pre-arrival
+/login
+/admin/pms
+/promo
+/promo/lebaran
+/promo/honeymoon
+/promo/bbq
+/promo/family
+```
+
+---
+
+# 6. Security Rules
+
+Agents must never commit or expose:
+
+```text
+payment secret keys
+database passwords
+admin secrets
+API private keys
+webhook signing secrets
+bot tokens
+api.config.php
+.env files with real secrets
+```
+
+Production rules:
+
+- LocalStorage is demo mode only.
+- Production bookings must be database-backed.
+- Production admin auth must be backend-based.
+- Payment status must be changed only by verified webhook or authorized admin review.
+- Availability must be checked server-side before confirming real bookings.
+- Uploaded proof images must be validated by file type and size server-side.
+- Admin mutations must create audit logs.
+
+---
+
+# 7. Booking and Payment Safety
+
+Do not make large booking/payment logic changes before audit and tests.
+
+Booking status must follow a clear state machine:
+
+```text
+draft → pending_payment → payment_review → confirmed → checked_in → checked_out → completed
+```
+
+Alternative states:
+
+```text
+expired
+payment_rejected
+cancelled
+rescheduled
+```
+
+Payment status must follow safe transitions:
+
+```text
+unpaid → pending → manual_uploaded → manual_approved → paid
+pending → paid via verified webhook
+pending → failed/expired
+paid → refund_requested → refund_pending → refunded
+```
+
+Do not treat proof upload as paid. Proof upload means payment review is required.
+
+---
+
+# 8. Preferred Agent Workflow
+
+Before editing:
+
+1. Confirm branch: `develop`.
+2. Confirm frontend root: `frontend/hotelier`.
+3. Read nearby files and current patterns.
+4. Check whether the task belongs to current phase.
+5. Avoid unrelated UI redesign or random features.
+6. Identify safety impact: route, booking, payment, auth, storage, deployment.
+
+During editing:
+
+1. Keep changes small and phase-scoped.
+2. Preserve existing routes and IDs/classes where possible.
+3. Do not delete files unless explicitly instructed.
+4. Do not move payment/DB secrets into frontend.
+5. Update docs after major changes.
+
+After editing:
+
+1. Run or define relevant manual checks.
+2. Verify no frontend secrets were introduced.
+3. Verify Vercel root remains `frontend/hotelier`.
+4. Report files changed, tests, security impact, deployment impact, and backup status.
+
+---
+
+# 9. Backup Rule
+
+For local risky edits, create a timestamped backup before editing critical files, then delete the backup after validation passes.
+
+Examples:
+
+```text
+.backups/20260604-anaira/AGENTS.md.bak
+.backups/20260604-anaira/README.md.bak
+```
+
+Retain backups only if:
+
+- validation fails,
+- rollback is needed,
+- the user explicitly asks to preserve them.
+
+When editing via GitHub connector/API, the previous file blob and commit history act as rollback history. Do not add permanent backup copies to the repo unless specifically requested.
+
+---
+
+# 10. Documentation Update Rule
+
+Major feature work must update relevant docs:
+
+```text
+README.md
+docs/MASTERPLAN_ANAIRA_BIG_UPGRADE.md
+docs/MASTERPROMPT_ANAIRA_BIG_UPGRADE.md
+docs/IMPLEMENTATION_PLAN_ANAIRA_BIG_UPGRADE.md
+docs/agent-handoff/PROJECT_STATUS.md
+docs/agent-handoff/NEXT_STEPS.md
+AGENTS.md
+```
+
+Phase 0 specifically requires:
+
+```text
+[ ] Three master docs exist in docs/
+[ ] README links to master docs
+[ ] AGENTS.md is Anaira-specific
+[ ] PROJECT_STATUS mentions v3.0 Big Upgrade
+[ ] NEXT_STEPS clearly points to Phase 1 QA after Phase 0
+```
+
+---
+
+# 11. Manual Test Checklist
+
+Public website:
+
+```text
+[ ] Homepage loads
+[ ] Rooms page loads
+[ ] Room detail pages load
+[ ] Gallery loads
+[ ] Packages loads
+[ ] Contact/map loads
+[ ] Promo pages load
+[ ] Mobile nav works
+[ ] CTA goes to booking
+[ ] Chatbot opens and answers FAQ
+```
+
+Booking:
+
+```text
+[ ] Select check-in/check-out
+[ ] Select room
+[ ] Apply voucher
+[ ] Add add-ons
+[ ] Price calculation correct
+[ ] Review modal opens
+[ ] Booking success page shows invoice
+[ ] Booking stored correctly in demo mode
+[ ] WhatsApp template correct
+```
+
+Admin PMS:
+
+```text
+[ ] Login gate works
+[ ] Dashboard stats render
+[ ] Booking list appears
+[ ] Calendar renders
+[ ] Payment verification UI opens
+[ ] Voucher/package/gallery/settings sections open
+[ ] Audit log records mutation
+[ ] CSV export works
+```
+
+Production safety:
+
+```text
+[ ] No frontend secrets
+[ ] LocalStorage clearly marked as demo mode
+[ ] Payment webhook remains pending until backend exists
+[ ] Real auth remains pending until backend exists
+[ ] Vercel root remains frontend/hotelier
+```
+
+---
+
+# 12. Agent Final Report Format
+
+Every implementation must finish with:
+
+```text
+SUMMARY:
+- What changed
+
+FILES CHANGED:
+- list files
+
+TESTS:
+- command run
+- result
+
+SECURITY:
+- secrets check
+- auth/rbac impact
+- payment impact
+
+DEPLOYMENT:
+- deploy needed?
+- root directory
+- rollback notes
+
+BACKUPS:
+- backup created?
+- backup deleted or retained?
+- reason
+```
+
+---
+
+**End of AGENTS.md**
